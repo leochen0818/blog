@@ -173,7 +173,7 @@
         <div class="content">
             <p>我最近在研究 Nx 時遇到了一個坑，這個坑讓我卡了兩、三個小時，所以我將這件事情筆記下來，希望如果以後有人遇到類似的問題，這篇筆記多少可以幫得上忙。</p>
 <hr>
-<h2 id="問題描述"><a href="#問題描述" class="headerlink" title="問題描述"></a>問題描述</h2><p>在 Angular 專案裡我們經常會看到各種 <code>tsconfig.json</code> ，而這些 <code>tsconfig.json</code> 又繼承來繼承去的，雖然一般我們不會特別去動他們的是訂，但當我們因為某些緣故需要去調整的時候，就要特別小心「覆蓋」的問題。</p>
+<h2 id="問題描述"><a href="#問題描述" class="headerlink" title="問題描述"></a>問題描述</h2><p>在 Angular 專案裡我們經常會看到各種 <code>tsconfig.json</code> ，而這些 <code>tsconfig.json</code> 又繼承來繼承去的，雖然一般我們不會特別去動他們的設定，但當我們因為某些緣故需要去調整的時候，就要特別小心「覆蓋」的問題。</p>
 <p>而我遇到的狀況是，我在使用 <code>JSZip</code> 這個套件時，遇到了下圖中的 Error ：</p>
 <p><img src="https://imgur.com/OycKi6h.png" alt="JSZip 的 Error"></p>
 <p>解決辦法是在 <code>apps/app-name/tsconfig.app.json</code> 的 <code>compilerOptions</code> 裡加上 <code>path</code> 的配置：</p>
@@ -298,7 +298,9 @@
             <div class="level-item has-text-centered" style="flex-shrink: 1">
                 <div>
                     
-                        <img class="image is-128x128 has-mb-6" src="/blog/images/avatar.JPG" alt="Leo">
+                        <figure class="image is-128x128 has-mb-6">
+                            <img class="is-rounded" src="/blog/images/avatar.JPG" alt="Leo">
+                        </figure>
                     
                     
                     <p class="is-size-4 is-block">
