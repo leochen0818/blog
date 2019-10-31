@@ -158,6 +158,75 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-10-31T07:16:03.000Z">2019-10-31</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/blog/categories/Web-前端/">Web 前端</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    4 分鐘 閱讀文 (大約 539 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/blog/2019/10/31/my-nx-note-tsconfig/">我的 Nx 筆記 - tsconfig.json 的坑</a>
+            
+        </h1>
+        <div class="content">
+            <p>我最近在研究 Nx 時遇到了一個坑，這個坑讓我卡了兩、三個小時，所以我將這件事情筆記下來，希望如果以後有人遇到類似的問題，這篇筆記多少可以幫得上忙。</p>
+<hr>
+<h2 id="問題描述"><a href="#問題描述" class="headerlink" title="問題描述"></a>問題描述</h2><p>在 Angular 專案裡我們經常會看到各種 <code>tsconfig.json</code> ，而這些 <code>tsconfig.json</code> 又繼承來繼承去的，雖然一般我們不會特別去動他們的是訂，但當我們因為某些緣故需要去調整的時候，就要特別小心「覆蓋」的問題。</p>
+<p>而我遇到的狀況是，我在使用 <code>JSZip</code> 這個套件時，遇到了下圖中的 Error ：</p>
+<p><img src="https://imgur.com/OycKi6h.png" alt="JSZip 的 Error"></p>
+<p>解決辦法是在 <code>apps/app-name/tsconfig.app.json</code> 的 <code>compilerOptions</code> 裡加上 <code>path</code> 的配置：</p>
+<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">  <span class="hljs-attr">"compilerOptions"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">    <span class="hljs-attr">"paths"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"jszip"</span>: [</span><br><span class="line">        <span class="hljs-string">"node_modules/jszip/dist/jszip.min.js"</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-string">"//"</span>: <span class="hljs-string">"..."</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>加上之後， <code>JSZip</code> 的問題解決了，但變成下圖中的 Error ：</p>
+<p><img src="https://imgur.com/A1e70Q3.png" alt="找不到 libs 裡的 Module"></p>
+<p>我百思不得其解，因為 <code>ng serve</code> 沒有問題，但 <code>build</code> 的時候就會說找不到，而我也試了很多方式都解不掉這個問題。</p>
+<p>後來我想到，會不會是因為設定會被覆蓋的關係？！</p>
+<p>因為原本 <code>libs</code> 裡的 import 路徑會在專案根目錄的 <code>tsconfig.ts</code> 裡設定，而 <code>tsconfig.ts</code> 們會像下圖這樣繼承配置：</p>
+<p><img src="https://imgur.com/HfUhT58.png" alt="tsconfig.ts 的繼承方式示意圖"></p>
+<ol>
+<li><code>apps/app-name/tsconfig.json</code> 繼承 <code>./tsconfig.json</code> 裡的配置 。</li>
+<li><code>apps/app-name/tsconfig.app.ts</code> 再繼承 <code>apps/app-name/tsconfig.json</code> 裡的配置。</li>
+</ol>
+<p>因此，當我們一開始在 <code>apps/app-name/tsconfig.app.ts</code> 加上因應 <code>JSZip</code> 的 <code>paths</code> 配置時，就覆蓋掉原本在 <code>./tsconfig.json</code> 裡的 <code>paths</code> 配置，造成找不到 <code>libs</code> 裡 export 的 module 的問題。</p>
+<h2 id="解決辦法"><a href="#解決辦法" class="headerlink" title="解決辦法"></a>解決辦法</h2><p>解決這個問題的辦法基本上有兩個：</p>
+<ol>
+<li>在 <code>apps/app-name/tsconfig.app.ts</code> 的 <code>paths</code> 補上原本在 <code>./tsconfig.ts</code> 的 <code>paths</code> 配置。</li>
+<li>將 <code>JSZip</code> 的配置從 <code>apps/app-name/tsconfig.app.ts</code> 移到 <code>./tsconfig.ts</code> 裡。</li>
+</ol>
+<p>以上。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2019-10-24T14:29:58.000Z">2019-10-24</time>
                 
                 <div class="level-item">
@@ -267,7 +336,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        1
+                        2
                     </p>
                 </div>
             </div>
@@ -287,7 +356,7 @@
                         標籤
                     </p>
                     <p class="title has-text-weight-normal">
-                        4
+                        5
                     </p>
                 </div>
             </div>
@@ -321,7 +390,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li>
             </ul>
@@ -335,7 +404,7 @@
         <h3 class="menu-label">
             標籤雲
         </h3>
-        <a href="/blog/tags/angular/" style="font-size: 10px;">angular</a> <a href="/blog/tags/library/" style="font-size: 10px;">library</a> <a href="/blog/tags/nx/" style="font-size: 10px;">nx</a> <a href="/blog/tags/scss/" style="font-size: 10px;">scss</a>
+        <a href="/blog/tags/angular/" style="font-size: 20px;">angular</a> <a href="/blog/tags/library/" style="font-size: 20px;">library</a> <a href="/blog/tags/nx/" style="font-size: 20px;">nx</a> <a href="/blog/tags/scss/" style="font-size: 10px;">scss</a> <a href="/blog/tags/typescript/" style="font-size: 10px;">typescript</a>
     </div>
 </div>
 
@@ -349,6 +418,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/blog/2019/10/31/my-nx-note-tsconfig/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/thumbnail.svg" alt="我的 Nx 筆記 - tsconfig.json 的坑">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-31T07:16:03.000Z">2019-10-31</time></div>
+                    <a href="/blog/2019/10/31/my-nx-note-tsconfig/" class="title has-link-black-ter is-size-6 has-text-weight-normal">我的 Nx 筆記 - tsconfig.json 的坑</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/Web-前端/">Web 前端</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -387,7 +475,7 @@
                     <span class="level-item">十月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -408,27 +496,34 @@
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/library/">
                         <span class="tag">library</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/nx/">
                         <span class="tag">nx</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/scss/">
                         <span class="tag">scss</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/typescript/">
+                        <span class="tag">typescript</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
@@ -458,6 +553,25 @@
         
         <article class="media">
             
+            <a href="/blog/2019/10/31/my-nx-note-tsconfig/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/blog/images/thumbnail.svg" alt="我的 Nx 筆記 - tsconfig.json 的坑">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2019-10-31T07:16:03.000Z">2019-10-31</time></div>
+                    <a href="/blog/2019/10/31/my-nx-note-tsconfig/" class="title has-link-black-ter is-size-6 has-text-weight-normal">我的 Nx 筆記 - tsconfig.json 的坑</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/blog/categories/Web-前端/">Web 前端</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/blog/2019/10/24/my-nx-note-impot-scss-from-library/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/blog/images/thumbnail.svg" alt="我的 Nx 筆記 - 如何在你的 Application 裡，用很漂亮的方式引入 Library 的 SCSS">
@@ -493,7 +607,7 @@
                     <span class="level-item">十月 2019</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -514,27 +628,34 @@
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/library/">
                         <span class="tag">library</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/nx/">
                         <span class="tag">nx</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/blog/tags/scss/">
                         <span class="tag">scss</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/blog/tags/typescript/">
+                        <span class="tag">typescript</span>
                         <span class="tag is-grey">1</span>
                     </a>
                 </div>
