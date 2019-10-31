@@ -168,7 +168,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    4 分鐘 閱讀文 (大約 539 個字)
+                    4 分鐘 閱讀文 (大約 661 個字)
                 </span>
                 
                 
@@ -193,19 +193,24 @@
 <p><img src="https://imgur.com/A1e70Q3.png" alt="找不到 libs 裡的 Module"></p>
 <p>我百思不得其解，因為 <code>ng serve</code> 沒有問題，但 <code>build</code> 的時候就會說找不到，而我也試了很多方式都解不掉這個問題。</p>
 <p>後來我想到，會不會是因為設定會被覆蓋的關係？！</p>
-<p>因為原本 <code>libs</code> 裡的 import 路徑會在專案根目錄的 <code>tsconfig.ts</code> 裡設定，而 <code>tsconfig.ts</code> 們會像下圖這樣繼承配置：</p>
-<p><img src="https://imgur.com/HfUhT58.png" alt="tsconfig.ts 的繼承方式示意圖"></p>
+<p>因為原本 <code>libs</code> 裡的 import 路徑會在專案根目錄的 <code>tsconfig.json</code> 裡設定，而 <code>tsconfig.json</code> 們會像下圖這樣繼承配置：</p>
+<p><img src="https://imgur.com/HfUhT58.png" alt="tsconfig.json 的繼承方式示意圖"></p>
 <ol>
 <li><code>apps/app-name/tsconfig.json</code> 繼承 <code>./tsconfig.json</code> 裡的配置 。</li>
-<li><code>apps/app-name/tsconfig.app.ts</code> 再繼承 <code>apps/app-name/tsconfig.json</code> 裡的配置。</li>
+<li><code>apps/app-name/tsconfig.app.json</code> 再繼承 <code>apps/app-name/tsconfig.json</code> 裡的配置。</li>
 </ol>
-<p>因此，當我們一開始在 <code>apps/app-name/tsconfig.app.ts</code> 加上因應 <code>JSZip</code> 的 <code>paths</code> 配置時，就覆蓋掉原本在 <code>./tsconfig.json</code> 裡的 <code>paths</code> 配置，造成找不到 <code>libs</code> 裡 export 的 module 的問題。</p>
+<p>因此，當我們一開始在 <code>apps/app-name/tsconfig.app.json</code> 加上因應 <code>JSZip</code> 的 <code>paths</code> 配置時，就覆蓋掉原本在 <code>./tsconfig.json</code> 裡的 <code>paths</code> 配置，造成找不到 <code>libs</code> 裡 export 的 module 的問題。</p>
 <h2 id="解決辦法"><a href="#解決辦法" class="headerlink" title="解決辦法"></a>解決辦法</h2><p>解決這個問題的辦法基本上有兩個：</p>
 <ol>
-<li>在 <code>apps/app-name/tsconfig.app.ts</code> 的 <code>paths</code> 補上原本在 <code>./tsconfig.ts</code> 的 <code>paths</code> 配置。</li>
-<li>將 <code>JSZip</code> 的配置從 <code>apps/app-name/tsconfig.app.ts</code> 移到 <code>./tsconfig.ts</code> 裡。</li>
+<li>在 <code>apps/app-name/tsconfig.app.json</code> 的 <code>paths</code> 補上原本在 <code>./tsconfig.json</code> 的 <code>paths</code> 配置。</li>
+<li>將 <code>JSZip</code> 的配置從 <code>apps/app-name/tsconfig.app.json</code> 移到 <code>./tsconfig.json</code> 裡。</li>
 </ol>
-<p>以上。</p>
+<p>相對來說，第二個方式絕對會比第一個方式好得多。</p>
+<h2 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h2><p>一般來說，其他的 <code>tsconfig.json</code> 都不太會需要去動，因此只要我們養成習慣，都只在修改在專案根目錄下的 <code>tsconfig.json</code> 的配置就不會有問題了。</p>
+<h2 id="參考連結"><a href="#參考連結" class="headerlink" title="參考連結"></a>參考連結</h2><ul>
+<li><a href="https://stackoverflow.com/questions/43281741/how-to-use-paths-in-tsconfig-json?fbclid=IwAR0jb1yPvfhQhdkNvWPkyRS8HYRc-L3lgPvgjbzZHfrnPJlV2r8iQY7_9wA" target="_blank" rel="noopener">How to use paths in tsconfig.json?</a></li>
+<li><a href="https://www.typescriptlang.org/docs/handbook/module-resolution.html" target="_blank" rel="noopener">TypeScript - Module Resolution</a></li>
+</ul>
 
         </div>
         
