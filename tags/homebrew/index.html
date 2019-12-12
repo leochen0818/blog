@@ -2,24 +2,19 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>我的 Nx 筆記 - 如何在你的 Application 裡，用很漂亮的方式引入 Library 的 SCSS - Leo&#39;s Coding Life</title>
+<title>標籤: homebrew - Leo&#39;s Coding Life</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
-    <meta name="description" content="最近在開始研究 Nx 這個非常好用的開發工具，當然也撞了不少牆…（鼻青臉腫中）。 今天主要要分享的是： 如何在你的 Application 裡，用很漂亮的方式引入 Library 裡的 SCSS 而這個方法是我在這個 issue 裡看到的，留言的人是 tcoz 。 在開始之前，請先準備 Nx 的專案，且裡面有一個 Application 名為 sample 、 一個 Library 名為 sam">
-<meta name="keywords" content="angular,nx,scss,library">
-<meta property="og:type" content="article">
-<meta property="og:title" content="我的 Nx 筆記 - 如何在你的 Application 裡，用很漂亮的方式引入 Library 的 SCSS">
-<meta property="og:url" content="https://leochen0818.github.io/2019/10/24/my-nx-note-impot-scss-from-library/index.html">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="Leo&#39;s Coding Life">
+<meta property="og:url" content="https://leochen0818.github.io/tags/homebrew/index.html">
 <meta property="og:site_name" content="Leo&#39;s Coding Life">
-<meta property="og:description" content="最近在開始研究 Nx 這個非常好用的開發工具，當然也撞了不少牆…（鼻青臉腫中）。 今天主要要分享的是： 如何在你的 Application 裡，用很漂亮的方式引入 Library 裡的 SCSS 而這個方法是我在這個 issue 裡看到的，留言的人是 tcoz 。 在開始之前，請先準備 Nx 的專案，且裡面有一個 Application 名為 sample 、 一個 Library 名為 sam">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="https://leochen0818.github.io/blog/images/og_image.png">
-<meta property="og:updated_time" content="2019-10-24T15:14:08.250Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="我的 Nx 筆記 - 如何在你的 Application 裡，用很漂亮的方式引入 Library 的 SCSS">
-<meta name="twitter:description" content="最近在開始研究 Nx 這個非常好用的開發工具，當然也撞了不少牆…（鼻青臉腫中）。 今天主要要分享的是： 如何在你的 Application 裡，用很漂亮的方式引入 Library 裡的 SCSS 而這個方法是我在這個 issue 裡看到的，留言的人是 tcoz 。 在開始之前，請先準備 Nx 的專案，且裡面有一個 Application 名為 sample 、 一個 Library 名為 sam">
+<meta name="twitter:title" content="Leo&#39;s Coding Life">
 <meta name="twitter:image" content="https://leochen0818.github.io/blog/images/og_image.png">
 
 
@@ -103,7 +98,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/blog/">
             
-                <img src="/blog/images/logo.png" alt="我的 Nx 筆記 - 如何在你的 Application 裡，用很漂亮的方式引入 Library 的 SCSS" height="28">
+                <img src="/blog/images/logo.png" alt="Leo&#39;s Coding Life" height="28">
             
             </a>
         </div>
@@ -147,22 +142,33 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    <div class="card-content">
+        <nav class="breadcrumb" aria-label="breadcrumbs">
+        <ul>
+            <li><a href="/blog/tags">標籤</a></li>
+            <li class="is-active"><a href="#" aria-current="page">homebrew</a></li>
+        </ul>
+        </nav>
+    </div>
+</div>
+
+    <div class="card">
     
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-10-24T14:29:58.000Z">2019-10-24</time>
+                <time class="level-item has-text-grey" datetime="2019-12-12T03:52:58.000Z">2019-12-12</time>
                 
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/blog/categories/Web-前端/">Web 前端</a>
+                <a class="has-link-grey -link" href="/blog/categories/Git/">Git</a>
                 </div>
                 
                 
                 <span class="level-item has-text-grey">
                     
                     
-                    3 分鐘 閱讀文 (大約 403 個字)
+                    4 分鐘 閱讀文 (大約 591 個字)
                 </span>
                 
                 
@@ -171,48 +177,44 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                我的 Nx 筆記 - 如何在你的 Application 裡，用很漂亮的方式引入 Library 的 SCSS
+                <a class="has-link-black-ter" href="/blog/2019/12/12/how-to-use-git-with-homebrew-in-macos/">如何在 macOS 裡使用 Homebrew 來安裝與升級 Git</a>
             
         </h1>
         <div class="content">
-            <p><img src="https://imgur.com/kuD3tVS.png" alt="Nx"></p>
-<p>最近在開始研究 <a href="https://nx.dev/angular" target="_blank" rel="noopener">Nx</a> 這個非常好用的開發工具，當然也撞了不少牆…（鼻青臉腫中）。</p>
-<p>今天主要要分享的是：</p>
-<p><strong>如何在你的 Application 裡，用很漂亮的方式引入 Library 裡的 SCSS</strong></p>
-<p>而這個方法是我在<a href="https://github.com/nrwl/nx/issues/1542" target="_blank" rel="noopener">這個 issue</a> 裡看到的，留言的人是 <code>tcoz</code> 。</p>
-<p>在開始之前，請先準備 Nx 的專案，且裡面有一個 Application 名為 <code>sample</code> 、 一個 Library 名為 <code>sample-lib</code> ，然後在 <code>sample-lib</code> 裡準備一個 <code>abc.scss</code> 。</p>
-<p>scss 的內容很簡單：</p>
-<figure class="highlight css hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-selector-tag">h1</span> &#123;</span><br><span class="line">    <span class="hljs-attribute">color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+            <p>在 macOS 裡，因 Git 是內建在系統當中的關係，所以在 macOS 裡使用 Git 非常方便，打開終端機就能使用了。</p>
+<p>但可惜的是，隨著 Git 裡有著某些重大安全性問題被發現， Git 也隨之釋出新版本提供給大家更新， macOS 內建的 Git 版本就過於老舊了些。</p>
+<p>我們可以在終端機中輸入以下指令來查看當前所使用的 Git 的版本：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> git version</span><br><span class="line">git version 2.15.1 (Apple Git-101)</span><br></pre></td></tr></table></figure>
 
-<p>接著把 <code>sample</code> 跑起來，應該會看到以下畫面：</p>
-<p><img src="https://i.imgur.com/Fls370X.png" alt="sample 的起始畫面"></p>
-<p>然後先在 Nx 的 <code>angular.json</code> 裡，找到你的專案的 <code>build</code> 配置，大概長這樣：</p>
-<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">  <span class="hljs-attr">"projects"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"sample"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      <span class="hljs-attr">"architect"</span>: &#123;</span><br><span class="line">        <span class="hljs-attr">"build"</span>: &#123;</span><br><span class="line">          <span class="hljs-attr">"builder"</span>: <span class="hljs-string">"@angular-devkit/build-angular:browser"</span>,</span><br><span class="line">          <span class="hljs-attr">"options"</span>: &#123;</span><br><span class="line">            <span class="hljs-attr">"outputPath"</span>: <span class="hljs-string">"dist/apps/sample"</span>,</span><br><span class="line">            <span class="hljs-attr">"index"</span>: <span class="hljs-string">"apps/sample/src/index.html"</span>,</span><br><span class="line">            <span class="hljs-attr">"main"</span>: <span class="hljs-string">"apps/sample/src/main.ts"</span>,</span><br><span class="line">            <span class="hljs-attr">"polyfills"</span>: <span class="hljs-string">"apps/sample/src/polyfills.ts"</span>,</span><br><span class="line">            <span class="hljs-attr">"tsConfig"</span>: <span class="hljs-string">"apps/sample/tsconfig.app.json"</span>,</span><br><span class="line">            <span class="hljs-attr">"aot"</span>: <span class="hljs-literal">false</span>,</span><br><span class="line">            <span class="hljs-attr">"assets"</span>: [<span class="hljs-string">"apps/sample/src/favicon.ico"</span>, <span class="hljs-string">"apps/sample/src/assets"</span>],</span><br><span class="line">            <span class="hljs-attr">"styles"</span>: [<span class="hljs-string">"apps/sample/src/styles.scss"</span>],</span><br><span class="line">            <span class="hljs-attr">"scripts"</span>: []</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然後加上 <code>stylePreprocessorOptions</code> 跟 <code>extractCss</code> 的配置，像這樣：</p>
-<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">  <span class="hljs-attr">"projects"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"sample"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      <span class="hljs-attr">"architect"</span>: &#123;</span><br><span class="line">        <span class="hljs-attr">"build"</span>: &#123;</span><br><span class="line">          <span class="hljs-attr">"builder"</span>: <span class="hljs-string">"@angular-devkit/build-angular:browser"</span>,</span><br><span class="line">          <span class="hljs-attr">"options"</span>: &#123;</span><br><span class="line">            <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line"></span><br><span class="line">            <span class="hljs-attr">"stylePreprocessorOptions"</span>: &#123;</span><br><span class="line">              <span class="hljs-attr">"includePaths"</span>: [<span class="hljs-string">"libs/sample-lib/src/lib/scss"</span>]</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="hljs-attr">"extractCss"</span>: <span class="hljs-literal">true</span>,</span><br><span class="line"></span><br><span class="line">            <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>includePaths</code> 裡的路徑就是要處理的 SCSS 的資料夾路徑。</p>
-</blockquote>
-<p>如此一來，就可以到 <code>sample</code> 裡的 SCSS 裡 import （我在 <code>sample</code> 裡的 <code>style.scss</code> import ）：</p>
-<figure class="highlight scss hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@<span class="hljs-keyword">import</span> <span class="hljs-string">"abc"</span>;</span><br></pre></td></tr></table></figure>
-
-<p>結果：</p>
-<p><img src="https://imgur.com/bJmD3w8.png" alt="import 了 abc 之後的結果"></p>
-<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><ul>
-<li><a href="https://angular.io/guide/workspace-config#style-preprocessor-options" target="_blank" rel="noopener">Angular 官方文件</a></li>
+<p>所以後來許多人就推薦改為使用 <code>Homebrew</code> 來安裝與更新 Git ，方式可以參考以下連結：</p>
+<ul>
+<li><a href="https://garynil.tw/2018/05/762/%E5%A6%82%E4%BD%95%E4%BB%A5-homebrew-%E5%8F%96%E4%BB%A3-macos-%E5%85%A7%E5%BB%BA-git-%E4%B8%A6%E6%9B%B4%E6%96%B0/" target="_blank" rel="noopener">如何以 Homebrew 取代 MacOS 內建 Git 並更新</a></li>
 </ul>
+<p>不過隨著 macOS 的更新，系統的安全性也逐漸被 Apple 增加，所以筆者在使用 <code>sudo mv /usr/bin/git /usr/bin/git-apple</code> 這個指令時（ macOS 版本為： Catalina 10.15.1 ），遇到了第一個問題： <code>operation not permitted</code> 。</p>
+<p>這時筆者 Google 到第一個解決方案：</p>
+<ul>
+<li><a href="https://www.azureunali.com/mac-iterm2%E6%88%96terminal%E5%9C%A8%E5%8D%87%E7%B4%9Amacos-mojave%E4%B9%8B%E5%BE%8C%E4%BD%BF%E7%94%A8%E6%8C%87%E4%BB%A4%E6%99%82%E6%9C%83%E5%87%BA%E7%8F%BEoperation-not-permitted/" target="_blank" rel="noopener">[Mac] iTerm2或Terminal在升級macOS Mojave之後使用指令時會出現”Operation not permitted”</a></li>
+</ul>
+<p>不過這個方式在筆者的系統中沒有作用，依舊會遇到 <code>operation not permitted</code> 的問題。</p>
+<p>而後筆者 Google 到第二個解決方案：</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/32659348/operation-not-permitted-when-on-root-el-capitan-rootless-disabled" target="_blank" rel="noopener">Operation Not Permitted when on root - El Capitan (rootless disabled)</a> 裡的綠勾勾回覆</li>
+</ul>
+<p>筆者照做之後，再次使用 <code>sudo mv /usr/bin/git /usr/bin/git-apple</code> ，遇到了第二個問題： <code>Read-only file system</code> 。因此筆者又 Google 了一下，找到了以下解決方案：</p>
+<ul>
+<li><a href="https://www.jianshu.com/p/a7e7bbcb913d" target="_blank" rel="noopener">macOS 无法sudo创建文件夹返回Read-only file system问题解决</a></li>
+</ul>
+<p>參照上述文章，筆者在終端機裡輸入以下指令：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> sudo mount -uw /</span><br></pre></td></tr></table></figure>
 
-        </div>
-        
-        <div class="level is-size-7 is-uppercase">
-            <div class="level-start">
-                <div class="level-item">
-                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/blog/tags/angular/">angular</a>, <a class="has-link-grey -link" href="/blog/tags/library/">library</a>, <a class="has-link-grey -link" href="/blog/tags/nx/">nx</a>, <a class="has-link-grey -link" href="/blog/tags/scss/">scss</a>
-                </div>
-            </div>
+<p>即可正常使用：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> sudo mv /usr/bin/git /usr/bin/git-apple</span><br></pre></td></tr></table></figure>
+
+<p>而後就能夠改為使用 <code>Homebrew</code> 安裝的 Git：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> git version</span><br><span class="line">git version 2.24.1</span><br></pre></td></tr></table></figure>
+
+<p>以上，希望有幫到大家。</p>
+
         </div>
         
         
@@ -224,45 +226,9 @@
 
 
 
-<div class="card card-transparent">
-    <div class="level post-navigation is-flex-wrap is-mobile">
-        
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/blog/2019/10/31/my-nx-note-tsconfig/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">我的 Nx 筆記 - tsconfig.json 的坑</span>
-            </a>
-        </div>
-        
-        
-    </div>
-</div>
 
 
 
-<div class="card">
-    <div class="card-content">
-        <h3 class="title is-5 has-text-weight-normal">評論</h3>
-        
-<script>
-    var disqus_config = function () {
-        this.page.url = 'https://leochen0818.github.io/2019/10/24/my-nx-note-impot-scss-from-library/';
-        this.page.identifier = '2019/10/24/my-nx-note-impot-scss-from-library/';
-    };
-    (function() {
-        var d = document, s = d.createElement('script');  
-        s.src = '//' + "leochen0818" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-
-<div id="disqus_thread">
-    
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
-    </div>
-</div>
 </div>
                 
 
@@ -759,7 +725,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/blog/">
                 
-                    <img src="/blog/images/logo.png" alt="我的 Nx 筆記 - 如何在你的 Application 裡，用很漂亮的方式引入 Library 的 SCSS" height="28">
+                    <img src="/blog/images/logo.png" alt="Leo&#39;s Coding Life" height="28">
                 
                 </a>
                 <p class="is-size-7">
