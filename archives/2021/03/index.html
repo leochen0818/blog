@@ -2,14 +2,14 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>Leo&#39;s Coding Life</title>
+<title>彙整: 2021/3 - Leo&#39;s Coding Life</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 
 
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="Leo&#39;s Coding Life">
-<meta property="og:url" content="https://leochen0818.github.io/index.html">
+<meta property="og:url" content="https://leochen0818.github.io/archives/2021/03/index.html">
 <meta property="og:site_name" content="Leo&#39;s Coding Life">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="https://leochen0818.github.io/blog/images/og_image.png">
@@ -106,7 +106,7 @@
             
             <div class="navbar-start">
                 
-                <a class="navbar-item is-active" href="/blog/">Home</a>
+                <a class="navbar-item" href="/blog/">Home</a>
                 
                 <a class="navbar-item" href="/blog/archives">Archives</a>
                 
@@ -142,300 +142,36 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2021-03-25T15:35:03.000Z">2021-03-25</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/blog/categories/Web-前端/">Web 前端</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    6 分鐘 閱讀文 (大約 894 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/blog/2021/03/25/get-to-the-meet-of-angular-injector/">Angular 之 Injector 探討</a>
-            
-        </h1>
-        <div class="content">
-            <p>關於 Angular 的 Injector ，雖然我之前在寫「<a href="https://ithelp.ithome.com.tw/users/20090728/ironman/1600" target="_blank" rel="noopener">Angular 深入淺出三十天</a>」的系列文時，就有在<a href="https://ithelp.ithome.com.tw/articles/10207283" target="_blank" rel="noopener">基礎結構說明（四）</a>這篇文章裡介紹過，不過今天我在跟朋友們聊到相關的話題時，除了好好的做了個實驗，並把程式碼保留下來之外，也忽然起了個念頭，覺得是該把這個問題寫成文章，讓剛學 Angular 或是對 Angular 的了解沒那麼深的朋友們可以比較容易理解、比較不會用錯（就我個人的經驗來看，沒有注意到這個部分的朋友們還滿多的）。</p>
-<hr>
-<h2 id="問題描述"><a href="#問題描述" class="headerlink" title="問題描述"></a>問題描述</h2><p>在 Angular 裡寫 Service 的時候，我們一般會用以下三種方式註冊它：</p>
-<ol>
-<li>在該 Service 的 <code>@Injectable()</code> 裡加上 <code>{ providedIn: &#39;root&#39; }</code> 的 Metadata （ Angular 7+ 推薦寫法），抑或者在 AppModule 的 <code>providers</code> 裡註冊它（ Angular 6- 的寫法）。</li>
-<li>在相關的功能模組的 <code>providers</code> 裡註冊它。</li>
-<li>在某個 Component 的 <code>providers</code> 裡註冊它。</li>
-</ol>
-<blockquote>
-<p>其實在 Angular 9 之後的版本，除了 <code>providedIn: &#39;root&#39;</code> 之外，還多了 <code>&#39;platform&#39;</code> 與 <code>&#39;any&#39;</code> 這兩個選擇，不過此篇文章不討論這個部分。</p>
-</blockquote>
-<p>這三種註冊方式其中的第一種與第三種，大家比較不會有問題，比較會有問題的是第二種，很多人可能會覺得，我使用起來明明就是同一個實體呀？怎麼官方說是不同實體呢？</p>
-<h2 id="實驗開始"><a href="#實驗開始" class="headerlink" title="實驗開始"></a>實驗開始</h2><p>為了釐清這個問題，我做了個實驗，程式碼在這裡：<a href="https://stackblitz.com/edit/angular-ivy-5fdo5y?file=src/app/app.component.html" target="_blank" rel="noopener">https://stackblitz.com/edit/angular-ivy-5fdo5y?file=src/app/app.component.html</a></p>
-<p>在這個實驗裡，我用了四個 Module ─ <code>AboutModule</code>、<code>ContactModule</code>、<code>HomeModule</code>、<code>WhateverModule</code> 與兩個 Service ─ <code>ASservice</code> 與 <code>BService</code> 來模擬大部分會遇到的情況：</p>
-<ul>
-<li><code>AService</code> 使用 <code>providedIn: &#39;root&#39;</code> 註冊。</li>
-<li><code>HomeModule</code>、<code>ContactModule</code>、<code>WhateverModule</code> 都 import 到 AppModule 裡。</li>
-<li><code>AboutModule</code> 用 <strong>LazyLoading</strong> 的方式載入。</li>
-<li><code>BService</code> 則分別註冊在 <code>ContactModule</code>、<code>HomeModule</code>、<code>AboutModule</code> 的 <code>providers</code> 裡與 <code>WhateverComponent</code> 的 <code>providers</code> 裡。</li>
-</ul>
-<p>結果：</p>
-<p><img src="https://i.imgur.com/KnvmBFp.png" alt="img"></p>
-<p>有看懂嗎？ <code>BService</code> 在 <code>HomeComponent</code> 與 <code>ContactComponet</code> 裡是用同一個實體，這是因為他們都有被 import 到 AppModule 裡，這時 AppModule（上層 Module）會接手 <code>ContactModule</code>、<code>HomeModule</code>（子層 Module）的 injector，所以他們雖然有分別註冊 <code>BService</code> ，但實際上還是共用了同一個實體。</p>
-<p>這部份其實官網文件有寫到：</p>
-<p><img src="https://imgur.com/tCWTAua.png" alt="img"></p>
-<p>網址在這：<a href="https://angular.io/guide/hierarchical-dependency-injection#moduleinjector" target="_blank" rel="noopener">https://angular.io/guide/hierarchical-dependency-injection#moduleinjector</a></p>
-<p>不過我這裡只有實驗一層的情況，如果 Module 一層一層的接下去，是不是也是一樣的狀況我就沒有特別做實驗了，大家可以自己玩看看。</p>
-<p>至於 <code>AboutComponent</code> 跟 <code>WhateverComponent</code> 呢，很明顯都是使用不同的<br> <code>BService</code> 的實體，前者因為使用 <strong>LazyLoading</strong> 的關係，跟 AppModule 沒有直接關聯，後者則是因為是使用了第三種註冊方式的關係。</p>
-<h2 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h2><p>總而言之，官方之所以提供了不同的註冊方式給我們，就是希望我們可以在不同的情況下使用不同的註冊方式來解決我們的問題，只要能夠熟知這其中的差異，就可以寫出好維護又高品質的系統囉！</p>
 
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="tag is-link">
+        三月 2021
+        </h3>
+        <div class="timeline">
+        
+            <article class="media">
+                
+                <div class="media-content">
+                    <div class="content">
+                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2021-03-25T15:35:03.000Z">2021-03-25</time>
+                        <a href="/blog/2021/03/25/get-to-the-meet-of-angular-injector/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 之 Injector 探討</a>
+                        <div class="level article-meta is-mobile">
+                            <div class="level-left">
+                                
+                                <div class="level-item is-size-7 is-uppercase">
+                                <a class="has-link-grey -link" href="/blog/categories/Web-前端/">Web 前端</a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        
         </div>
-        
-        
-        
     </div>
 </div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-12-12T03:52:58.000Z">2019-12-12</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/blog/categories/Git/">Git</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    4 分鐘 閱讀文 (大約 591 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/blog/2019/12/12/how-to-use-git-with-homebrew-in-macos/">如何在 macOS 裡使用 Homebrew 來安裝與升級 Git</a>
-            
-        </h1>
-        <div class="content">
-            <p>在 macOS 裡，因 Git 是內建在系統當中的關係，所以在 macOS 裡使用 Git 非常方便，打開終端機就能使用了。</p>
-<p>但可惜的是，隨著 Git 裡有著某些重大安全性問題被發現， Git 也隨之釋出新版本提供給大家更新， macOS 內建的 Git 版本就過於老舊了些。</p>
-<p>我們可以在終端機中輸入以下指令來查看當前所使用的 Git 的版本：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> git version</span><br><span class="line">git version 2.15.1 (Apple Git-101)</span><br></pre></td></tr></table></figure>
-
-<p>所以後來許多人就推薦改為使用 <code>Homebrew</code> 來安裝與更新 Git ，方式可以參考以下連結：</p>
-<ul>
-<li><a href="https://garynil.tw/2018/05/762/%E5%A6%82%E4%BD%95%E4%BB%A5-homebrew-%E5%8F%96%E4%BB%A3-macos-%E5%85%A7%E5%BB%BA-git-%E4%B8%A6%E6%9B%B4%E6%96%B0/" target="_blank" rel="noopener">如何以 Homebrew 取代 MacOS 內建 Git 並更新</a></li>
-</ul>
-<p>不過隨著 macOS 的更新，系統的安全性也逐漸被 Apple 增加，所以筆者在使用 <code>sudo mv /usr/bin/git /usr/bin/git-apple</code> 這個指令時（ macOS 版本為： Catalina 10.15.1 ），遇到了第一個問題： <code>operation not permitted</code> 。</p>
-<p>這時筆者 Google 到第一個解決方案：</p>
-<ul>
-<li><a href="https://www.azureunali.com/mac-iterm2%E6%88%96terminal%E5%9C%A8%E5%8D%87%E7%B4%9Amacos-mojave%E4%B9%8B%E5%BE%8C%E4%BD%BF%E7%94%A8%E6%8C%87%E4%BB%A4%E6%99%82%E6%9C%83%E5%87%BA%E7%8F%BEoperation-not-permitted/" target="_blank" rel="noopener">[Mac] iTerm2或Terminal在升級macOS Mojave之後使用指令時會出現”Operation not permitted”</a></li>
-</ul>
-<p>不過這個方式在筆者的系統中沒有作用，依舊會遇到 <code>operation not permitted</code> 的問題。</p>
-<p>而後筆者 Google 到第二個解決方案：</p>
-<ul>
-<li><a href="https://stackoverflow.com/questions/32659348/operation-not-permitted-when-on-root-el-capitan-rootless-disabled" target="_blank" rel="noopener">Operation Not Permitted when on root - El Capitan (rootless disabled)</a> 裡的綠勾勾回覆</li>
-</ul>
-<p>筆者照做之後，再次使用 <code>sudo mv /usr/bin/git /usr/bin/git-apple</code> ，遇到了第二個問題： <code>Read-only file system</code> 。因此筆者又 Google 了一下，找到了以下解決方案：</p>
-<ul>
-<li><a href="https://www.jianshu.com/p/a7e7bbcb913d" target="_blank" rel="noopener">macOS 无法sudo创建文件夹返回Read-only file system问题解决</a></li>
-</ul>
-<p>參照上述文章，筆者在終端機裡輸入以下指令：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> sudo mount -uw /</span><br></pre></td></tr></table></figure>
-
-<p>即可正常使用：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> sudo mv /usr/bin/git /usr/bin/git-apple</span><br></pre></td></tr></table></figure>
-
-<p>而後就能夠改為使用 <code>Homebrew</code> 安裝的 Git：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> git version</span><br><span class="line">git version 2.24.1</span><br></pre></td></tr></table></figure>
-
-<p>以上，希望有幫到大家。</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-10-31T07:16:03.000Z">2019-10-31</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/blog/categories/Web-前端/">Web 前端</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    4 分鐘 閱讀文 (大約 661 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/blog/2019/10/31/my-nx-note-tsconfig/">我的 Nx 筆記 - tsconfig.json 的坑</a>
-            
-        </h1>
-        <div class="content">
-            <p>我最近在研究 Nx 時遇到了一個坑，這個坑讓我卡了兩、三個小時，所以我將這件事情筆記下來，希望如果以後有人遇到類似的問題，這篇筆記多少可以幫得上忙。</p>
-<hr>
-<h2 id="問題描述"><a href="#問題描述" class="headerlink" title="問題描述"></a>問題描述</h2><p>在 Angular 專案裡我們經常會看到各種 <code>tsconfig.json</code> ，而這些 <code>tsconfig.json</code> 又繼承來繼承去的，雖然一般我們不會特別去動他們的設定，但當我們因為某些緣故需要去調整的時候，就要特別小心「覆蓋」的問題。</p>
-<p>而我遇到的狀況是，我在使用 <code>JSZip</code> 這個套件時，遇到了下圖中的 Error ：</p>
-<p><img src="https://imgur.com/OycKi6h.png" alt="JSZip 的 Error"></p>
-<p>解決辦法是在 <code>apps/app-name/tsconfig.app.json</code> 的 <code>compilerOptions</code> 裡加上 <code>path</code> 的配置：</p>
-<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">  <span class="hljs-attr">"compilerOptions"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">    <span class="hljs-attr">"paths"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"jszip"</span>: [</span><br><span class="line">        <span class="hljs-string">"node_modules/jszip/dist/jszip.min.js"</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-string">"//"</span>: <span class="hljs-string">"..."</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>加上之後， <code>JSZip</code> 的問題解決了，但變成下圖中的 Error ：</p>
-<p><img src="https://imgur.com/A1e70Q3.png" alt="找不到 libs 裡的 Module"></p>
-<p>我百思不得其解，因為 <code>ng serve</code> 沒有問題，但 <code>build</code> 的時候就會說找不到，而我也試了很多方式都解不掉這個問題。</p>
-<p>後來我想到，會不會是因為設定會被覆蓋的關係？！</p>
-<p>因為原本 <code>libs</code> 裡的 import 路徑會在專案根目錄的 <code>tsconfig.json</code> 裡設定，而 <code>tsconfig.json</code> 們會像下圖這樣繼承配置：</p>
-<p><img src="https://imgur.com/HfUhT58.png" alt="tsconfig.json 的繼承方式示意圖"></p>
-<ol>
-<li><code>apps/app-name/tsconfig.json</code> 繼承 <code>./tsconfig.json</code> 裡的配置 。</li>
-<li><code>apps/app-name/tsconfig.app.json</code> 再繼承 <code>apps/app-name/tsconfig.json</code> 裡的配置。</li>
-</ol>
-<p>因此，當我們一開始在 <code>apps/app-name/tsconfig.app.json</code> 加上因應 <code>JSZip</code> 的 <code>paths</code> 配置時，就覆蓋掉原本在 <code>./tsconfig.json</code> 裡的 <code>paths</code> 配置，造成找不到 <code>libs</code> 裡 export 的 module 的問題。</p>
-<h2 id="解決辦法"><a href="#解決辦法" class="headerlink" title="解決辦法"></a>解決辦法</h2><p>解決這個問題的辦法基本上有兩個：</p>
-<ol>
-<li>在 <code>apps/app-name/tsconfig.app.json</code> 的 <code>paths</code> 補上原本在 <code>./tsconfig.json</code> 的 <code>paths</code> 配置。</li>
-<li>將 <code>JSZip</code> 的配置從 <code>apps/app-name/tsconfig.app.json</code> 移到 <code>./tsconfig.json</code> 裡。</li>
-</ol>
-<p>相對來說，第二個方式絕對會比第一個方式好得多。</p>
-<h2 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h2><p>一般來說，其他的 <code>tsconfig.json</code> 都不太會需要去動，因此只要我們養成習慣，都只在修改在專案根目錄下的 <code>tsconfig.json</code> 的配置就不會有問題了。</p>
-<h2 id="參考連結"><a href="#參考連結" class="headerlink" title="參考連結"></a>參考連結</h2><ul>
-<li><a href="https://stackoverflow.com/questions/43281741/how-to-use-paths-in-tsconfig-json?fbclid=IwAR0jb1yPvfhQhdkNvWPkyRS8HYRc-L3lgPvgjbzZHfrnPJlV2r8iQY7_9wA" target="_blank" rel="noopener">How to use paths in tsconfig.json?</a></li>
-<li><a href="https://www.typescriptlang.org/docs/handbook/module-resolution.html" target="_blank" rel="noopener">TypeScript - Module Resolution</a></li>
-</ul>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-10-24T14:29:58.000Z">2019-10-24</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/blog/categories/Web-前端/">Web 前端</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    3 分鐘 閱讀文 (大約 403 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/blog/2019/10/24/my-nx-note-impot-scss-from-library/">我的 Nx 筆記 - 如何在你的 Application 裡，用很漂亮的方式引入 Library 的 SCSS</a>
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://imgur.com/kuD3tVS.png" alt="Nx"></p>
-<p>最近在開始研究 <a href="https://nx.dev/angular" target="_blank" rel="noopener">Nx</a> 這個非常好用的開發工具，當然也撞了不少牆…（鼻青臉腫中）。</p>
-<p>今天主要要分享的是：</p>
-<p><strong>如何在你的 Application 裡，用很漂亮的方式引入 Library 裡的 SCSS</strong></p>
-<p>而這個方法是我在<a href="https://github.com/nrwl/nx/issues/1542" target="_blank" rel="noopener">這個 issue</a> 裡看到的，留言的人是 <code>tcoz</code> 。</p>
-<p>在開始之前，請先準備 Nx 的專案，且裡面有一個 Application 名為 <code>sample</code> 、 一個 Library 名為 <code>sample-lib</code> ，然後在 <code>sample-lib</code> 裡準備一個 <code>abc.scss</code> 。</p>
-<p>scss 的內容很簡單：</p>
-<figure class="highlight css hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-selector-tag">h1</span> &#123;</span><br><span class="line">    <span class="hljs-attribute">color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>接著把 <code>sample</code> 跑起來，應該會看到以下畫面：</p>
-<p><img src="https://i.imgur.com/Fls370X.png" alt="sample 的起始畫面"></p>
-<p>然後先在 Nx 的 <code>angular.json</code> 裡，找到你的專案的 <code>build</code> 配置，大概長這樣：</p>
-<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">  <span class="hljs-attr">"projects"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"sample"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      <span class="hljs-attr">"architect"</span>: &#123;</span><br><span class="line">        <span class="hljs-attr">"build"</span>: &#123;</span><br><span class="line">          <span class="hljs-attr">"builder"</span>: <span class="hljs-string">"@angular-devkit/build-angular:browser"</span>,</span><br><span class="line">          <span class="hljs-attr">"options"</span>: &#123;</span><br><span class="line">            <span class="hljs-attr">"outputPath"</span>: <span class="hljs-string">"dist/apps/sample"</span>,</span><br><span class="line">            <span class="hljs-attr">"index"</span>: <span class="hljs-string">"apps/sample/src/index.html"</span>,</span><br><span class="line">            <span class="hljs-attr">"main"</span>: <span class="hljs-string">"apps/sample/src/main.ts"</span>,</span><br><span class="line">            <span class="hljs-attr">"polyfills"</span>: <span class="hljs-string">"apps/sample/src/polyfills.ts"</span>,</span><br><span class="line">            <span class="hljs-attr">"tsConfig"</span>: <span class="hljs-string">"apps/sample/tsconfig.app.json"</span>,</span><br><span class="line">            <span class="hljs-attr">"aot"</span>: <span class="hljs-literal">false</span>,</span><br><span class="line">            <span class="hljs-attr">"assets"</span>: [<span class="hljs-string">"apps/sample/src/favicon.ico"</span>, <span class="hljs-string">"apps/sample/src/assets"</span>],</span><br><span class="line">            <span class="hljs-attr">"styles"</span>: [<span class="hljs-string">"apps/sample/src/styles.scss"</span>],</span><br><span class="line">            <span class="hljs-attr">"scripts"</span>: []</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然後加上 <code>stylePreprocessorOptions</code> 跟 <code>extractCss</code> 的配置，像這樣：</p>
-<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">  <span class="hljs-attr">"projects"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"sample"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      <span class="hljs-attr">"architect"</span>: &#123;</span><br><span class="line">        <span class="hljs-attr">"build"</span>: &#123;</span><br><span class="line">          <span class="hljs-attr">"builder"</span>: <span class="hljs-string">"@angular-devkit/build-angular:browser"</span>,</span><br><span class="line">          <span class="hljs-attr">"options"</span>: &#123;</span><br><span class="line">            <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line"></span><br><span class="line">            <span class="hljs-attr">"stylePreprocessorOptions"</span>: &#123;</span><br><span class="line">              <span class="hljs-attr">"includePaths"</span>: [<span class="hljs-string">"libs/sample-lib/src/lib/scss"</span>]</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="hljs-attr">"extractCss"</span>: <span class="hljs-literal">true</span>,</span><br><span class="line"></span><br><span class="line">            <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>includePaths</code> 裡的路徑就是要處理的 SCSS 的資料夾路徑。</p>
-</blockquote>
-<p>如此一來，就可以到 <code>sample</code> 裡的 SCSS 裡 import （我在 <code>sample</code> 裡的 <code>style.scss</code> import ）：</p>
-<figure class="highlight scss hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">@<span class="hljs-keyword">import</span> <span class="hljs-string">"abc"</span>;</span><br></pre></td></tr></table></figure>
-
-<p>結果：</p>
-<p><img src="https://imgur.com/bJmD3w8.png" alt="import 了 abc 之後的結果"></p>
-<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><ul>
-<li><a href="https://angular.io/guide/workspace-config#style-preprocessor-options" target="_blank" rel="noopener">Angular 官方文件</a></li>
-</ul>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
 
 
 </div>
