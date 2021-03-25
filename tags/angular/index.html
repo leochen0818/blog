@@ -168,7 +168,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    6 分鐘 閱讀文 (大約 894 個字)
+                    6 分鐘 閱讀文 (大約 900 個字)
                 </span>
                 
                 
@@ -202,10 +202,10 @@
 <li><code>BService</code> 則分別註冊在 <code>ContactModule</code>、<code>HomeModule</code>、<code>AboutModule</code> 的 <code>providers</code> 裡與 <code>WhateverComponent</code> 的 <code>providers</code> 裡。</li>
 </ul>
 <p>結果：</p>
-<p><img src="https://i.imgur.com/KnvmBFp.png" alt="img"></p>
+<p><img src="https://i.imgur.com/KnvmBFp.png" alt="實驗結果"></p>
 <p>有看懂嗎？ <code>BService</code> 在 <code>HomeComponent</code> 與 <code>ContactComponet</code> 裡是用同一個實體，這是因為他們都有被 import 到 AppModule 裡，這時 AppModule（上層 Module）會接手 <code>ContactModule</code>、<code>HomeModule</code>（子層 Module）的 injector，所以他們雖然有分別註冊 <code>BService</code> ，但實際上還是共用了同一個實體。</p>
 <p>這部份其實官網文件有寫到：</p>
-<p><img src="https://imgur.com/tCWTAua.png" alt="img"></p>
+<p><img src="https://imgur.com/tCWTAua.png" alt="官網文件"></p>
 <p>網址在這：<a href="https://angular.io/guide/hierarchical-dependency-injection#moduleinjector" target="_blank" rel="noopener">https://angular.io/guide/hierarchical-dependency-injection#moduleinjector</a></p>
 <p>不過我這裡只有實驗一層的情況，如果 Module 一層一層的接下去，是不是也是一樣的狀況我就沒有特別做實驗了，大家可以自己玩看看。</p>
 <p>至於 <code>AboutComponent</code> 跟 <code>WhateverComponent</code> 呢，很明顯都是使用不同的<br> <code>BService</code> 的實體，前者因為使用 <strong>LazyLoading</strong> 的關係，跟 AppModule 沒有直接關聯，後者則是因為是使用了第三種註冊方式的關係。</p>
