@@ -340,9 +340,6 @@ img.thumbnail {
 .margin-center {
   margin: 0 auto;
 }
-profile-container > * {
-  margin-bottom: 5px;
-}
 @media screen and (max-width: 768px) {
   .has-text-centered-mobile {
     text-align: center !important;
