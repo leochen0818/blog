@@ -2,20 +2,25 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>分類: Web 前端 - Leo&#39;s Coding Life</title>
+<title>Angular 深入淺出三十天：表單與測試 Day03 - Reactive Forms 實作 - 以登入為例 - Leo&#39;s Coding Life</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <base href="/">
 
 
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Leo&#39;s Coding Life">
-<meta property="og:url" content="https://blog.leochen.dev/categories/Web-前端/index.html">
+    <meta name="description" content="今天要來用 Reactive Forms 的方式實作一個簡單的登入系統，撇開 UI 不談，具體的功能需求規格跟昨天差不多，如下所示：  帳號 格式為 Email Address，相關規則請參考維基百科，此處則直接使用正規表示法 /^\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b$/gi 來檢驗，驗證有誤時需在欄位後方顯示錯誤訊息：格式有誤，請重新輸入 此欄位必填，驗證有誤時需需在欄">
+<meta name="keywords" content="angular,form,testing,frontend,web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Angular 深入淺出三十天：表單與測試 Day03 - Reactive Forms 實作 - 以登入為例">
+<meta property="og:url" content="https://blog.leochen.dev/2021/09/18/angular-30days-form-and-test-03/index.html">
 <meta property="og:site_name" content="Leo&#39;s Coding Life">
+<meta property="og:description" content="今天要來用 Reactive Forms 的方式實作一個簡單的登入系統，撇開 UI 不談，具體的功能需求規格跟昨天差不多，如下所示：  帳號 格式為 Email Address，相關規則請參考維基百科，此處則直接使用正規表示法 /^\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b$/gi 來檢驗，驗證有誤時需在欄位後方顯示錯誤訊息：格式有誤，請重新輸入 此欄位必填，驗證有誤時需需在欄">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
+<meta property="og:updated_time" content="2021-09-18T00:06:38.607Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Leo&#39;s Coding Life">
+<meta name="twitter:title" content="Angular 深入淺出三十天：表單與測試 Day03 - Reactive Forms 實作 - 以登入為例">
+<meta name="twitter:description" content="今天要來用 Reactive Forms 的方式實作一個簡單的登入系統，撇開 UI 不談，具體的功能需求規格跟昨天差不多，如下所示：  帳號 格式為 Email Address，相關規則請參考維基百科，此處則直接使用正規表示法 /^\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b$/gi 來檢驗，驗證有誤時需在欄位後方顯示錯誤訊息：格式有誤，請重新輸入 此欄位必填，驗證有誤時需需在欄">
 <meta name="twitter:image" content="https://blog.leochen.dev/images/og_image.png">
 
 
@@ -99,7 +104,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="Leo&#39;s Coding Life" height="28">
+                <img src="/images/logo.png" alt="Angular 深入淺出三十天：表單與測試 Day03 - Reactive Forms 實作 - 以登入為例" height="28">
             
             </a>
         </div>
@@ -143,18 +148,6 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
-    <div class="card-content">
-        <nav class="breadcrumb" aria-label="breadcrumbs">
-        <ul>
-            <li><a href="/categories">分類</a></li>
-            
-            <li class="is-active"><a href="#" aria-current="page">Web 前端</a></li>
-        </ul>
-        </nav>
-    </div>
-</div>
-
-    <div class="card">
     
     <div class="card-content article ">
         
@@ -179,7 +172,7 @@
         
         <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
             
-                <a class="has-link-black-ter" href="/2021/09/18/angular-30days-form-and-test-03/">Angular 深入淺出三十天：表單與測試 Day03 - Reactive Forms 實作 - 以登入為例</a>
+                Angular 深入淺出三十天：表單與測試 Day03 - Reactive Forms 實作 - 以登入為例
             
         </h1>
         <div class="content">
@@ -279,136 +272,15 @@
 
         </div>
         
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2021-09-17T00:36:10.000Z">2021-09-17</time>
-                
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
                 <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/angular/">angular</a>, <a class="has-link-grey -link" href="/tags/form/">form</a>, <a class="has-link-grey -link" href="/tags/frontend/">frontend</a>, <a class="has-link-grey -link" href="/tags/testing/">testing</a>, <a class="has-link-grey -link" href="/tags/web/">web</a>
                 </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    12 分鐘 閱讀文 (大約 1853 個字)
-                </span>
-                
-                
             </div>
         </div>
         
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2021/09/17/angular-30days-form-and-test-02/">Angular 深入淺出三十天：表單與測試 Day02 - Template Driven Forms 實作 - 以登入為例</a>
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://i.imgur.com/EL8b9Ws.jpg" alt="Day2"></p>
-<p>今天要來用 <strong>Template Driven Forms</strong> 的方式實作一個簡單的登入系統，撇開 UI 不談，具體的功能需求規格如下：</p>
-<ul>
-<li>帳號<ul>
-<li>格式為 Email Address，相關規則請參考<a href="https://zh.wikipedia.org/wiki/%E9%9B%BB%E5%AD%90%E9%83%B5%E4%BB%B6%E5%9C%B0%E5%9D%80" target="_blank" rel="noopener">維基百科</a>，此處則直接使用正規表示法 <code>/^\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b$/gi</code> 來檢驗，驗證有誤時需在欄位後方顯示錯誤訊息：<code>格式有誤，請重新輸入</code></li>
-<li>此欄位必填，驗證有誤時需需在欄位後方顯示錯誤訊息：<code>此欄位必填</code></li>
-</ul>
-</li>
-<li>密碼<ul>
-<li>長度最短不得低於 8 碼，驗證有誤時需需在欄位後方顯示錯誤訊息：<code>密碼長度最短不得低於8碼</code></li>
-<li>長度最長不得超過 16碼</li>
-<li>此欄位必填，驗證有誤時需需在欄位後方顯示錯誤訊息：<code>此欄位必填</code></li>
-</ul>
-</li>
-<li>以上驗證皆需在使用者輸入時動態檢查</li>
-<li>任一驗證有誤時，登入按鈕皆呈現不可被點選之狀態。</li>
-</ul>
-<p>規格需求看清楚之後，我們就來開始實作吧！</p>
-<blockquote>
-<p>實作時大家可以自己開一個專案來練習，抑或是用 <a href="https://stackblitz.com/" target="_blank" rel="noopener">Stackblitz</a> 開一個 Angular 的專案來練習，我就不再贅述囉！</p>
-<p>如果正在閱讀此篇文章的你還不知道要怎麼開始一個 Angular 專案的話，請先閱讀我的 <a href="https://ithelp.ithome.com.tw/users/20090728/ironman/1600" target="_blank" rel="noopener">Angular 深入淺出三十天</a>後再來閱讀此系列文章會比較恰當噢！</p>
-</blockquote>
-<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>首先我們先準備好基本的 HTML ：</p>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">form</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"account"</span>&gt;</span>帳號：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"email"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"account"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"account"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"password"</span>&gt;</span>密碼：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"password"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"password"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"password"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span>&gt;</span>登入<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>未經美化的畫面應該會長這樣：</p>
-<p><img src="https://i.imgur.com/UzH8WrV.png" alt="Template view"></p>
-<p>接著到 <code>app.module.ts</code> 裡 import <code>FormsModule</code> ：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; NgModule &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> &#123; BrowserModule &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> &#123; FormsModule &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; AppComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.component'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@NgModule</span>(&#123;</span><br><span class="line">  imports: [</span><br><span class="line">    BrowserModule, </span><br><span class="line">    FormsModule</span><br><span class="line">  ],</span><br><span class="line">  declarations: [AppComponent],</span><br><span class="line">  bootstrap: [AppComponent]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppModule &#123; &#125;</span><br></pre></td></tr></table></figure>
-
-<p>然後將要綁在 Template 的屬性跟方法都準備好：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent &#123;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// 綁定在帳號欄位上</span></span><br><span class="line">  account = <span class="hljs-string">''</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 綁定在密碼欄位上</span></span><br><span class="line">  password = <span class="hljs-string">''</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// 帳號欄位的錯誤訊息</span></span><br><span class="line">  accountErrorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// 密碼欄位的錯誤訊息</span></span><br><span class="line">  passwordErrorMessage = <span class="hljs-string">''</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在帳號欄位上，當使用者改變帳號時會觸發此函式</span></span><br><span class="line"><span class="hljs-comment">   * </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;FormControl&#125; accountControl 帳號欄位的 FormControl (by Angular)</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  accountValueChange(accountControl: FormControl): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.account = accountControl.value;</span><br><span class="line">    <span class="hljs-keyword">this</span>.validationCheck(accountControl.errors, <span class="hljs-string">'account'</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在密碼欄位上，當使用者改變密碼時會觸發此函式</span></span><br><span class="line"><span class="hljs-comment">   * </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;FormControl&#125; passwordControl 密碼欄位的 FormControl (by Angular)</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  passwordValueChange(passwordControl: FormControl): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.password = passwordControl.value;</span><br><span class="line">    <span class="hljs-keyword">this</span>.validationCheck(passwordControl.errors, <span class="hljs-string">'password'</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 綁定在表單上，當使用者按下登入按鈕時會觸發此函式</span></span><br><span class="line">  login(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// do login...</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 透過欄位裡的 ValidationErrors 來設定該欄位的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   * </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;ValidationErrors&#125; errors 欲驗證的欄位的錯誤 (by Angular)</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;'account' | 'password'&#125; fieldName 欄位名稱</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">private</span> validationCheck(</span><br><span class="line">    errors: ValidationErrors,</span><br><span class="line">    fieldName: <span class="hljs-string">'account'</span> | <span class="hljs-string">'password'</span></span><br><span class="line">  ): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> errorMessage: <span class="hljs-built_in">string</span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!errors) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (errors.required) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (errors.pattern) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'格式有誤，請重新輸入'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (errors.minlength) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'密碼長度最短不得低於8碼'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">this</span>.setErrorMessage(fieldName, errorMessage);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 設定指定欄位的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   * </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;'account' | 'password'&#125; fieldName 欲設定錯誤訊息的欄位名稱</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; errorMessage 欲設定的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">private</span> setErrorMessage(</span><br><span class="line">    fieldName: <span class="hljs-string">'account'</span> | <span class="hljs-string">'password'</span>,</span><br><span class="line">    errorMessage: <span class="hljs-built_in">string</span></span><br><span class="line">  ): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (fieldName === <span class="hljs-string">'account'</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.accountErrorMessage = errorMessage;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.passwordErrorMessage = errorMessage;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>就可以將這些屬性和方法跟 Template 綁定在一起：</p>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> #<span class="hljs-attr">form</span>=<span class="hljs-string">"ngForm"</span> (<span class="hljs-attr">ngSubmit</span>)=<span class="hljs-string">"login()"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"account"</span>&gt;</span>帳號：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">type</span>=<span class="hljs-string">"email"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">name</span>=<span class="hljs-string">"account"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">id</span>=<span class="hljs-string">"account"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">required</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">pattern</span>=<span class="hljs-string">"\b[\w\.-]+@[\w\.-]+\.\w&#123;2,4&#125;\b"</span></span></span><br><span class="line"><span class="hljs-tag">      #<span class="hljs-attr">accountNgModel</span>=<span class="hljs-string">"ngModel"</span></span></span><br><span class="line"><span class="hljs-tag">      [<span class="hljs-attr">ngModel</span>]=<span class="hljs-string">"account"</span></span></span><br><span class="line"><span class="hljs-tag">      (<span class="hljs-attr">ngModelChange</span>)=<span class="hljs-string">"accountValueChange(accountNgModel.control)"</span></span></span><br><span class="line"><span class="hljs-tag">    /&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"error-message"</span>&gt;</span>&#123;&#123; accountErrorMessage &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"password"</span>&gt;</span>密碼：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">type</span>=<span class="hljs-string">"password"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">name</span>=<span class="hljs-string">"password"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">id</span>=<span class="hljs-string">"password"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">required</span></span></span><br><span class="line"><span class="hljs-tag">      #<span class="hljs-attr">passwordNgModel</span>=<span class="hljs-string">"ngModel"</span></span></span><br><span class="line"><span class="hljs-tag">      [<span class="hljs-attr">minlength</span>]=<span class="hljs-string">"8"</span></span></span><br><span class="line"><span class="hljs-tag">      [<span class="hljs-attr">maxlength</span>]=<span class="hljs-string">"16"</span></span></span><br><span class="line"><span class="hljs-tag">      [<span class="hljs-attr">ngModel</span>]=<span class="hljs-string">"password"</span></span></span><br><span class="line"><span class="hljs-tag">      (<span class="hljs-attr">ngModelChange</span>)=<span class="hljs-string">"passwordValueChange(passwordNgModel.control)"</span></span></span><br><span class="line"><span class="hljs-tag">    /&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"error-message"</span>&gt;</span>&#123;&#123; passwordErrorMessage &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> [<span class="hljs-attr">disabled</span>]=<span class="hljs-string">"form.invalid"</span>&gt;</span>登入<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>到目前為止的程式碼你看懂了多少呢？容我稍微說明一下：</p>
-<ol>
-<li><p>首先是關於<strong>必填</strong>檢核，只要 <code>&lt;input ...&gt;</code> 欄位裡加上 HTML 原生的屬性 ─ <code>required</code> 即可。</p>
-</li>
-<li><p>帳號欄位的格式檢查則是使用原生的屬性 ─ <code>pattern</code> ，這個屬性可以直接使用正規表示法的方式來檢查使用者所輸入的值是否符合我們所訂定的格式。不過要注意的是，頭尾不需要特別加上 <code>/^$/</code> ，所以整串表示法只需要用到中間的部份 ─ <code>\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b</code> 。</p>
-</li>
-</ol>
-<blockquote>
-<p>對這個屬性較不熟悉的朋友可以參照 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern" target="_blank" rel="noopener">MDN 的說明文件</a>。</p>
-</blockquote>
-<ol start="3">
-<li><p>字數長度的檢核也是使用原生的屬性 ─ <code>minlength</code> 與 <code>maxlength</code> 。這部份有兩個地方需要特別留意：</p>
-<ol>
-<li>字數長度的檢核不會管你的字元是半型還是全型、是英文還是中文，每個字元都是一樣以<strong>一個</strong>長度來計算，如果有特別需求就不能使用這個方式處理。</li>
-<li>HTML 的原生屬性 ─ <code>maxlength</code> 是會阻擋使用者輸入的，當需求是要檢核長度但不能阻擋使用者輸入的話，就不能使用這個方式。</li>
-</ol>
-</li>
-<li><p>很多人剛學會用 Angular 的朋友，在使用 <code>ngModel</code> 時都會忘記這兩件事情:</p>
-<ol>
-<li>引入 <code>FormsModule</code></li>
-<li><code>input</code> 要有 <code>name</code> 屬性</li>
-</ol>
-</li>
-<li><p>使用範本語法 <code>#accountNgModel=&quot;ngModel&quot;</code> 、 <code>#passwordNgModel=&quot;ngModel&quot;</code> 來取得型別為 <a href="https://angular.io/api/forms/NgModel" target="_blank" rel="noopener">NgModel</a> 的物件，並取得它的 <code>control</code> 物件（型別為 <a href="https://angular.io/api/forms/FormControl" target="_blank" rel="noopener">FormControl</a> ），因為我們可以從中取得該欄位的 <code>value</code> 與 <code>errors</code> ，前者指定給其相關屬性，後者用以判斷該欄位的錯誤，以設定相對應的錯誤訊息。</p>
-</li>
-</ol>
-<blockquote>
-<p>單純使用 <code>#accountNgModel</code> 與 <code>#accountNgModel=&quot;ngModel&quot;</code> 的差別在於前者取得的是單純的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement" target="_blank" rel="noopener">HTMLInputElement</a> 物件。</p>
-</blockquote>
-<ol start="6">
-<li>使用範本語法 <code>#form=&quot;ngForm&quot;</code> 來取得型別為 <a href="https://angular.io/api/forms/NgForm" target="_blank" rel="noopener">NgForm</a> 的表單物件。</li>
-</ol>
-<blockquote>
-<p>單純使用 <code>#form</code> 與 <code>#form=&quot;ngForm&quot;</code> 的差別在於前者取得的是單純的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement" target="_blank" rel="noopener">HTMLFormElement</a> 物件。</p>
-</blockquote>
-<ol start="7">
-<li>最後，則是將登入按鈕加上 <code>[disabled]=&quot;form.invalid&quot;</code> 的綁定，讓按鈕在表單無效時，無法按下登入按鈕。</li>
-</ol>
-<p>至此，我們就完成今天的目標囉！是不是很簡單呢？！</p>
-<p>最後的結果應該要像這樣：</p>
-<p><img src="https://i.imgur.com/YYRiSfW.gif" alt="complete gif"></p>
-<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>剛開始學習 Angular 的朋友，通常都會因為不熟悉 Angular 的語法而導致明明很簡單的功能卻要弄得很複雜。</p>
-<p>今天的學習重點主要有以下三點：</p>
-<ol>
-<li>學習如何使用 Angular 的範本語法取得 Angular 已經包裝好的物件，例如 <code>#accountNgModel=&quot;ngModel&quot;</code> 與 <code>#form=&quot;ngForm&quot;</code> 。</li>
-<li>學習使用表單物件 <a href="https://angular.io/api/forms/NgModel" target="_blank" rel="noopener">NgModel</a> 、 <a href="https://angular.io/api/forms/NgForm" target="_blank" rel="noopener">NgForm</a> 與 <a href="https://angular.io/api/forms/FormControl" target="_blank" rel="noopener">FormControl</a> 。</li>
-<li>善用 <a href="https://angular.io/api/forms/FormControl" target="_blank" rel="noopener">FormControl</a> 裡的 <code>ValidationErrors</code> 取得相應的錯誤訊息。</li>
-</ol>
-<p>我會將今日的實作程式碼放在 <a href="https://stackblitz.com/edit/angular-template-driven-forms-sample-login?file=src/app/app.component.ts" target="_blank" rel="noopener">Stackblitz</a> 上供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
-<p>如果有任何的問題或是回饋，也都非常歡迎留言給我讓我知道噢！</p>
-
-        </div>
-        
         
         
     </div>
@@ -418,426 +290,45 @@
 
 
 
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2021/09/17/angular-30days-form-and-test-02/">
+                <span class="level-item">Angular 深入淺出三十天：表單與測試 Day02 - Template Driven Forms 實作 - 以登入為例</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
 
 
 
-    <div class="card">
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">評論</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://blog.leochen.dev/2021/09/18/angular-30days-form-and-test-03/';
+        this.page.identifier = '2021/09/18/angular-30days-form-and-test-03/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + "leochen0818" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
     
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2021-09-16T01:48:10.000Z">2021-09-16</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    14 分鐘 閱讀文 (大約 2171 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2021/09/16/angular-30days-form-and-test-01/">Angular 深入淺出三十天：表單與測試 Day01 - 前言</a>
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://i.imgur.com/yRC9Xy8.jpg" alt="First Day"></p>
-<h2 id="何謂表單？"><a href="#何謂表單？" class="headerlink" title="何謂表單？"></a>何謂表單？</h2><p>維基百科是這樣說的：</p>
-<ul>
-<li><p>表單是一種帶有空格可用於書寫以及能選擇和勾選相似內容的文件。</p>
-</li>
-<li><p>表單可用於填寫聲明、請求、命令、支票、稅單。</p>
-</li>
-<li><p>網頁表單可以將使用者輸入的資料，傳送到伺服器進行處理。因為網際網路的使用者會操作核取方塊、無線電鈕或文字欄位來填寫網頁上的表格，所以網頁表單的形式類似檔案或資料庫。</p>
-</li>
-<li><p>網頁表單可應用線上上的電子商務：以信用卡訂購產品、要求貨運，或可用於檢索資料（例如，搜尋引擎上搜尋）。 </p>
-</li>
-</ul>
-<p><img src="https://upload.wikimedia.org/wikipedia/commons/3/34/Sample_web_form.png" alt="維基百科的網頁表單示意圖"></p>
-<blockquote>
-<p>以上文字與圖片皆來自於維基百科（<a href="https://zh.wikipedia.org/wiki/%E8%A1%A8%E5%96%AE" target="_blank" rel="noopener">表單</a>與<a href="https://zh.wikipedia.org/wiki/%E7%B6%B2%E9%A0%81%E8%A1%A8%E5%96%AE" target="_blank" rel="noopener">網頁表單</a>）的搜尋結果。</p>
-</blockquote>
-<p>自古以來，<strong>表單</strong>一直都是各大商業系統裡舉足輕重的一部分，舉凡會員註冊、商品寄送、稅務申請、市場調查等，各式各樣大大小小的表單連結你我的生活，其中更甚者，光以表單這個服務就是足以讓一間公司賴以為生。</p>
-<h2 id="Angular-的表單製作方法"><a href="#Angular-的表單製作方法" class="headerlink" title="Angular 的表單製作方法"></a>Angular 的表單製作方法</h2><p>在 Angular 裡，製作表單的方法主要分成以下兩種方式：</p>
-<ul>
-<li>Template Driven Forms</li>
-<li>Reactive Forms</li>
-</ul>
-<h3 id="Template-Driven-Forms"><a href="#Template-Driven-Forms" class="headerlink" title="Template Driven Forms"></a>Template Driven Forms</h3><p><strong>Template Driven Forms</strong> 的方式很接近前端原始寫法，資料的驗證與限制都是使用 <strong>HTML 原生的表單機制</strong>，只是再額外加上 Angular 的<strong>資料綁定機制</strong>與<strong>範本語法</strong>來處理，只要知道有 HTML 與 Angular 的<strong>基礎</strong>即可使用，淺顯易懂、學習成本低，對<strong>前端新手</strong>來說較為簡單且熟悉。</p>
-<p>但隨著表單的<strong>複雜度增加</strong>，後續<strong>維護難度</strong>也會越來越高，且<strong>不易於測試</strong>與<strong>重用性較差</strong>，所以一般用於較為簡單的情境。</p>
-<h3 id="Reactive-Forms"><a href="#Reactive-Forms" class="headerlink" title="Reactive Forms"></a>Reactive Forms</h3><p><strong>Reactive Forms</strong> 的方式是直接用<strong>資料</strong>來創建與操作表單，<strong>較為抽象</strong>且需要對 <a href="https://angular.tw/guide/rx-library" target="_blank" rel="noopener">RxJS</a> 有基本的認知，有很多相對<strong>程式新手</strong>來說較困難、較不習慣的觀念要熟悉，<strong>學習成本較高</strong>。</p>
-<p>但因其<strong>擴充性</strong>、<strong>重用性</strong>與<strong>可測試性</strong>都很好，且就算表單的複雜度增加，後續維護的難易度也不會多高，如果<strong>表單功能</strong>是你的應用程式裡很關鍵、重要的一塊，抑或是需要處理較為複雜、動態處理的表單，那麼我相當推薦使用此方式。</p>
-<h2 id="何謂測試？"><a href="#何謂測試？" class="headerlink" title="何謂測試？"></a>何謂測試？</h2><p><strong>測試</strong>，是軟體工程裡很重要的一環，簡單地說就是用程式來驗證程式/系統/軟體的<strong>實際執行結果</strong>是否與<strong>預期執行結果</strong>相符。</p>
-<p>試想，我們平常在開發功能時，如何知道我們所寫出來的程式其運作結果符合我們心中所想、符合功能需求抑或者使用者需求？</p>
-<p>我猜想，大部分開發者的流程應該是這樣：</p>
-<ol>
-<li>開發</li>
-<li>測試</li>
-<li>除錯</li>
-<li>不斷重複 1 ~ 3 直到完成開發</li>
-</ol>
-<p>這樣的開發流程當然沒什麼太大的問題，不過俗話說得好：<strong>「人非聖賢，孰能無過。」</strong>，我們自己在測試時，非常容易就會因為各種無心、有心的關係，漏掉一些測試的案例；又或者跟別人開發時，我們不能保證別人都跟我們一樣在寫完程式之後都會乖乖測試，所以常常會造成<strong>改 A 壞 B</strong> ，甚至會有不符合需求的情況。</p>
-<p>那如果我們將測試的步驟交給電腦來幫我們做會怎麼樣？</p>
-<p>我的程式啟蒙老師說過一句話：<strong>「電腦很聽話，你讓它往東它不會往西，如果程式碼有錯就一定是你的錯，不會是電腦的錯」</strong>，所以如果把測試這件事情讓電腦來做，你有幾個案例它就會測幾個案例，你要它測幾遍他就測幾遍，而且執行起來的速度比我們手動還要快太多太多，一旦有錯馬上就會知道，如此一來，就不會發生改 A 壞 B 的情況，使我們的<strong>程式碼品質</strong>變得更好。</p>
-<p>關於前端的測試類型，我個人認為主要有以下三種：</p>
-<ul>
-<li>單元測試 <em>(Unit Testing)</em></li>
-<li>整合測試 <em>(Integration Testing)</em></li>
-<li>E2E 測試 <em>(End-to-end Testing)</em></li>
-</ul>
-<h3 id="單元測試-Unit-Testing"><a href="#單元測試-Unit-Testing" class="headerlink" title="單元測試 (Unit Testing)"></a>單元測試 <em>(Unit Testing)</em></h3><p>測試單個類別的 function 其執行結果是否符合我們的預期。</p>
-<h3 id="整合測試-Integration-Testing"><a href="#整合測試-Integration-Testing" class="headerlink" title="整合測試 (Integration Testing)"></a>整合測試 <em>(Integration Testing)</em></h3><p>測試兩個以上的類別實體之間的互動是否符合我們的預期。</p>
-<h3 id="E2E-測試-End-to-end-Testing"><a href="#E2E-測試-End-to-end-Testing" class="headerlink" title="E2E 測試 (End-to-end Testing)"></a>E2E 測試 <em>(End-to-end Testing)</em></h3><p>模擬使用者的操作行為來測試一個完整的 story ，驗證其是否符合我們的預期。</p>
-<blockquote>
-<p>想知道更多細節的話，可以參考保哥的文章：<a href="https://blog.miniasp.com/post/2019/02/18/Unit-testing-Integration-testing-e2e-testing" target="_blank" rel="noopener">一次搞懂單元測試、整合測試、端對端測試之間的差異</a></p>
-</blockquote>
-<h2 id="關於本系列文"><a href="#關於本系列文" class="headerlink" title="關於本系列文"></a>關於本系列文</h2><p>我有幸參與過一些系統的製作，因此對於如何在 Angular 製作表單還算小有心得，雖然官網已經有相關的文件，網路上的資源更是多不勝數，但<strong>系統性地學習表單製作的文章與課程相對較少</strong>，再加上一般程式初學者對於 <strong>「測試」</strong> 這件事情普遍都只是 <strong>「聽說」</strong> ，可能連看都沒看過，更不用提實作了。正好我也在這個部分小有研究，也慣於撰寫測試甚至樂於推廣，所以我會在這個系列文裡把這兩個單元結合，希望可以幫到大家。</p>
-<p>需要注意的是，本系列文<strong>不適合</strong>完全不會 Angular 的朋友，如果是您是初學者、抑或是想學習 Angular 的朋友，可以先看看我的 <a href="https://ithelp.ithome.com.tw/users/20090728/ironman/1600" target="_blank" rel="noopener">Angular 深入淺出三十天</a>，直到對於 Angular 的資料綁訂機制與範本語法有相當程度地了解之後，再來閱讀此系列文會比較好。</p>
-<p>本系列文將從 Angular 裡最簡單的表單製作方式開始分享，章節安排具體會用這樣子的方式：</p>
-<ol>
-<li>用 Template Driven Forms 風格的實作</li>
-<li>講解上一篇的實作所需要知道的重點與注意事項（Optional）</li>
-<li>用 Reactive Forms 風格的實作</li>
-<li>講解上一篇的實作所需要知道的重點與注意事項（Optional）</li>
-<li>撰寫單元測試以測試用 Template Driven Forms 風格的實作</li>
-<li>撰寫整合測試以測試用 Template Driven Forms 風格的實作</li>
-<li>撰寫單元測試以測試用 Reactive Forms 風格的實作</li>
-<li>撰寫整合測試以測試用 Reactive Forms 風格的實作</li>
-<li>重複 1 ~ 8</li>
-</ol>
-<p>其中可能會穿插一些必須先知道的內容，而後面會視剩餘的篇幅多寡來安排其他更多關於表單、抑或是 E2E 測試與的章節，希望藉由這樣子的安排能讓大家由淺入深地逐步掌握與熟悉它們。</p>
-<h2 id="友情連結"><a href="#友情連結" class="headerlink" title="友情連結"></a>友情連結</h2><p>這次我是跟朋友一起組隊參賽的，透過團隊的壓力更能督促我自己一定要順利完賽（壓力山大），如果以下這些文章對你有幫助，也希望大家可以花點時間閱讀：</p>
-<ul>
-<li><a href="https://ithelp.ithome.com.tw/2021ironman/signup/team/155#" target="_blank" rel="noopener">NestJS 帶你飛！</a></li>
-<li><a href="https://ithelp.ithome.com.tw/users/20124602/ironman/3925" target="_blank" rel="noopener">花30天做個Android小專案</a></li>
-<li><a href="https://ithelp.ithome.com.tw/users/20139358/ironman/3927" target="_blank" rel="noopener">Python 爬蟲這樣學，一定是大拇指拉！</a></li>
-<li><a href="https://ithelp.ithome.com.tw/users/20120107/ironman/4699" target="_blank" rel="noopener">做一個面試官無法拒絕的sideproject，當一個全能的前端</a></li>
-</ul>
-<p>特別友情貴賓 VVVVVIP 熱情強力推薦：</p>
-<ul>
-<li><a href="https://ithelp.ithome.com.tw/users/20119486/ironman/3917" target="_blank" rel="noopener">從 JavaScript 角度學 Python</a></li>
-</ul>
-
-        </div>
-        
-        
-        
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
     </div>
 </div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2021-05-13T02:46:03.000Z">2021-05-13</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/新聞/">新聞</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    9 分鐘 閱讀文 (大約 1410 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2021/05/13/angular-v12-is-available-now/">Angular v12 來了！！</a>
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://i.imgur.com/A4TsvId.jpg" alt="YEAH!!!"></p>
-<p>今天一早準備工作時，看到令人興奮的好消息！那就是 ─ Angular v12 已經正式 Release 了！！</p>
-<p>官方文章在此：<a href="https://blog.angular.io/angular-v12-is-now-available-32ed51fbfd49" target="_blank" rel="noopener">Angular v12 is now available</a></p>
-<p>幫看到英文就倒退三百步的朋友總結一下幾個重點：</p>
-<h2 id="Ivy-Everywhere"><a href="#Ivy-Everywhere" class="headerlink" title="Ivy Everywhere"></a>Ivy Everywhere</h2><p>為了更靠近 <strong>Ivy Everywhere</strong> 這個目標， Angular 棄用了舊的 Compiler - <strong>View Engine</strong> ，不過這對於一般開發者來說沒什麼影響，主要是如果你是身為 Library 的<strong>作者</strong>且是使用 <strong>View Engine</strong> 來 Compile 的話，可以開始著手準備使用 Ivy 來 Compile 了。</p>
-<p>為此，官方有提供<a href="https://blog.angular.io/upcoming-improvements-to-angular-library-distribution-76c02f782aa4" target="_blank" rel="noopener">實作細節</a>。</p>
-<h2 id="Protractor-的未來"><a href="#Protractor-的未來" class="headerlink" title="Protractor 的未來"></a>Protractor 的未來</h2><p>關於 Angular 生態圈所標配的 E2E 測試框架 ─ <strong>Protractor</strong> 的未來，目前官方決定將從 v12 開始不再預設包含 <strong>Protractor</strong> ，而是與其他夥伴合作（目前官方已收到的夥伴回音有 <strong>Cypress</strong> 、 <strong>TestCafe</strong> 與 <strong>WebdriverIO</strong> 。如果你們公司也有在做這塊且有興趣，可以跟官方團隊聯繫），並透過 Angular CLI 的 <strong>schematic/builder</strong> 與 Angular 緊密結合。</p>
-<p>官方堅信，透過與其他夥伴的合作以及擁抱社群的力量，可以使 Angular 變得更加強大！對於細節有興趣的朋友可以閱讀<a href="https://github.com/angular/protractor/issues/5502" target="_blank" rel="noopener">官方的RFC（請求意見稿）</a>。</p>
-<h2 id="Nullish-操作符"><a href="#Nullish-操作符" class="headerlink" title="Nullish 操作符"></a>Nullish 操作符</h2><p>從 v12 開始，開發者們可以在 Angular 的 <strong>Template</strong> 裡使用 <strong>Nullish</strong> 操作符 ─  <code>??</code>（沒錯，就是很香很甜的語法糖）了！</p>
-<p>透過使用 <strong>Nullish</strong> 操作符，可以讓你的 code 看起來更加 <strong>Clean</strong> （雖然每個人、每個團隊對於 <strong>Clean Code</strong> 的定義都不一樣，但官方是這麼認為，我也是）。</p>
-<p>舉個例子：</p>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; age !== null &amp;&amp; age !== undefined ? age : calculateAge() &#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>使用 Nullish 操作符後，你的 code 像這樣：</p>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#123; age ?? calculateAge() &#125;&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>謎之聲：耶！令人舒爽的程式碼！</p>
-</blockquote>
-<h2 id="樣式相關的改進"><a href="#樣式相關的改進" class="headerlink" title="樣式相關的改進"></a>樣式相關的改進</h2><p>關於樣式方面，從 v12 開始，只要在 <code>angular.json</code> 裡加上 <code>inlineStyleLanguage: &quot;scss&quot;</code> 的設定，就可以在 Component 的 <code>styles</code> 裡寫 <strong>SCSS</strong> 了，雖然關於這點我其實覺得還好，因為我個人不喜歡將 Template 或是樣式直接寫在 <code>*.component.ts</code> 裡。</p>
-<p>不過令人興奮的是， <strong>Angular CDK</strong> 與 <strong>Angular Material</strong> 現在內部已經改使用 <a href="https://sass-lang.com/blog/the-module-system-is-launched" target="_blank" rel="noopener">Sass 新的 Module System</a> 了！與此同時， <strong>Angular CDK</strong> 與 <strong>Angular Material</strong> 所外露的 API 介面也已經改採用 <code>@use</code> 語法，<a href="https://material.angular.io/guides" target="_blank" rel="noopener">官方文件</a> 也已經同步更新（尷尬，破版了XDD）。</p>
-<p>不過如果你的應用程式是建立在 Angular v12 以下，但有使用到新版的 <strong>Angular CDK</strong> 或是 <strong>Angular Material</strong> 的話，可以使用 <code>ng update</code> 的指令讓 Angular CLI 幫你自動更新所有使用於 <strong>Angular CDK</strong> 與 <strong>Angular Material</strong> 的 <code>@import</code> 聲明（<a href="https://gist.github.com/MarkTechson/6283b6a3b353f9e38964af0740e29280" target="_blank" rel="noopener">Before and After</a>），並記得將你的 NPM 套件從 <code>node-sass</code> 改為 <code>sass</code> ， <code>node-sass</code> 已經沒有持續更新且維護了（如果你是使用 Angular v12 則不用做此行為，內建已經是 <code>sass</code> 了）。</p>
-<h2 id="編譯模式預設為-Production-模式"><a href="#編譯模式預設為-Production-模式" class="headerlink" title="編譯模式預設為 Production 模式"></a>編譯模式預設為 Production 模式</h2><p>v12 之後， <code>ng build</code> 指令將會預設為 <strong>Production</strong> 模式，意即開發者們不用再加上 <code>--prod</code> 來強調要編譯 <strong>Production</strong> 模式的檔案，減少多餘的步驟並防止將開發模式的程式碼誤植到 <strong>Production</strong> 上的意外發生。</p>
-<h2 id="預設開啟嚴格模式"><a href="#預設開啟嚴格模式" class="headerlink" title="預設開啟嚴格模式"></a>預設開啟嚴格模式</h2><p>v12 之後，將預設開啟 TypeScript 的<strong>嚴格模式</strong>，嚴格模式會幫助開發者們儘早發現錯誤。</p>
-<p>關於嚴格模式可以閱讀 <a href="https://angular.io/guide/strict-mode" target="_blank" rel="noopener">Angular 官方文件</a>與 <a href="https://blog.angular.io/with-best-practices-from-the-start-d64881a16de8" target="_blank" rel="noopener">Angular 官方部落格的文章</a>。</p>
-<h2 id="Angular-Language-Service-預設為-Ivy-based"><a href="#Angular-Language-Service-預設為-Ivy-based" class="headerlink" title="Angular Language Service 預設為 Ivy-based"></a>Angular Language Service 預設為 Ivy-based</h2><p>v12 之後，將原先 <strong>Angular Language Service</strong> 可以選擇性使用 <strong>Ivy-based</strong> 改為預設使用。</p>
-<p>官方還有提供了一部<a href="https://www.youtube.com/watch?v=doVYC32hjIw" target="_blank" rel="noopener">影片</a> 是關於Angular Language Service with Ivy 的，有興趣的朋友也可以看看。</p>
-<h2 id="使用-Webpack-5"><a href="#使用-Webpack-5" class="headerlink" title="使用 Webpack 5"></a>使用 Webpack 5</h2><p>從 v11 開始， Angular 其實就有實驗性地在支援 <strong>Webpack 5</strong> ；但從 v12 開始，就正式支援啦！！！（灑花）</p>
-<h2 id="TypeScript-v4-2"><a href="#TypeScript-v4-2" class="headerlink" title="TypeScript v4.2"></a>TypeScript v4.2</h2><p>v12 預設所採用的 TypeScript 是 v4.2 ，關於 v4.2 的細節可以閱讀<a href="https://devblogs.microsoft.com/typescript/announcing-typescript-4-2/" target="_blank" rel="noopener">官方的文章</a>。</p>
-<h2 id="棄用對-IE-11-的支援"><a href="#棄用對-IE-11-的支援" class="headerlink" title="棄用對 IE 11 的支援"></a>棄用對 IE 11 的支援</h2><p>從 v12 開始，官方將棄用對於 <strong>IE 11</strong> 的支援，並預計將在 v13 時正式將其移除。關於此決定可以觀看 <a href="https://github.com/angular/angular/issues/41840" target="_blank" rel="noopener">官方的 RFC（請求意見稿）</a>。</p>
-<h2 id="其他更新"><a href="#其他更新" class="headerlink" title="其他更新"></a>其他更新</h2><p>其實其他還有一些滿重要的更新與調整，不過上述幾點是我個人擷取出來，覺得對一般開發者來說比較重要且有感的更新，所以關於其他的更新，可以直接閱讀<a href="https://blog.angular.io/angular-v12-is-now-available-32ed51fbfd49" target="_blank" rel="noopener">官方的文章</a>，抑或是直接看<a href="https://github.com/angular/angular/blob/master/CHANGELOG.md" target="_blank" rel="noopener">官方的 CHANGELOG</a>。</p>
-<hr>
-<p>以上，就是今天<strong>李歐</strong>想要分享給大家的資訊，感謝您的收看！</p>
-<p>如果您喜歡我的文章，歡迎<strong>按讚、訂閱以及分享</strong>，我們下次見囉，拜拜～！（好 Youtuber 式的結尾XD）</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2021-03-25T15:35:03.000Z">2021-03-25</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/Angular-之深入解析/">Angular 之深入解析</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    6 分鐘 閱讀文 (大約 900 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2021/03/25/get-to-the-meet-of-angular-injector/">Angular 之 Injector 探討</a>
-            
-        </h1>
-        <div class="content">
-            <p>關於 Angular 的 Injector ，雖然我之前在寫「<a href="https://ithelp.ithome.com.tw/users/20090728/ironman/1600" target="_blank" rel="noopener">Angular 深入淺出三十天</a>」的系列文時，就有在<a href="https://ithelp.ithome.com.tw/articles/10207283" target="_blank" rel="noopener">基礎結構說明（四）</a>這篇文章裡介紹過，不過今天我在跟朋友們聊到相關的話題時，除了好好的做了個實驗，並把程式碼保留下來之外，也忽然起了個念頭，覺得是該把這個問題寫成文章，讓剛學 Angular 或是對 Angular 的了解沒那麼深的朋友們可以比較容易理解、比較不會用錯（就我個人的經驗來看，沒有注意到這個部分的朋友們還滿多的）。</p>
-<hr>
-<h2 id="問題描述"><a href="#問題描述" class="headerlink" title="問題描述"></a>問題描述</h2><p>在 Angular 裡寫 Service 的時候，我們一般會用以下三種方式註冊它：</p>
-<ol>
-<li>在該 Service 的 <code>@Injectable()</code> 裡加上 <code>{ providedIn: &#39;root&#39; }</code> 的 Metadata （ Angular 7+ 推薦寫法），抑或者在 AppModule 的 <code>providers</code> 裡註冊它（ Angular 6- 的寫法）。</li>
-<li>在相關的功能模組的 <code>providers</code> 裡註冊它。</li>
-<li>在某個 Component 的 <code>providers</code> 裡註冊它。</li>
-</ol>
-<blockquote>
-<p>其實在 Angular 9 之後的版本，除了 <code>providedIn: &#39;root&#39;</code> 之外，還多了 <code>&#39;platform&#39;</code> 與 <code>&#39;any&#39;</code> 這兩個選擇，不過此篇文章不討論這個部分。</p>
-</blockquote>
-<p>這三種註冊方式其中的第一種與第三種，大家比較不會有問題，比較會有問題的是第二種，很多人可能會覺得，我使用起來明明就是同一個實體呀？怎麼官方說是不同實體呢？</p>
-<h2 id="實驗開始"><a href="#實驗開始" class="headerlink" title="實驗開始"></a>實驗開始</h2><p>為了釐清這個問題，我做了個實驗，程式碼在這裡：<a href="https://stackblitz.com/edit/angular-ivy-5fdo5y?file=src/app/app.component.html" target="_blank" rel="noopener">https://stackblitz.com/edit/angular-ivy-5fdo5y?file=src/app/app.component.html</a></p>
-<p>在這個實驗裡，我用了四個 Module ─ <code>AboutModule</code>、<code>ContactModule</code>、<code>HomeModule</code>、<code>WhateverModule</code> 與兩個 Service ─ <code>ASservice</code> 與 <code>BService</code> 來模擬大部分會遇到的情況：</p>
-<ul>
-<li><code>AService</code> 使用 <code>providedIn: &#39;root&#39;</code> 註冊。</li>
-<li><code>HomeModule</code>、<code>ContactModule</code>、<code>WhateverModule</code> 都 import 到 AppModule 裡。</li>
-<li><code>AboutModule</code> 用 <strong>LazyLoading</strong> 的方式載入。</li>
-<li><code>BService</code> 則分別註冊在 <code>ContactModule</code>、<code>HomeModule</code>、<code>AboutModule</code> 的 <code>providers</code> 裡與 <code>WhateverComponent</code> 的 <code>providers</code> 裡。</li>
-</ul>
-<p>結果：</p>
-<p><img src="https://i.imgur.com/KnvmBFp.png" alt="實驗結果"></p>
-<p>有看懂嗎？ <code>BService</code> 在 <code>HomeComponent</code> 與 <code>ContactComponet</code> 裡是用同一個實體，這是因為他們都有被 import 到 AppModule 裡，這時 AppModule（上層 Module）會接手 <code>ContactModule</code>、<code>HomeModule</code>（子層 Module）的 injector，所以他們雖然有分別註冊 <code>BService</code> ，但實際上還是共用了同一個實體。</p>
-<p>這部份其實官網文件有寫到：</p>
-<p><img src="https://imgur.com/tCWTAua.png" alt="官網文件"></p>
-<p>網址在這：<a href="https://angular.io/guide/hierarchical-dependency-injection#moduleinjector" target="_blank" rel="noopener">https://angular.io/guide/hierarchical-dependency-injection#moduleinjector</a></p>
-<p>不過我這裡只有實驗一層的情況，如果 Module 一層一層的接下去，是不是也是一樣的狀況我就沒有特別做實驗了，大家可以自己玩看看。</p>
-<p>至於 <code>AboutComponent</code> 跟 <code>WhateverComponent</code> 呢，很明顯都是使用不同的<br> <code>BService</code> 的實體，前者因為使用 <strong>LazyLoading</strong> 的關係，跟 AppModule 沒有直接關聯，後者則是因為是使用了第三種註冊方式的關係。</p>
-<h2 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h2><p>總而言之，官方之所以提供了不同的註冊方式給我們，就是希望我們可以在不同的情況下使用不同的註冊方式來解決我們的問題，只要能夠熟知這其中的差異，就可以寫出好維護又高品質的系統囉！</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-10-31T07:16:03.000Z">2019-10-31</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/Nx/">Nx</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    4 分鐘 閱讀文 (大約 661 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/10/31/my-nx-note-tsconfig/">我的 Nx 筆記 - tsconfig.json 的坑</a>
-            
-        </h1>
-        <div class="content">
-            <p>我最近在研究 Nx 時遇到了一個坑，這個坑讓我卡了兩、三個小時，所以我將這件事情筆記下來，希望如果以後有人遇到類似的問題，這篇筆記多少可以幫得上忙。</p>
-<hr>
-<h2 id="問題描述"><a href="#問題描述" class="headerlink" title="問題描述"></a>問題描述</h2><p>在 Angular 專案裡我們經常會看到各種 <code>tsconfig.json</code> ，而這些 <code>tsconfig.json</code> 又繼承來繼承去的，雖然一般我們不會特別去動他們的設定，但當我們因為某些緣故需要去調整的時候，就要特別小心「覆蓋」的問題。</p>
-<p>而我遇到的狀況是，我在使用 <code>JSZip</code> 這個套件時，遇到了下圖中的 Error ：</p>
-<p><img src="https://imgur.com/OycKi6h.png" alt="JSZip 的 Error"></p>
-<p>解決辦法是在 <code>apps/app-name/tsconfig.app.json</code> 的 <code>compilerOptions</code> 裡加上 <code>path</code> 的配置：</p>
-<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">  <span class="hljs-attr">"compilerOptions"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">    <span class="hljs-attr">"paths"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"jszip"</span>: [</span><br><span class="line">        <span class="hljs-string">"node_modules/jszip/dist/jszip.min.js"</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-string">"//"</span>: <span class="hljs-string">"..."</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>加上之後， <code>JSZip</code> 的問題解決了，但變成下圖中的 Error ：</p>
-<p><img src="https://imgur.com/A1e70Q3.png" alt="找不到 libs 裡的 Module"></p>
-<p>我百思不得其解，因為 <code>ng serve</code> 沒有問題，但 <code>build</code> 的時候就會說找不到，而我也試了很多方式都解不掉這個問題。</p>
-<p>後來我想到，會不會是因為設定會被覆蓋的關係？！</p>
-<p>因為原本 <code>libs</code> 裡的 import 路徑會在專案根目錄的 <code>tsconfig.json</code> 裡設定，而 <code>tsconfig.json</code> 們會像下圖這樣繼承配置：</p>
-<p><img src="https://imgur.com/HfUhT58.png" alt="tsconfig.json 的繼承方式示意圖"></p>
-<ol>
-<li><code>apps/app-name/tsconfig.json</code> 繼承 <code>./tsconfig.json</code> 裡的配置 。</li>
-<li><code>apps/app-name/tsconfig.app.json</code> 再繼承 <code>apps/app-name/tsconfig.json</code> 裡的配置。</li>
-</ol>
-<p>因此，當我們一開始在 <code>apps/app-name/tsconfig.app.json</code> 加上因應 <code>JSZip</code> 的 <code>paths</code> 配置時，就覆蓋掉原本在 <code>./tsconfig.json</code> 裡的 <code>paths</code> 配置，造成找不到 <code>libs</code> 裡 export 的 module 的問題。</p>
-<h2 id="解決辦法"><a href="#解決辦法" class="headerlink" title="解決辦法"></a>解決辦法</h2><p>解決這個問題的辦法基本上有兩個：</p>
-<ol>
-<li>在 <code>apps/app-name/tsconfig.app.json</code> 的 <code>paths</code> 補上原本在 <code>./tsconfig.json</code> 的 <code>paths</code> 配置。</li>
-<li>將 <code>JSZip</code> 的配置從 <code>apps/app-name/tsconfig.app.json</code> 移到 <code>./tsconfig.json</code> 裡。</li>
-</ol>
-<p>相對來說，第二個方式絕對會比第一個方式好得多。</p>
-<h2 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h2><p>一般來說，其他的 <code>tsconfig.json</code> 都不太會需要去動，因此只要我們養成習慣，都只在修改在專案根目錄下的 <code>tsconfig.json</code> 的配置就不會有問題了。</p>
-<h2 id="參考連結"><a href="#參考連結" class="headerlink" title="參考連結"></a>參考連結</h2><ul>
-<li><a href="https://stackoverflow.com/questions/43281741/how-to-use-paths-in-tsconfig-json?fbclid=IwAR0jb1yPvfhQhdkNvWPkyRS8HYRc-L3lgPvgjbzZHfrnPJlV2r8iQY7_9wA" target="_blank" rel="noopener">How to use paths in tsconfig.json?</a></li>
-<li><a href="https://www.typescriptlang.org/docs/handbook/module-resolution.html" target="_blank" rel="noopener">TypeScript - Module Resolution</a></li>
-</ul>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-10-24T14:29:58.000Z">2019-10-24</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/Nx/">Nx</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    3 分鐘 閱讀文 (大約 403 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/10/24/my-nx-note-impot-scss-from-library/">我的 Nx 筆記 - 如何在你的 Application 裡，用很漂亮的方式引入 Library 的 SCSS</a>
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://imgur.com/kuD3tVS.png" alt="Nx"></p>
-<p>最近在開始研究 <a href="https://nx.dev/angular" target="_blank" rel="noopener">Nx</a> 這個非常好用的開發工具，當然也撞了不少牆…（鼻青臉腫中）。</p>
-<p>今天主要要分享的是：</p>
-<p><strong>如何在你的 Application 裡，用很漂亮的方式引入 Library 裡的 SCSS</strong></p>
-<p>而這個方法是我在<a href="https://github.com/nrwl/nx/issues/1542" target="_blank" rel="noopener">這個 issue</a> 裡看到的，留言的人是 <code>tcoz</code> 。</p>
-<p>在開始之前，請先準備 Nx 的專案，且裡面有一個 Application 名為 <code>sample</code> 、 一個 Library 名為 <code>sample-lib</code> ，然後在 <code>sample-lib</code> 裡準備一個 <code>abc.scss</code> 。</p>
-<p>scss 的內容很簡單：</p>
-<figure class="highlight css hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-selector-tag">h1</span> &#123;</span><br><span class="line">    <span class="hljs-attribute">color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>接著把 <code>sample</code> 跑起來，應該會看到以下畫面：</p>
-<p><img src="https://i.imgur.com/Fls370X.png" alt="sample 的起始畫面"></p>
-<p>然後先在 Nx 的 <code>angular.json</code> 裡，找到你的專案的 <code>build</code> 配置，大概長這樣：</p>
-<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">  <span class="hljs-attr">"projects"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"sample"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      <span class="hljs-attr">"architect"</span>: &#123;</span><br><span class="line">        <span class="hljs-attr">"build"</span>: &#123;</span><br><span class="line">          <span class="hljs-attr">"builder"</span>: <span class="hljs-string">"@angular-devkit/build-angular:browser"</span>,</span><br><span class="line">          <span class="hljs-attr">"options"</span>: &#123;</span><br><span class="line">            <span class="hljs-attr">"outputPath"</span>: <span class="hljs-string">"dist/apps/sample"</span>,</span><br><span class="line">            <span class="hljs-attr">"index"</span>: <span class="hljs-string">"apps/sample/src/index.html"</span>,</span><br><span class="line">            <span class="hljs-attr">"main"</span>: <span class="hljs-string">"apps/sample/src/main.ts"</span>,</span><br><span class="line">            <span class="hljs-attr">"polyfills"</span>: <span class="hljs-string">"apps/sample/src/polyfills.ts"</span>,</span><br><span class="line">            <span class="hljs-attr">"tsConfig"</span>: <span class="hljs-string">"apps/sample/tsconfig.app.json"</span>,</span><br><span class="line">            <span class="hljs-attr">"aot"</span>: <span class="hljs-literal">false</span>,</span><br><span class="line">            <span class="hljs-attr">"assets"</span>: [<span class="hljs-string">"apps/sample/src/favicon.ico"</span>, <span class="hljs-string">"apps/sample/src/assets"</span>],</span><br><span class="line">            <span class="hljs-attr">"styles"</span>: [<span class="hljs-string">"apps/sample/src/styles.scss"</span>],</span><br><span class="line">            <span class="hljs-attr">"scripts"</span>: []</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然後加上 <code>stylePreprocessorOptions</code> 跟 <code>extractCss</code> 的配置，像這樣：</p>
-<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">  <span class="hljs-attr">"projects"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"sample"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      <span class="hljs-attr">"architect"</span>: &#123;</span><br><span class="line">        <span class="hljs-attr">"build"</span>: &#123;</span><br><span class="line">          <span class="hljs-attr">"builder"</span>: <span class="hljs-string">"@angular-devkit/build-angular:browser"</span>,</span><br><span class="line">          <span class="hljs-attr">"options"</span>: &#123;</span><br><span class="line">            <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line"></span><br><span class="line">            <span class="hljs-attr">"stylePreprocessorOptions"</span>: &#123;</span><br><span class="line">              <span class="hljs-attr">"includePaths"</span>: [<span class="hljs-string">"libs/sample-lib/src/lib/scss"</span>]</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="hljs-attr">"extractCss"</span>: <span class="hljs-literal">true</span>,</span><br><span class="line"></span><br><span class="line">            <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>includePaths</code> 裡的路徑就是要處理的 SCSS 的資料夾路徑。</p>
-</blockquote>
-<p>如此一來，就可以到 <code>sample</code> 裡的 SCSS 裡 import （我在 <code>sample</code> 裡的 <code>style.scss</code> import ）：</p>
-<figure class="highlight scss hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">@import</span> <span class="hljs-string">"abc"</span>;</span><br></pre></td></tr></table></figure>
-
-<p>結果：</p>
-<p><img src="https://imgur.com/bJmD3w8.png" alt="import 了 abc 之後的結果"></p>
-<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><ul>
-<li><a href="https://angular.io/guide/workspace-config#style-preprocessor-options" target="_blank" rel="noopener">Angular 官方文件</a></li>
-</ul>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 </div>
                 
 
@@ -1564,7 +1055,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.png" alt="Leo&#39;s Coding Life" height="28">
+                    <img src="/images/logo.png" alt="Angular 深入淺出三十天：表單與測試 Day03 - Reactive Forms 實作 - 以登入為例" height="28">
                 
                 </a>
                 <p class="is-size-7">
