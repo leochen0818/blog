@@ -162,6 +162,128 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-09-19T00:24:10.000Z">2021-09-19</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    14 分鐘 閱讀文 (大約 2123 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/09/19/angular-30days-form-and-test-04/">Angular 深入淺出三十天：表單與測試 Day04 - 開始撰寫測試之前必須要知道的二三事</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/SVDM3en.jpg" alt="Day4"></p>
+<p>在開始撰寫測試之前，先帶大家來了解一下 Angular 預設使用的測試框架 ─ <a href="https://karma-runner.github.io/latest/index.html" target="_blank" rel="noopener">Karma</a> 。</p>
+<p><img src="https://i.imgur.com/euq7yDV.png" alt="Karma 的 logo"></p>
+<p>Karma 的原名是 Testacular ， Google 在 2012 年的時候將其開源， 2013 年時將其改名為 Karma ，它是基於 <a href="https://jasmine.github.io/" target="_blank" rel="noopener">Jasmine</a> 與 <a href="https://www.selenium.dev/" target="_blank" rel="noopener">Selenium</a> 所開發出來的 JavaScript 測試執行過程管理工具（Test Runner）。</p>
+<p>一般我們會使用它來撰寫<strong>單元測試</strong>與<strong>整合測試</strong>，測試的檔案名稱通常會命名為 <code>xxx.spec.ts</code> ，而只要是使用 Angular CLI 所建立的檔案，在預設的情況下都會連帶產生該檔案，像是： <code>xxx.component.spec.ts</code> 、  <code>xxx.service.spec.ts</code> 。 </p>
+<p>當我們想要執行測試程式時，只要使用指令 <code>npm test</code> or  <code>yarn test</code> or <code>ng test</code> ，就可以看到它的執行結果：</p>
+<p><img src="https://i.imgur.com/NntaiLf.png" alt="Karma&#39;s log"></p>
+<p><img src="https://i.imgur.com/V2YjAZX.png" alt="Karma&#39;s view"></p>
+<p>當 Karma 執行起來後，只要我們不停掉它的 server 且不關掉它的視窗，只要我們有修改我們的測試並存檔後，它就會偵測到我們的變動並再重新跑一次測試，是個很方便且強大的功能。</p>
+<blockquote>
+<p>關於執行測試時的更多參數，請參考<a href="https://angular.io/cli/test" target="_blank" rel="noopener">Angular 官方 API 文件</a></p>
+<p>想了解更多的話，可參考網路文章：<a href="https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/272465/" target="_blank" rel="noopener">JavaScript 測試工具之 Karma-Jasmine 的安裝和使用詳解</a>與 <a href="https://karma-runner.github.io/6.3/intro/how-it-works.html" target="_blank" rel="noopener">Karma 官方文件</a></p>
+</blockquote>
+<h2 id="測試的檔案內容"><a href="#測試的檔案內容" class="headerlink" title="測試的檔案內容"></a>測試的檔案內容</h2><p>上述提到，在 Angular 裡的測試檔案一般我們會將其命名為 <code>xxx.spec.ts</code> ，而檔案內容大致上會長這樣：</p>
+<p><img src="https://i.imgur.com/BpUndsd.png" alt="Testing Sample"></p>
+<p>或是這樣：</p>
+<p><img src="https://i.imgur.com/nihtiba.png" alt="Testing Sample"></p>
+<p>從中我們可以發現，它是一種巢狀式的結構，外層會是一個名字叫 <code>describe</code> 的函式，內層則有許多名為 <code>it</code> 的函式，這些函式各是什麼意思呢？</p>
+<h3 id="it"><a href="#it" class="headerlink" title="it"></a>it</h3><p><code>it</code> 指的是 <strong>測試案例（Test case）</strong>，通常會在 <code>describe</code> 函式的裡面，使用方式如下所示：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">it(<span class="hljs-string">'說明文字'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// test content</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>第一個參數是該<strong>測試案例</strong>的說明文字，讓我們在閱讀時可以很清楚、直接地知道這個<strong>測試案例</strong>會有什麼結果，通常建議以 <code>should</code> 做開頭，整體閱讀起來較為順暢，例如：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">it(<span class="hljs-string">'should be created'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// test content</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>或者像是：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">it(<span class="hljs-string">'should have as title "Angular"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// test content</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>第二個參數是一個函式，裡面就是該<strong>測試案例</strong>所要執行的程式碼，也就是我們實際上要測試的內容。</p>
+<h3 id="describe"><a href="#describe" class="headerlink" title="describe"></a>describe</h3><p><code>describe</code> 指的是 <strong>測試集合（Test suite）</strong>，主要是用於將測試案例分組、分類，類似資料夾的概念，這樣我們在閱讀程式碼的時候與其測試結果時，才會比較好閱讀</p>
+<p>使用方式如下所示：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'說明文字'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// test cases</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>跟 <code>it</code> 一樣，第一個參數是該<strong>測試集合</strong>的說明文字，讓我們在閱讀時可以很清楚、直接地知道這個<strong>測試集合</strong>的主要測試目標，例如：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'LoginComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  describe(<span class="hljs-string">'Component logic'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    describe(<span class="hljs-string">'login'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-comment">// test cases</span></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">  describe(<span class="hljs-string">'Template logic'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    describe(<span class="hljs-string">'When login button be clicked'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-comment">// test cases</span></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>第二個參數是一個函式，裡面是該<strong>測試集合</strong>所要執行的<strong>測試案例</strong>。</p>
+<p><code>describe</code> 除了分類、分組的功能外，他還有一個很重要的特性 ─ <strong>作用域（Scoping）</strong> 。</p>
+<h4 id="作用域（Scoping）"><a href="#作用域（Scoping）" class="headerlink" title="作用域（Scoping）"></a>作用域（Scoping）</h4><p>在寫測試案例的時候，我們可能會遇到某些情況是在需要事先做一些配置，又或者是驗證完之後需要把某些狀態還原，如果將這些事情寫在每一個 <code>it</code> 裡又覺得很囉嗦且不好維護，這時候我們就會使用以下這些函式來幫我們：</p>
+<ul>
+<li><code>beforeAll</code> ─ 在執行所有的測試案例之前，會先執行這裡面的程式碼。</li>
+<li><code>beforeEach</code> ─ 在執行每一個測試案例之前，會先執行這裡面的程式碼。</li>
+<li><code>afterAll</code> ─ 在執行完所有的測試案例之後，會再執行這裡面的程式碼。</li>
+<li><code>afterEach</code> ─ 在執行完每一個測試案例之後，會再執行這裡面的程式碼。</li>
+</ul>
+<p>舉個例子，如果我們有個測試集合長這樣：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'Test Suite'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  beforeAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeAll'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeEach'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'test case - 1'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'test case - 1'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'test case - 2'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'test case - 2'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  afterEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'afterEach'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  afterAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'afterAll'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>它的執行結果會是這樣：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// beforeAll</span></span><br><span class="line"><span class="hljs-comment">// beforeEach</span></span><br><span class="line"><span class="hljs-comment">// test case - 1</span></span><br><span class="line"><span class="hljs-comment">// afterEach</span></span><br><span class="line"><span class="hljs-comment">// beforeEach</span></span><br><span class="line"><span class="hljs-comment">// test case - 2</span></span><br><span class="line"><span class="hljs-comment">// afterEach</span></span><br><span class="line"><span class="hljs-comment">// afterAll</span></span><br></pre></td></tr></table></figure>
+
+<p>從上述結果中可以看出，在一個<strong>測試集合</strong>裡會先執行的是 <code>beforeAll</code> 裡的程式，接著會是 <code>beforeEach</code> ，然後才會是<strong>測試案例</strong>；而在測試案例之後，則會先執行 <code>afterEach</code> 才會輪到下一個測試案例之前的 <code>beforeEach</code>，再接著下一個<strong>測試案例</strong>，之後一樣會是那個測試案例之後的 <code>afterEach</code> 。直到最後沒有測試案例時，就執行 <code>afterAll</code> 裡面的程式，結束這個測試集合。</p>
+<p>有比較理解了嗎？如果有的話，我們來試試比較複雜一點的巢狀結構：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'Test Suite - 1'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  beforeAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeAll - 1'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeEach - 1'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'test case - 1'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'test case - 1'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'test case - 2'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'test case - 2'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  describe(<span class="hljs-string">'Test Suite - 2'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    beforeAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeAll - 2'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeEach - 2'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    it(<span class="hljs-string">'test case - 3'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'test case - 3'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    it(<span class="hljs-string">'test case - 4'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'test case - 4'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    afterEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'afterEach - 2'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    afterAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'afterAll - 2'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  afterEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'afterEach - 1'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  afterAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'afterAll - 1'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>它的執行結果會是這樣：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// beforeAll - 1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// beforeEach - 1</span></span><br><span class="line"><span class="hljs-comment">// test case - 1</span></span><br><span class="line"><span class="hljs-comment">// afterEach - 1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// beforeEach - 1</span></span><br><span class="line"><span class="hljs-comment">// test case - 2</span></span><br><span class="line"><span class="hljs-comment">// afterEach - 1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// beforeAll - 2</span></span><br><span class="line"><span class="hljs-comment">// beforeEach - 1</span></span><br><span class="line"><span class="hljs-comment">// beforeEach - 2</span></span><br><span class="line"><span class="hljs-comment">// test case - 3</span></span><br><span class="line"><span class="hljs-comment">// afterEach - 2</span></span><br><span class="line"><span class="hljs-comment">// afterEach - 1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// beforeEach - 1</span></span><br><span class="line"><span class="hljs-comment">// beforeEach - 2</span></span><br><span class="line"><span class="hljs-comment">// test case - 4</span></span><br><span class="line"><span class="hljs-comment">// afterEach - 2</span></span><br><span class="line"><span class="hljs-comment">// afterEach - 1</span></span><br><span class="line"><span class="hljs-comment">// afterAll - 2</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// afterAll - 1</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>為讓大家比較好閱讀，我將每個測試案例稍微隔開方便大家觀察其中規律。</p>
+</blockquote>
+<p>雖然這個例子比較複雜，但邏輯上來說跟上一個例子一樣：在開始測試某<strong>測試集合</strong>裡面的測試案例之前，會先執行該測試集合的 <code>beforeAll</code> ，接著是每一個測試案例的 <code>beforeEach</code> ，然後執行<strong>測試案例</strong>，執行完測試案例後就是 <code>afterEach</code> 。</p>
+<p>比較特別需要注意的就是當要開始執行 <code>test case - 3</code> 之前，會先執行的是  <code>Test Suite - 2</code> 的  <code>beforeAll</code> 。原因就像上面提過的：「在開始測試某<strong>測試集合</strong>裡面的測試案例之前，會先執行該測試集合的 <code>beforeAll</code> 」， <code>test case - 3</code> 是 <code>Test Suite - 2</code> 裡面的測試案例，所以在開始測試 <code>test case - 3</code> 之前，自然會先執行該測試集合裡的 <code>beforeAll</code> ，接著是<strong>父層</strong>測試集合裡的 <code>beforeEach</code> ，才會輪到 <code>Test Suite - 2</code> 裡面的 <code>beforeEach</code> 。</p>
+<blockquote>
+<p>這個概念在大多數的前端測試框架裡是差不多的，學一次基本適用在大多數的測試框架裡， CP 值非常之高。</p>
+</blockquote>
+<p>雖然上述的測試執行過程看似有序，但實際上我們不能依賴這種有序，原因跟如何撰寫出優秀的測試有關，不過相信今天的內容應該已經夠燒腦了，所以明天再跟大家分享如何撰寫出優秀的測試吧！</p>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天的文章內容主要是要讓大家在開始撰寫測試之前，先對 Angular 的測試框架、測試檔案的內容結構有個初步的理解，如此一來有兩個好處：</p>
+<ol>
+<li>後續不用再解釋，文章內容可以比較精簡</li>
+<li>有需要時可以回來複習</li>
+</ol>
+<p>此外，今天的重點主要是以下三點：</p>
+<ol>
+<li>認識 Angular 預設所使用的測試框架。</li>
+<li>了解測試檔案的內容結構。</li>
+<li>理解<strong>作用域（Scoping）</strong> 的邏輯。</li>
+</ol>
+<p>尤其是關於<strong>作用域（Scoping）</strong> 的部份，這在後續撰寫測試時，會非常常使用，所以如果有任何的問題或是回饋，請務必留言給我讓我知道噢！</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2021-09-18T00:07:10.000Z">2021-09-18</time>
                 
                 <div class="level-item">
@@ -588,7 +710,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        8
+                        9
                     </p>
                 </div>
             </div>
@@ -650,7 +772,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">7</span>
+                <span class="level-item tag">8</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -674,7 +796,7 @@
                 <span class="level-item">iThome2021鐵人賽</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">3</span>
+                <span class="level-item tag">4</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/新聞/">
@@ -713,6 +835,25 @@
         
         <article class="media">
             
+            <a href="/2021/09/19/angular-30days-form-and-test-04/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day04 - 開始撰寫測試之前必須要知道的二三事">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-19T00:24:10.000Z">2021-09-19</time></div>
+                    <a href="/2021/09/19/angular-30days-form-and-test-04/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day04 - 開始撰寫測試之前必須要知道的二三事</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/09/18/angular-30days-form-and-test-03/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day03 - Reactive Forms 實作 - 以登入為例">
@@ -787,25 +928,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/03/25/get-to-the-meet-of-angular-injector/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 之 Injector 探討">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-25T15:35:03.000Z">2021-03-25</time></div>
-                    <a href="/2021/03/25/get-to-the-meet-of-angular-injector/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 之 Injector 探討</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/Angular-之深入解析/">Angular 之深入解析</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -824,7 +946,7 @@
                     <span class="level-item">九月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -889,21 +1011,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">3</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">3</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
@@ -952,7 +1074,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">3</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
@@ -966,7 +1088,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">3</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
@@ -995,6 +1117,25 @@
         
         <article class="media">
             
+            <a href="/2021/09/19/angular-30days-form-and-test-04/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day04 - 開始撰寫測試之前必須要知道的二三事">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-19T00:24:10.000Z">2021-09-19</time></div>
+                    <a href="/2021/09/19/angular-30days-form-and-test-04/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day04 - 開始撰寫測試之前必須要知道的二三事</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/09/18/angular-30days-form-and-test-03/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day03 - Reactive Forms 實作 - 以登入為例">
@@ -1069,25 +1210,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/03/25/get-to-the-meet-of-angular-injector/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 之 Injector 探討">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-03-25T15:35:03.000Z">2021-03-25</time></div>
-                    <a href="/2021/03/25/get-to-the-meet-of-angular-injector/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 之 Injector 探討</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/Angular-之深入解析/">Angular 之深入解析</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1106,7 +1228,7 @@
                     <span class="level-item">九月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -1171,21 +1293,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">3</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">3</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
@@ -1234,7 +1356,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">3</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
@@ -1248,7 +1370,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">3</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
