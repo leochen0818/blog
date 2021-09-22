@@ -2,7 +2,7 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>標籤: library - Leo&#39;s Coding Life</title>
+<title>分類: Web 前端 - Leo&#39;s Coding Life</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <base href="/">
 
@@ -10,7 +10,7 @@
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="Leo&#39;s Coding Life">
-<meta property="og:url" content="https://blog.leochen.dev/tags/library/index.html">
+<meta property="og:url" content="https://blog.leochen.dev/categories/Web-前端/page/2/index.html">
 <meta property="og:site_name" content="Leo&#39;s Coding Life">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
@@ -146,86 +146,13 @@
     <div class="card-content">
         <nav class="breadcrumb" aria-label="breadcrumbs">
         <ul>
-            <li><a href="/tags">標籤</a></li>
-            <li class="is-active"><a href="#" aria-current="page">library</a></li>
+            <li><a href="/categories">分類</a></li>
+            
+            <li class="is-active"><a href="#" aria-current="page">Web 前端</a></li>
         </ul>
         </nav>
     </div>
 </div>
-
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-10-31T07:16:03.000Z">2019-10-31</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/Nx/">Nx</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    4 分鐘 閱讀文 (大約 661 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/10/31/my-nx-note-tsconfig/">我的 Nx 筆記 - tsconfig.json 的坑</a>
-            
-        </h1>
-        <div class="content">
-            <p>我最近在研究 Nx 時遇到了一個坑，這個坑讓我卡了兩、三個小時，所以我將這件事情筆記下來，希望如果以後有人遇到類似的問題，這篇筆記多少可以幫得上忙。</p>
-<hr>
-<h2 id="問題描述"><a href="#問題描述" class="headerlink" title="問題描述"></a>問題描述</h2><p>在 Angular 專案裡我們經常會看到各種 <code>tsconfig.json</code> ，而這些 <code>tsconfig.json</code> 又繼承來繼承去的，雖然一般我們不會特別去動他們的設定，但當我們因為某些緣故需要去調整的時候，就要特別小心「覆蓋」的問題。</p>
-<p>而我遇到的狀況是，我在使用 <code>JSZip</code> 這個套件時，遇到了下圖中的 Error ：</p>
-<p><img src="https://imgur.com/OycKi6h.png" alt="JSZip 的 Error"></p>
-<p>解決辦法是在 <code>apps/app-name/tsconfig.app.json</code> 的 <code>compilerOptions</code> 裡加上 <code>path</code> 的配置：</p>
-<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">  <span class="hljs-attr">"compilerOptions"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">    <span class="hljs-attr">"paths"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"jszip"</span>: [</span><br><span class="line">        <span class="hljs-string">"node_modules/jszip/dist/jszip.min.js"</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-string">"//"</span>: <span class="hljs-string">"..."</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>加上之後， <code>JSZip</code> 的問題解決了，但變成下圖中的 Error ：</p>
-<p><img src="https://imgur.com/A1e70Q3.png" alt="找不到 libs 裡的 Module"></p>
-<p>我百思不得其解，因為 <code>ng serve</code> 沒有問題，但 <code>build</code> 的時候就會說找不到，而我也試了很多方式都解不掉這個問題。</p>
-<p>後來我想到，會不會是因為設定會被覆蓋的關係？！</p>
-<p>因為原本 <code>libs</code> 裡的 import 路徑會在專案根目錄的 <code>tsconfig.json</code> 裡設定，而 <code>tsconfig.json</code> 們會像下圖這樣繼承配置：</p>
-<p><img src="https://imgur.com/HfUhT58.png" alt="tsconfig.json 的繼承方式示意圖"></p>
-<ol>
-<li><code>apps/app-name/tsconfig.json</code> 繼承 <code>./tsconfig.json</code> 裡的配置 。</li>
-<li><code>apps/app-name/tsconfig.app.json</code> 再繼承 <code>apps/app-name/tsconfig.json</code> 裡的配置。</li>
-</ol>
-<p>因此，當我們一開始在 <code>apps/app-name/tsconfig.app.json</code> 加上因應 <code>JSZip</code> 的 <code>paths</code> 配置時，就覆蓋掉原本在 <code>./tsconfig.json</code> 裡的 <code>paths</code> 配置，造成找不到 <code>libs</code> 裡 export 的 module 的問題。</p>
-<h2 id="解決辦法"><a href="#解決辦法" class="headerlink" title="解決辦法"></a>解決辦法</h2><p>解決這個問題的辦法基本上有兩個：</p>
-<ol>
-<li>在 <code>apps/app-name/tsconfig.app.json</code> 的 <code>paths</code> 補上原本在 <code>./tsconfig.json</code> 的 <code>paths</code> 配置。</li>
-<li>將 <code>JSZip</code> 的配置從 <code>apps/app-name/tsconfig.app.json</code> 移到 <code>./tsconfig.json</code> 裡。</li>
-</ol>
-<p>相對來說，第二個方式絕對會比第一個方式好得多。</p>
-<h2 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h2><p>一般來說，其他的 <code>tsconfig.json</code> 都不太會需要去動，因此只要我們養成習慣，都只在修改在專案根目錄下的 <code>tsconfig.json</code> 的配置就不會有問題了。</p>
-<h2 id="參考連結"><a href="#參考連結" class="headerlink" title="參考連結"></a>參考連結</h2><ul>
-<li><a href="https://stackoverflow.com/questions/43281741/how-to-use-paths-in-tsconfig-json?fbclid=IwAR0jb1yPvfhQhdkNvWPkyRS8HYRc-L3lgPvgjbzZHfrnPJlV2r8iQY7_9wA" target="_blank" rel="noopener">How to use paths in tsconfig.json?</a></li>
-<li><a href="https://www.typescriptlang.org/docs/handbook/module-resolution.html" target="_blank" rel="noopener">TypeScript - Module Resolution</a></li>
-</ul>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
 
     <div class="card">
     
@@ -299,6 +226,25 @@
 
 
 
+
+    
+<div class="card card-transparent">
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <div class="pagination-previous">
+            <a class="is-flex-grow has-text-black-ter" href="/categories/Web-前端/">上一頁</a>
+        </div>
+        <div class="pagination-next is-invisible is-hidden-mobile">
+            <a class="is-flex-grow has-text-black-ter" href="/categories/Web-前端/page/3/">下一頁</a>
+        </div>
+        <ul class="pagination-list is-hidden-mobile">
+            
+            <li><a class="pagination-link has-text-black-ter" href="/categories/Web-前端/">1</a></li>
+            
+            <li><a class="pagination-link is-current" href="/categories/Web-前端/page/2/">2</a></li>
+            
+        </ul>
+    </nav>
+</div>
 </div>
                 
 

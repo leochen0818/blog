@@ -159,6 +159,210 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-09-22T00:37:10.000Z">2021-09-22</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    25 分鐘 閱讀文 (大約 3808 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/09/22/angular-30days-form-and-test-07/">Angular 深入淺出三十天：表單與測試 Day07 - 整合測試實作 - 登入系統 by Template Driven Forms</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/xIgEfoM.jpg" alt="Day7"></p>
+<p>昨天幫我們用 <strong>Template Driven Forms</strong> 所撰寫的登入系統寫完單元測試之後，今天則是要來為它寫整合測試。</p>
+<p>大家還記得整合測試的目標是要測什麼嗎？我幫大家複習一下：</p>
+<blockquote>
+<p>整合測試的測試目標是要測是<strong>兩個</strong>或是<strong>兩個以上</strong>的類別之間的<strong>互動</strong>是否符合我們的預期。</p>
+</blockquote>
+<p>再更直接一點地說，整合測試就是在測<strong>互動關係</strong>，其他的事情我們都不在乎，因為其他的事情基本上都會在<strong>單元測試</strong>的部份裡測。</p>
+<p>這時候可能會有人覺得奇怪，我們現在就只有一個 Component ，並沒有符合「<strong>兩個</strong>或是<strong>兩個以上</strong>的類別」，這樣是要怎麼測試？</p>
+<p>沒錯，雖然我們現在並沒有「<strong>兩個</strong>或是<strong>兩個以上</strong>的類別」，但是前端比較不一樣的地方是前端會有<strong>畫面</strong>，使用者實際上是看著畫面來跟我們的程式互動的。</p>
+<p>用我們用做的登入系統來說，雖然很簡單、很陽春，但如果沒有畫面、沒有那些輸入欄位，使用者也沒辦法使用。</p>
+<p>所以今天寫整合測試的目的就是要來來驗證我們所做的登入系統的<strong>畫面</strong>，有沒有如我們所預期地和我們的程式碼<strong>互動</strong>。</p>
+<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>首先我們先增加一個 <code>describe</code> 的區塊，有關於整合測試的程式碼接下來都會放在這裡面：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; TestBed &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core/testing'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; AppComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.component'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="hljs-string">'AppComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> component: AppComponent;</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">await</span> TestBed.configureTestingModule(&#123;</span><br><span class="line">      declarations: [AppComponent],</span><br><span class="line">      imports: [FormsModule]</span><br><span class="line">    &#125;).compileComponents();</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">const</span> fixture = TestBed.createComponent(AppComponent);</span><br><span class="line">    component = fixture.componentInstance;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  describe(<span class="hljs-string">'Unit testing'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 昨天寫的單元測試...</span></span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">  describe(<span class="hljs-string">'Integration testing'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 今天要寫的整合測試</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>一般我們不會特別將單元測試跟整合測試的程式碼分開檔案來寫，只會用測試集合將其區隔。</p>
+</blockquote>
+<p>由於今天的整合測試跟畫面會比較有相關，所以我們打開 <code>app.component.html</code> 來看一下目前的程式碼：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> #<span class="hljs-attr">form</span>=<span class="hljs-string">"ngForm"</span> (<span class="hljs-attr">ngSubmit</span>)=<span class="hljs-string">"login()"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"account"</span>&gt;</span>帳號：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">type</span>=<span class="hljs-string">"email"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">name</span>=<span class="hljs-string">"account"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">id</span>=<span class="hljs-string">"account"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">required</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">pattern</span>=<span class="hljs-string">"\b[\w\.-]+@[\w\.-]+\.\w&#123;2,4&#125;\b"</span></span></span><br><span class="line"><span class="hljs-tag">      #<span class="hljs-attr">accountNgModel</span>=<span class="hljs-string">"ngModel"</span></span></span><br><span class="line"><span class="hljs-tag">      [<span class="hljs-attr">ngModel</span>]=<span class="hljs-string">"account"</span></span></span><br><span class="line"><span class="hljs-tag">      (<span class="hljs-attr">ngModelChange</span>)=<span class="hljs-string">"</span></span></span><br><span class="line"><span class="hljs-tag"><span class="hljs-string">        accountValueChange(accountNgModel.value, accountNgModel.errors)</span></span></span><br><span class="line"><span class="hljs-tag"><span class="hljs-string">      "</span></span></span><br><span class="line"><span class="hljs-tag">    /&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"error-message"</span>&gt;</span>&#123;&#123; accountErrorMessage &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"password"</span>&gt;</span>密碼：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">type</span>=<span class="hljs-string">"password"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">name</span>=<span class="hljs-string">"password"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">id</span>=<span class="hljs-string">"password"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">required</span></span></span><br><span class="line"><span class="hljs-tag">      #<span class="hljs-attr">passwordNgModel</span>=<span class="hljs-string">"ngModel"</span></span></span><br><span class="line"><span class="hljs-tag">      [<span class="hljs-attr">minlength</span>]=<span class="hljs-string">"8"</span></span></span><br><span class="line"><span class="hljs-tag">      [<span class="hljs-attr">maxlength</span>]=<span class="hljs-string">"16"</span></span></span><br><span class="line"><span class="hljs-tag">      [<span class="hljs-attr">ngModel</span>]=<span class="hljs-string">"password"</span></span></span><br><span class="line"><span class="hljs-tag">      (<span class="hljs-attr">ngModelChange</span>)=<span class="hljs-string">"</span></span></span><br><span class="line"><span class="hljs-tag"><span class="hljs-string">        passwordValueChange(passwordNgModel.value, passwordNgModel.errors)</span></span></span><br><span class="line"><span class="hljs-tag"><span class="hljs-string">      "</span></span></span><br><span class="line"><span class="hljs-tag">    /&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"error-message"</span>&gt;</span>&#123;&#123; passwordErrorMessage &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> [<span class="hljs-attr">disabled</span>]=<span class="hljs-string">"form.invalid"</span>&gt;</span>登入<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>大家有看出來要測什麼了嗎？我來幫大家整理一下要測的項目：</p>
+<ul>
+<li>帳號欄位<ul>
+<li>屬性 <code>type</code> 的值要是 <code>email</code></li>
+<li>屬性 <code>name</code> 的值要是 <code>account</code></li>
+<li>屬性 <code>pattern</code> 的值要是 <code>\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b</code></li>
+<li>要有屬性 <code>required</code></li>
+<li>要將 Component 的屬性 <code>account</code> 的值綁定到此欄位上</li>
+<li>此欄位的值如果有變動，要能觸發函式 <code>accountValueChange</code></li>
+</ul>
+</li>
+<li>密碼欄位<ul>
+<li>屬性 <code>type</code> 的值要是 <code>password</code></li>
+<li>屬性 <code>name</code> 的值要是 <code>password</code></li>
+<li>屬性 <code>minlength</code> 的值要是 <code>8</code></li>
+<li>屬性 <code>maxlength</code> 的值要是 <code>16</code></li>
+<li>要有屬性 <code>required</code></li>
+<li>要將 Component 的屬性 <code>password</code> 的值綁定到此欄位上</li>
+<li>此欄位的值如果有變動，要能觸發函式 <code>passwordValueChange</code></li>
+</ul>
+</li>
+<li>錯誤訊息<ul>
+<li>要將 Component 的屬性 <code>accountErrorMessage</code> 的值綁定到畫面上</li>
+<li>要將 Component 的屬性 <code>passwordErrorMessage</code> 的值綁定到畫面上</li>
+</ul>
+</li>
+<li>登入按鈕<ul>
+<li>屬性 <code>type</code> 的值要是 <code>submit</code></li>
+<li>當表單是無效的狀態時，要有屬性 <code>disabled</code></li>
+<li>當表單是有效的狀態時，沒有屬性 <code>disabled</code></li>
+<li>當表單是有效狀態時，按下登入按鈕要能觸發函式 <code>login</code></li>
+</ul>
+</li>
+</ul>
+<p>把要測的項目都列出來之後，有沒有覺得要測的項目很多阿？哈哈！</p>
+<p>不過上面這些我個人列的項目有些其實並不屬於<strong>整合測試</strong>的範圍，但我個人會在這時候一起測，因為這樣可以省下一些重複的程式碼，而我自己也習慣在寫測試的時候分成 Component/Template 兩塊，而不是單元測試/整合測試，這樣的命名會比較符合實際上在做的事情。</p>
+<p>那要怎麼測畫面呢？</p>
+<p>在 <code>beforeEach</code> 裡有個 <code>fixture</code> ，我們在測單元測試的時候，是從這裡取得 Component 的實體。而現在要測畫面，一樣是從 <code>fixture</code> 裡取得 Angular 渲染出來的畫面：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; ComponentFixture, TestBed &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core/testing'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; AppComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.component'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="hljs-string">'AppComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> component: AppComponent;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 將 fixture 抽出來</span></span><br><span class="line">  <span class="hljs-keyword">let</span> fixture: ComponentFixture&lt;AppComponent&gt;;</span><br><span class="line">  </span><br><span class="line">  beforeEach(<span class="hljs-keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">await</span> TestBed.configureTestingModule(&#123;</span><br><span class="line">      declarations: [AppComponent],</span><br><span class="line">      imports: [FormsModule]</span><br><span class="line">    &#125;).compileComponents();</span><br><span class="line"></span><br><span class="line">    fixture = TestBed.createComponent(AppComponent);</span><br><span class="line">    component = fixture.componentInstance;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  describe(<span class="hljs-string">'Unit testing'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 昨天寫的單元測試...</span></span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">  </span><br><span class="line">  describe(<span class="hljs-string">'Integration testing'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> compiledComponent: HTMLElement;</span><br><span class="line"></span><br><span class="line">    beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-comment">// 此行的意思是讓 Angular 幫我們將畫面的元素都渲染出來</span></span><br><span class="line">      fixture.detectChanges();</span><br><span class="line"></span><br><span class="line">      <span class="hljs-comment">// 取得渲染完之後的元素</span></span><br><span class="line">      compiledComponent = fixture.nativeElement;</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>拿到渲染完的元素之後，接下來要做的事情應該是每個前端工程師都應該要很熟悉的 DOM 操作。</p>
+<blockquote>
+<p>不知道什麼是 <a href="https://developer.mozilla.org/zh-TW/docs/Web/API/Document_Object_Model" target="_blank" rel="noopener">DOM</a> 的朋友可能是走錯棚了噢！</p>
+</blockquote>
+<p>沒錯，在撰寫測試以驗證畫面上的元素時，就是用大家都滾瓜爛熟的 DOM 操作來撰寫，以帳號欄位為例：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'Integration testing'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> compiledComponent: HTMLElement;</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    fixture.detectChanges();</span><br><span class="line">    compiledComponent = fixture.nativeElement;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  describe(<span class="hljs-string">'Account input field'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> accountInputElement: HTMLInputElement;</span><br><span class="line">  </span><br><span class="line">    beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      accountInputElement = compiledComponent.querySelector(<span class="hljs-string">'#account'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果你的專案有開啟嚴格模式的話（ Angular v12 之後預設開啟），可能會在 <code>accountInputElement</code> 底下看到紅色毛毛蟲：</p>
+<p><img src="https://i.imgur.com/Zj92HIR.png" alt="strict mode error"></p>
+<p>這是因為 TypeScript 在跟你說，這裡有可能會找不到元素，所以型別有可能會是 <code>null</code> 。</p>
+<p>如果我們很有自信它一定找的到、絕對不會是 <code>null</code> 的話，可以在該行結尾加 <code>!</code> ，像這樣： <code>accountInputElement = compiledComponent.querySelector(&#39;#account&#39;)!</code> ，就不會有紅色毛毛蟲囉。</p>
+</blockquote>
+<h3 id="帳號欄位的驗證"><a href="#帳號欄位的驗證" class="headerlink" title="帳號欄位的驗證"></a>帳號欄位的驗證</h3><p>複習一下帳號欄位的驗證項目：</p>
+<ul>
+<li>屬性 <code>type</code> 的值要是 <code>email</code></li>
+<li>屬性 <code>name</code> 的值要是 <code>account</code></li>
+<li>屬性 <code>pattern</code> 的值要是 <code>\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b</code></li>
+<li>要有屬性 <code>required</code></li>
+<li>要將 Component 的屬性 <code>account</code> 的值綁定到此欄位上</li>
+<li>此欄位的值如果有變動，要能觸發函式 <code>accountValueChange</code></li>
+</ul>
+<p>接下來就把帳號欄位要驗證的項目寫成測試案例：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'Account input field'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> accountInputElement: HTMLInputElement;</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    accountInputElement = compiledComponent.querySelector(<span class="hljs-string">'#account'</span>)!;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should have attribute "type" and the value is "email"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> attributeName = <span class="hljs-string">'type'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> attributeValue = <span class="hljs-string">'email'</span>;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(accountInputElement.getAttribute(attributeName)).toBe(attributeValue);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should have attribute "name" and the value is "account"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> attributeName = <span class="hljs-string">'name'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> attributeValue = <span class="hljs-string">'account'</span>;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(accountInputElement.getAttribute(attributeName)).toBe(attributeValue);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should have attribute "pattern" and the value is "\b[\w\.-]+@[\w\.-]+\.\w&#123;2,4&#125;\b"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> attributeName = <span class="hljs-string">'pattern'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> attributeValue = <span class="hljs-string">'\\b[\\w\\.-]+@[\\w\\.-]+\\.\\w&#123;2,4&#125;\\b'</span>;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(accountInputElement.getAttribute(attributeName)).toBe(attributeValue);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should have attribute "required"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> attributeName = <span class="hljs-string">'required'</span>;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(accountInputElement.hasAttribute(attributeName)).toBe(<span class="hljs-literal">true</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should binding the value of property "account"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> account = <span class="hljs-string">'whatever'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.account = account;</span><br><span class="line">    fixture.detectChanges();</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(accountInputElement.getAttribute(<span class="hljs-string">'ng-reflect-model'</span>)).toBe(account);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should trigger function "accountValueChange" when the value be changed'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    spyOn(component, <span class="hljs-string">'accountValueChange'</span>);</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    accountInputElement.value = <span class="hljs-string">'whatever'</span>;</span><br><span class="line">    accountInputElement.dispatchEvent(<span class="hljs-keyword">new</span> Event(<span class="hljs-string">'ngModelChange'</span>));</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.accountValueChange).toHaveBeenCalled();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>測試結果：</p>
+<p><img src="https://i.imgur.com/cBc5mPq.png" alt="testing result"></p>
+<p>在這些測試案例裡，比較特別需要說明的是： <code>should trigger function &quot;accountValueChange&quot; when the value be changed</code> 這個測試案例，怎麼說呢？</p>
+<p>大家應該都有發現在這個測試案例裡，有使用一個叫做 <code>spyOn</code> 的函式，這個函式的第一個參數是一個物件，第二個參數是這個物件裡的函式的名字。</p>
+<p>這個函式的用意是，它會把該物件裡我們所指定的函式替換成一個叫做 <strong>Spy</strong> 的物件，讓後續如果有人執行該函式時，實際執行的會是我們替換掉的 <strong>Spy</strong> 物件，而不是原本我們寫的那個函式，這樣才能在後續去驗證該函式是否已經被呼叫過，甚至還可以知道被呼叫的次數、被呼叫時所傳入的參數等等。</p>
+<p>這個方式是大家在寫測試時所慣用的手法。在這個測試案例裡，我們只在意該函式是不是有被觸發，不在意該函式的實際執行結果，因為該函式的實際執行結果已經在寫<strong>單元測試</strong>的時候驗證過了，而<strong>整合測試</strong>的部份所在意的是<strong>互動行為</strong>。</p>
+<blockquote>
+<p>關於測試的替身，可以參考此篇網路文章：<a href="https://medium.com/starbugs/unit-test-%E4%B8%AD%E7%9A%84%E6%9B%BF%E8%BA%AB-%E6%90%9E%E4%B8%8D%E6%B8%85%E6%A5%9A%E7%9A%84dummy-stub-spy-mock-fake-94be192d5c46" target="_blank" rel="noopener">Unit Test 中的替身：搞不清楚的Dummy 、Stub、Spy、Mock、Fake</a></p>
+</blockquote>
+<p>不過這個測試案例其實有個美中不足的地方，因為嚴格來說我們必須要驗證在該函式被呼叫的時候有傳入 <code>accountNgModel.value</code> 與 <code>accountNgModel.errors</code> ，但因為這個物件是透過 Angular 的範本語法去產生出來的，如果要抓到它需要在 Component 裡新增一個屬性，並使用 Angular 的裝飾器 <code>@ViewChild()</code> 來幫我們把這個物件抓出來：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent &#123;</span><br><span class="line">  <span class="hljs-meta">@ViewChild</span>(<span class="hljs-string">'accountNgModel'</span>) accountNgModelRef!: NgModel;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如此就能改用 <code>toHaveBeenCalledWith</code> 來驗證：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">it(<span class="hljs-string">'should trigger function "accountValueChange" when the value be changed'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// Arrange</span></span><br><span class="line">  spyOn(component, <span class="hljs-string">'accountValueChange'</span>);</span><br><span class="line">  <span class="hljs-keyword">const</span> accountNgModel = component.accountNgModelRef;</span><br><span class="line">  <span class="hljs-comment">// Act</span></span><br><span class="line">  accountInputElement.value = <span class="hljs-string">'whatever'</span>;</span><br><span class="line">  accountInputElement.dispatchEvent(<span class="hljs-keyword">new</span> Event(<span class="hljs-string">'ngModelChange'</span>));</span><br><span class="line">  <span class="hljs-comment">// Assert</span></span><br><span class="line">  expect(component.accountValueChange).toHaveBeenCalledWith(accountNgModel.value, accountNgModel.errors);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>除了這個測試案例大家可能會不習慣之外，其他的測試看起來滿簡單的對吧？！</p>
+<h3 id="密碼欄位的驗證"><a href="#密碼欄位的驗證" class="headerlink" title="密碼欄位的驗證"></a>密碼欄位的驗證</h3><p>帳號欄位的測試寫完之後，再來就輪到密碼欄位的部分囉！</p>
+<p>複習一下密碼欄位的驗證項目：</p>
+<ul>
+<li>屬性 <code>type</code> 的值要是 <code>password</code></li>
+<li>屬性 <code>name</code> 的值要是 <code>password</code></li>
+<li>屬性 <code>minlength</code> 的值要是 <code>8</code></li>
+<li>屬性 <code>maxlength</code> 的值要是 <code>16</code></li>
+<li>要有屬性 <code>required</code></li>
+<li>要將 Component 的屬性 <code>password</code> 的值綁定到此欄位上</li>
+<li>此欄位的值如果有變動，要能觸發函式 <code>passwordValueChange</code></li>
+</ul>
+<p>測試程式碼如下：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'Password input field'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> passwordInputElement: HTMLInputElement;</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    passwordInputElement = compiledComponent.querySelector(<span class="hljs-string">'#password'</span>)!;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should have attribute "type" and the value is "password"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> attributeName = <span class="hljs-string">'type'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> attributeValue = <span class="hljs-string">'password'</span>;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(passwordInputElement.getAttribute(attributeName)).toBe(attributeValue);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should have attribute "name" and the value is "password"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> attributeName = <span class="hljs-string">'name'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> attributeValue = <span class="hljs-string">'password'</span>;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(passwordInputElement.getAttribute(attributeName)).toBe(attributeValue);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should have attribute "minlength" and the value is "8"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> attributeName = <span class="hljs-string">'minlength'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> attributeValue = <span class="hljs-string">'8'</span>;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(passwordInputElement.getAttribute(attributeName)).toBe(attributeValue);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should have attribute "maxlength" and the value is "16"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> attributeName = <span class="hljs-string">'maxlength'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> attributeValue = <span class="hljs-string">'16'</span>;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(passwordInputElement.getAttribute(attributeName)).toBe(attributeValue);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should have attribute "required"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> attributeName = <span class="hljs-string">'required'</span>;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(passwordInputElement.hasAttribute(attributeName)).toBe(<span class="hljs-literal">true</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should binding the value of property "password"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> password = <span class="hljs-string">'whatever'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.password = password;</span><br><span class="line">    fixture.detectChanges();</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(passwordInputElement.getAttribute(<span class="hljs-string">'ng-reflect-model'</span>)).toBe(password);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should trigger function "passwordValueChange" when the value be changed'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    spyOn(component, <span class="hljs-string">'passwordValueChange'</span>);</span><br><span class="line">    <span class="hljs-keyword">const</span> passwordNgModel = component.passwordNgModelRef;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    passwordInputElement.value = <span class="hljs-string">'whatever'</span>;</span><br><span class="line">    passwordInputElement.dispatchEvent(<span class="hljs-keyword">new</span> Event(<span class="hljs-string">'ngModelChange'</span>));</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.passwordValueChange).toHaveBeenCalledWith(passwordNgModel.value, passwordNgModel.errors);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>密碼欄位的部份基本上跟帳號欄位差不多，只有一兩個屬性不一樣而已。</p>
+<p>測試結果：</p>
+<p><img src="https://i.imgur.com/CZCkwe9.png" alt="testing result"></p>
+<h3 id="錯誤訊息的驗證"><a href="#錯誤訊息的驗證" class="headerlink" title="錯誤訊息的驗證"></a>錯誤訊息的驗證</h3><p>錯誤訊息的驗證也非常簡單，真要說個比較難的地方，大概就是對於 <strong>CSS Selector</strong> 的熟悉程度吧！</p>
+<p>錯誤訊息要驗證的項目是：</p>
+<ul>
+<li>要將 Component 的屬性 <code>accountErrorMessage</code> 的值綁定到畫面上</li>
+<li>要將 Component 的屬性 <code>passwordErrorMessage</code> 的值綁定到畫面上</li>
+</ul>
+<p>測試程式碼如下：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'Error Message'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should binding the value of property "accountErrorMessage" in the template'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = <span class="hljs-string">'account error'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> targetElement = compiledComponent.querySelector(<span class="hljs-string">'#account + .error-message'</span>);</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.accountErrorMessage = errorMessage;</span><br><span class="line">    fixture.detectChanges();</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(targetElement?.textContent).toBe(errorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should binding the value of property "passwordErrorMessage" in the template'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = <span class="hljs-string">'password error'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> targetElement = compiledComponent.querySelector(<span class="hljs-string">'#password + .error-message'</span>);</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.passwordErrorMessage = errorMessage;</span><br><span class="line">    fixture.detectChanges();</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(targetElement?.textContent).toBe(errorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果你對於 CSS Selector 真的不熟，就在要驗的元素上增加你可以找到的 ID 、類別或者是屬性吧！</p>
+</blockquote>
+<p>測試結果：</p>
+<p><img src="https://i.imgur.com/CZCkwe9.png" alt="testing result"></p>
+<h3 id="登入按鈕的驗證"><a href="#登入按鈕的驗證" class="headerlink" title="登入按鈕的驗證"></a>登入按鈕的驗證</h3><p>最後是登入按鈕的驗證，它的驗證項目是：</p>
+<ul>
+<li>屬性 <code>type</code> 的值要是 <code>submit</code></li>
+<li>當表單是無效的狀態時，要有屬性 <code>disabled</code></li>
+<li>當表單是有效的狀態時，沒有屬性 <code>disabled</code></li>
+<li>當表單是有效狀態時，按下登入按鈕要能觸發函式 <code>login</code></li>
+</ul>
+<p>程式碼如下：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'Login button'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> buttonElement: HTMLButtonElement;</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    buttonElement = compiledComponent.querySelector(<span class="hljs-string">'button'</span>)!;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should have attribute "type" and the value is "submit"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> attributeName = <span class="hljs-string">'type'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> attributeValue = <span class="hljs-string">'submit'</span>;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(buttonElement.getAttribute(attributeName)).toBe(attributeValue);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should have attribute "disabled" when the form\'s status is invalid'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> attributeName = <span class="hljs-string">'disabled'</span>;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(buttonElement.hasAttribute(attributeName)).toBe(<span class="hljs-literal">true</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  describe(<span class="hljs-string">'When the form\'s status is valid'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      component.account = <span class="hljs-string">'abc@email.com'</span>;</span><br><span class="line">      component.password = <span class="hljs-string">'12345678'</span>;</span><br><span class="line">      fixture.detectChanges();</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    it(<span class="hljs-string">'should not have attribute "disabled"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-comment">// Arrange</span></span><br><span class="line">      <span class="hljs-keyword">const</span> attributeName = <span class="hljs-string">'disabled'</span>;</span><br><span class="line">      <span class="hljs-comment">// Assert</span></span><br><span class="line">      expect(buttonElement.hasAttribute(attributeName)).toBe(<span class="hljs-literal">false</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    it(<span class="hljs-string">'should trigger function "login" when being clicked'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-comment">// Arrange</span></span><br><span class="line">      spyOn(component, <span class="hljs-string">'login'</span>);</span><br><span class="line">      <span class="hljs-comment">// Act</span></span><br><span class="line">      buttonElement.click();</span><br><span class="line">      <span class="hljs-comment">// Assert</span></span><br><span class="line">      expect(component.login).toHaveBeenCalled();</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>測試結果：</p>
+<p><img src="https://i.imgur.com/qm2RoUy.png" alt="testing result"></p>
+<p>咦？怎麼會有 Error 咧？我自己在第一次遇到這個狀況也是有點傻眼，於是我深入調查了之後發現：</p>
+<p><img src="https://i.imgur.com/lIKWpXf.png" alt="testing result"></p>
+<p>原來是因為 Karma 渲染出來的元素跟 Angular 渲染出來的元素狀態不一樣，Karma 渲染出來的 <code>form</code> 元素跟沒有正確吃到底下的表單欄位：</p>
+<p><img src="https://i.imgur.com/2RQeN4P.png" alt="testing result"></p>
+<p>關於這個問題，我會再發 issue 詢問官方，如果後續有任何消息，我會再更新此篇文章讓大家知道。</p>
+<p>至於目前這個案例，我們可以先在 <code>it</code> 的前面加上一個 <code>x</code> ，代表我們要 <code>ignore</code> 這個案例的意思，像這樣：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">xit(<span class="hljs-string">'should have attribute "disabled" when the form\'s status is invalid'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// Arrange</span></span><br><span class="line">  <span class="hljs-keyword">const</span> attributeName = <span class="hljs-string">'disabled'</span>;</span><br><span class="line">  <span class="hljs-comment">// Assert</span></span><br><span class="line">  expect(buttonElement.hasAttribute(attributeName)).toBe(<span class="hljs-literal">true</span>);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>測試結果：</p>
+<p><img src="https://i.imgur.com/YiXkT3m.png" alt="testing result"></p>
+<p>至此，我們就完成了整合測試的部份囉！雖然剛好遇到奇怪的問題，但學習如何排除異常也是非常重要的一部分噢！</p>
+<p>今天的文章就到這邊，明天我們要為用 Reactive Forms 所撰寫的登入表單來撰寫單元測試，不過我其實昨天其實就教過大家怎麼寫單元測試，在看我的文章之前，建議大家先自己寫寫看再參考我的文章，相信一定會有更多的收穫！</p>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>再次提醒大家，在寫<strong>整合測試</strong>時，需要測試的是兩個類別實體之間在各種情況下的<strong>互動行為</strong>是否符合我們的預期，跟<strong>單元測試</strong>要測試的重點是很不一樣的。</p>
+<p>除此之外，就算我們是在寫整合測試不是單元測試，但依然要盡量做到我在<a href="https://ithelp.ithome.com.tw/articles/10268160" target="_blank" rel="noopener">如何寫出優秀的測試？</a>文中所提到的部份噢！</p>
+<p>我會將今日的實作程式碼放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day7" target="_blank" rel="noopener">Github - Branch: day7</a> 供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
+<p>如果有任何的問題或是回饋，也都非常歡迎留言給我讓我知道噢！</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2021-09-21T01:15:10.000Z">2021-09-21</time>
                 
                 <div class="level-item">
@@ -1192,78 +1396,25 @@
 
 
 
-    <div class="card">
+
     
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-10-24T14:29:58.000Z">2019-10-24</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/Nx/">Nx</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    3 分鐘 閱讀文 (大約 403 個字)
-                </span>
-                
-                
-            </div>
+<div class="card card-transparent">
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <div class="pagination-previous is-invisible is-hidden-mobile">
+            <a class="is-flex-grow has-text-black-ter" href="/tags/angular/page/0/">上一頁</a>
         </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/10/24/my-nx-note-impot-scss-from-library/">我的 Nx 筆記 - 如何在你的 Application 裡，用很漂亮的方式引入 Library 的 SCSS</a>
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://imgur.com/kuD3tVS.png" alt="Nx"></p>
-<p>最近在開始研究 <a href="https://nx.dev/angular" target="_blank" rel="noopener">Nx</a> 這個非常好用的開發工具，當然也撞了不少牆…（鼻青臉腫中）。</p>
-<p>今天主要要分享的是：</p>
-<p><strong>如何在你的 Application 裡，用很漂亮的方式引入 Library 裡的 SCSS</strong></p>
-<p>而這個方法是我在<a href="https://github.com/nrwl/nx/issues/1542" target="_blank" rel="noopener">這個 issue</a> 裡看到的，留言的人是 <code>tcoz</code> 。</p>
-<p>在開始之前，請先準備 Nx 的專案，且裡面有一個 Application 名為 <code>sample</code> 、 一個 Library 名為 <code>sample-lib</code> ，然後在 <code>sample-lib</code> 裡準備一個 <code>abc.scss</code> 。</p>
-<p>scss 的內容很簡單：</p>
-<figure class="highlight css hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-selector-tag">h1</span> &#123;</span><br><span class="line">    <span class="hljs-attribute">color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>接著把 <code>sample</code> 跑起來，應該會看到以下畫面：</p>
-<p><img src="https://i.imgur.com/Fls370X.png" alt="sample 的起始畫面"></p>
-<p>然後先在 Nx 的 <code>angular.json</code> 裡，找到你的專案的 <code>build</code> 配置，大概長這樣：</p>
-<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">  <span class="hljs-attr">"projects"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"sample"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      <span class="hljs-attr">"architect"</span>: &#123;</span><br><span class="line">        <span class="hljs-attr">"build"</span>: &#123;</span><br><span class="line">          <span class="hljs-attr">"builder"</span>: <span class="hljs-string">"@angular-devkit/build-angular:browser"</span>,</span><br><span class="line">          <span class="hljs-attr">"options"</span>: &#123;</span><br><span class="line">            <span class="hljs-attr">"outputPath"</span>: <span class="hljs-string">"dist/apps/sample"</span>,</span><br><span class="line">            <span class="hljs-attr">"index"</span>: <span class="hljs-string">"apps/sample/src/index.html"</span>,</span><br><span class="line">            <span class="hljs-attr">"main"</span>: <span class="hljs-string">"apps/sample/src/main.ts"</span>,</span><br><span class="line">            <span class="hljs-attr">"polyfills"</span>: <span class="hljs-string">"apps/sample/src/polyfills.ts"</span>,</span><br><span class="line">            <span class="hljs-attr">"tsConfig"</span>: <span class="hljs-string">"apps/sample/tsconfig.app.json"</span>,</span><br><span class="line">            <span class="hljs-attr">"aot"</span>: <span class="hljs-literal">false</span>,</span><br><span class="line">            <span class="hljs-attr">"assets"</span>: [<span class="hljs-string">"apps/sample/src/favicon.ico"</span>, <span class="hljs-string">"apps/sample/src/assets"</span>],</span><br><span class="line">            <span class="hljs-attr">"styles"</span>: [<span class="hljs-string">"apps/sample/src/styles.scss"</span>],</span><br><span class="line">            <span class="hljs-attr">"scripts"</span>: []</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然後加上 <code>stylePreprocessorOptions</code> 跟 <code>extractCss</code> 的配置，像這樣：</p>
-<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">  <span class="hljs-attr">"projects"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"sample"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      <span class="hljs-attr">"architect"</span>: &#123;</span><br><span class="line">        <span class="hljs-attr">"build"</span>: &#123;</span><br><span class="line">          <span class="hljs-attr">"builder"</span>: <span class="hljs-string">"@angular-devkit/build-angular:browser"</span>,</span><br><span class="line">          <span class="hljs-attr">"options"</span>: &#123;</span><br><span class="line">            <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line"></span><br><span class="line">            <span class="hljs-attr">"stylePreprocessorOptions"</span>: &#123;</span><br><span class="line">              <span class="hljs-attr">"includePaths"</span>: [<span class="hljs-string">"libs/sample-lib/src/lib/scss"</span>]</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="hljs-attr">"extractCss"</span>: <span class="hljs-literal">true</span>,</span><br><span class="line"></span><br><span class="line">            <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p><code>includePaths</code> 裡的路徑就是要處理的 SCSS 的資料夾路徑。</p>
-</blockquote>
-<p>如此一來，就可以到 <code>sample</code> 裡的 SCSS 裡 import （我在 <code>sample</code> 裡的 <code>style.scss</code> import ）：</p>
-<figure class="highlight scss hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">@import</span> <span class="hljs-string">"abc"</span>;</span><br></pre></td></tr></table></figure>
-
-<p>結果：</p>
-<p><img src="https://imgur.com/bJmD3w8.png" alt="import 了 abc 之後的結果"></p>
-<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><ul>
-<li><a href="https://angular.io/guide/workspace-config#style-preprocessor-options" target="_blank" rel="noopener">Angular 官方文件</a></li>
-</ul>
-
+        <div class="pagination-next">
+            <a class="is-flex-grow has-text-black-ter" href="/tags/angular/page/2/">下一頁</a>
         </div>
-        
-        
-        
-    </div>
+        <ul class="pagination-list is-hidden-mobile">
+            
+            <li><a class="pagination-link is-current" href="/tags/angular/">1</a></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/tags/angular/page/2/">2</a></li>
+            
+        </ul>
+    </nav>
 </div>
-
-
-
-
-
-
-
-
 </div>
                 
 
@@ -1309,7 +1460,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        11
+                        12
                     </p>
                 </div>
             </div>
@@ -1371,7 +1522,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">10</span>
+                <span class="level-item tag">11</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -1395,7 +1546,7 @@
                 <span class="level-item">iThome2021鐵人賽</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">6</span>
+                <span class="level-item tag">7</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/新聞/">
@@ -1434,6 +1585,25 @@
         
         <article class="media">
             
+            <a href="/2021/09/22/angular-30days-form-and-test-07/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day07 - 整合測試實作 - 登入系統 by Template Driven Forms">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-22T00:37:10.000Z">2021-09-22</time></div>
+                    <a href="/2021/09/22/angular-30days-form-and-test-07/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day07 - 整合測試實作 - 登入系統 by Template Driven Forms</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/09/21/angular-30days-form-and-test-06/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day06 - 單元測試實作 - 登入系統 by Template Driven Forms">
@@ -1508,25 +1678,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/09/17/angular-30days-form-and-test-02/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day02 - Template Driven Forms 實作 - 以登入為例">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-17T00:36:10.000Z">2021-09-17</time></div>
-                    <a href="/2021/09/17/angular-30days-form-and-test-02/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day02 - Template Driven Forms 實作 - 以登入為例</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1545,7 +1696,7 @@
                     <span class="level-item">九月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -1610,21 +1761,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">10</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
@@ -1673,7 +1824,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
@@ -1687,7 +1838,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
@@ -1716,6 +1867,25 @@
         
         <article class="media">
             
+            <a href="/2021/09/22/angular-30days-form-and-test-07/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day07 - 整合測試實作 - 登入系統 by Template Driven Forms">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-22T00:37:10.000Z">2021-09-22</time></div>
+                    <a href="/2021/09/22/angular-30days-form-and-test-07/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day07 - 整合測試實作 - 登入系統 by Template Driven Forms</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/09/21/angular-30days-form-and-test-06/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day06 - 單元測試實作 - 登入系統 by Template Driven Forms">
@@ -1790,25 +1960,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/09/17/angular-30days-form-and-test-02/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day02 - Template Driven Forms 實作 - 以登入為例">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-17T00:36:10.000Z">2021-09-17</time></div>
-                    <a href="/2021/09/17/angular-30days-form-and-test-02/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day02 - Template Driven Forms 實作 - 以登入為例</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1827,7 +1978,7 @@
                     <span class="level-item">九月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -1892,21 +2043,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">10</span>
+                        <span class="tag is-grey">11</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
@@ -1955,7 +2106,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
@@ -1969,7 +2120,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">6</span>
+                        <span class="tag is-grey">7</span>
                     </a>
                 </div>
                 
