@@ -149,6 +149,83 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-12-12T03:52:58.000Z">2019-12-12</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Git/">Git</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    4 分鐘 閱讀文 (大約 591 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/12/12/how-to-use-git-with-homebrew-in-macos/">如何在 macOS 裡使用 Homebrew 來安裝與升級 Git</a>
+            
+        </h1>
+        <div class="content">
+            <p>在 macOS 裡，因 Git 是內建在系統當中的關係，所以在 macOS 裡使用 Git 非常方便，打開終端機就能使用了。</p>
+<p>但可惜的是，隨著 Git 裡有著某些重大安全性問題被發現， Git 也隨之釋出新版本提供給大家更新， macOS 內建的 Git 版本就過於老舊了些。</p>
+<p>我們可以在終端機中輸入以下指令來查看當前所使用的 Git 的版本：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> git version</span><br><span class="line">git version 2.15.1 (Apple Git-101)</span><br></pre></td></tr></table></figure>
+
+<p>所以後來許多人就推薦改為使用 <code>Homebrew</code> 來安裝與更新 Git ，方式可以參考以下連結：</p>
+<ul>
+<li><a href="https://garynil.tw/2018/05/762/%E5%A6%82%E4%BD%95%E4%BB%A5-homebrew-%E5%8F%96%E4%BB%A3-macos-%E5%85%A7%E5%BB%BA-git-%E4%B8%A6%E6%9B%B4%E6%96%B0/" target="_blank" rel="noopener">如何以 Homebrew 取代 MacOS 內建 Git 並更新</a></li>
+</ul>
+<p>不過隨著 macOS 的更新，系統的安全性也逐漸被 Apple 增加，所以筆者在使用 <code>sudo mv /usr/bin/git /usr/bin/git-apple</code> 這個指令時（ macOS 版本為： Catalina 10.15.1 ），遇到了第一個問題： <code>operation not permitted</code> 。</p>
+<p>這時筆者 Google 到第一個解決方案：</p>
+<ul>
+<li><a href="https://www.azureunali.com/mac-iterm2%E6%88%96terminal%E5%9C%A8%E5%8D%87%E7%B4%9Amacos-mojave%E4%B9%8B%E5%BE%8C%E4%BD%BF%E7%94%A8%E6%8C%87%E4%BB%A4%E6%99%82%E6%9C%83%E5%87%BA%E7%8F%BEoperation-not-permitted/" target="_blank" rel="noopener">[Mac] iTerm2或Terminal在升級macOS Mojave之後使用指令時會出現”Operation not permitted”</a></li>
+</ul>
+<p>不過這個方式在筆者的系統中沒有作用，依舊會遇到 <code>operation not permitted</code> 的問題。</p>
+<p>而後筆者 Google 到第二個解決方案：</p>
+<ul>
+<li><a href="https://stackoverflow.com/questions/32659348/operation-not-permitted-when-on-root-el-capitan-rootless-disabled" target="_blank" rel="noopener">Operation Not Permitted when on root - El Capitan (rootless disabled)</a> 裡的綠勾勾回覆</li>
+</ul>
+<p>筆者照做之後，再次使用 <code>sudo mv /usr/bin/git /usr/bin/git-apple</code> ，遇到了第二個問題： <code>Read-only file system</code> 。因此筆者又 Google 了一下，找到了以下解決方案：</p>
+<ul>
+<li><a href="https://www.jianshu.com/p/a7e7bbcb913d" target="_blank" rel="noopener">macOS 无法sudo创建文件夹返回Read-only file system问题解决</a></li>
+</ul>
+<p>參照上述文章，筆者在終端機裡輸入以下指令：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> sudo mount -uw /</span><br></pre></td></tr></table></figure>
+
+<p>即可正常使用：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> sudo mv /usr/bin/git /usr/bin/git-apple</span><br></pre></td></tr></table></figure>
+
+<p>而後就能夠改為使用 <code>Homebrew</code> 安裝的 Git：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> git version</span><br><span class="line">git version 2.24.1</span><br></pre></td></tr></table></figure>
+
+<p>以上，希望有幫到大家。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2019-10-31T07:16:03.000Z">2019-10-31</time>
                 
                 <div class="level-item">
@@ -353,7 +430,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        12
+                        13
                     </p>
                 </div>
             </div>
@@ -415,7 +492,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">11</span>
+                <span class="level-item tag">12</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -439,7 +516,7 @@
                 <span class="level-item">iThome2021鐵人賽</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">7</span>
+                <span class="level-item tag">8</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/新聞/">
@@ -478,6 +555,25 @@
         
         <article class="media">
             
+            <a href="/2021/09/23/angular-30days-form-and-test-08/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day08 - 單元測試實作 - 登入系統 by Reactive Forms">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T01:37:10.000Z">2021-09-23</time></div>
+                    <a href="/2021/09/23/angular-30days-form-and-test-08/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day08 - 單元測試實作 - 登入系統 by Reactive Forms</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/09/22/angular-30days-form-and-test-07/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day07 - 整合測試實作 - 登入系統 by Template Driven Forms">
@@ -552,25 +648,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/09/18/angular-30days-form-and-test-03/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day03 - Reactive Forms 實作 - 以登入為例">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-18T00:07:10.000Z">2021-09-18</time></div>
-                    <a href="/2021/09/18/angular-30days-form-and-test-03/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day03 - Reactive Forms 實作 - 以登入為例</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -589,7 +666,7 @@
                     <span class="level-item">九月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">8</span>
                 </span>
             </a>
         </li>
@@ -654,21 +731,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -717,7 +794,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -731,7 +808,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -760,6 +837,25 @@
         
         <article class="media">
             
+            <a href="/2021/09/23/angular-30days-form-and-test-08/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day08 - 單元測試實作 - 登入系統 by Reactive Forms">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-23T01:37:10.000Z">2021-09-23</time></div>
+                    <a href="/2021/09/23/angular-30days-form-and-test-08/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day08 - 單元測試實作 - 登入系統 by Reactive Forms</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/09/22/angular-30days-form-and-test-07/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day07 - 整合測試實作 - 登入系統 by Template Driven Forms">
@@ -834,25 +930,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/09/18/angular-30days-form-and-test-03/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day03 - Reactive Forms 實作 - 以登入為例">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-18T00:07:10.000Z">2021-09-18</time></div>
-                    <a href="/2021/09/18/angular-30days-form-and-test-03/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day03 - Reactive Forms 實作 - 以登入為例</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -871,7 +948,7 @@
                     <span class="level-item">九月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">7</span>
+                    <span class="level-item tag">8</span>
                 </span>
             </a>
         </li>
@@ -936,21 +1013,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -999,7 +1076,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
@@ -1013,7 +1090,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">7</span>
+                        <span class="tag is-grey">8</span>
                     </a>
                 </div>
                 
