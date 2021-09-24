@@ -8,19 +8,19 @@
 
 
 
-    <meta name="description" content="昨天幫我們用 Template Driven Forms 所撰寫的登入系統寫完單元測試之後，今天則是要來為它寫整合測試。 大家還記得整合測試的目標是要測什麼嗎？我幫大家複習一下：  整合測試的測試目標是要測是兩個或是兩個以上的類別之間的互動是否符合我們的預期。  再更直接一點地說，整合測試就是在測互動關係，其他的事情我們都不在乎，因為其他的事情基本上都會在單元測試的部份裡測。 這時候可能會有人覺">
+    <meta name="description" content="昨天幫我們用 Template Driven Forms 所撰寫的登入系統寫完單元測試之後，今天則是要來為它寫整合測試。 大家還記得整合測試的目標是要測什麼嗎？我幫大家複習一下：  整合測試的測試目標是要測試兩個或是兩個以上的類別之間的互動是否符合我們的預期。  再更直接一點地說，整合測試就是在測互動關係，其他的事情我們都不在乎，因為其他的事情基本上都會在單元測試的部份裡測。 這時候可能會有人覺">
 <meta name="keywords" content="angular,form,testing,frontend,web">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Angular 深入淺出三十天：表單與測試 Day07 - 整合測試實作 - 登入系統 by Template Driven Forms">
 <meta property="og:url" content="https://blog.leochen.dev/2021/09/22/angular-30days-form-and-test-07/index.html">
 <meta property="og:site_name" content="Leo&#39;s Coding Life">
-<meta property="og:description" content="昨天幫我們用 Template Driven Forms 所撰寫的登入系統寫完單元測試之後，今天則是要來為它寫整合測試。 大家還記得整合測試的目標是要測什麼嗎？我幫大家複習一下：  整合測試的測試目標是要測是兩個或是兩個以上的類別之間的互動是否符合我們的預期。  再更直接一點地說，整合測試就是在測互動關係，其他的事情我們都不在乎，因為其他的事情基本上都會在單元測試的部份裡測。 這時候可能會有人覺">
+<meta property="og:description" content="昨天幫我們用 Template Driven Forms 所撰寫的登入系統寫完單元測試之後，今天則是要來為它寫整合測試。 大家還記得整合測試的目標是要測什麼嗎？我幫大家複習一下：  整合測試的測試目標是要測試兩個或是兩個以上的類別之間的互動是否符合我們的預期。  再更直接一點地說，整合測試就是在測互動關係，其他的事情我們都不在乎，因為其他的事情基本上都會在單元測試的部份裡測。 這時候可能會有人覺">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
-<meta property="og:updated_time" content="2021-09-22T00:36:53.568Z">
+<meta property="og:updated_time" content="2021-09-24T06:37:34.591Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 深入淺出三十天：表單與測試 Day07 - 整合測試實作 - 登入系統 by Template Driven Forms">
-<meta name="twitter:description" content="昨天幫我們用 Template Driven Forms 所撰寫的登入系統寫完單元測試之後，今天則是要來為它寫整合測試。 大家還記得整合測試的目標是要測什麼嗎？我幫大家複習一下：  整合測試的測試目標是要測是兩個或是兩個以上的類別之間的互動是否符合我們的預期。  再更直接一點地說，整合測試就是在測互動關係，其他的事情我們都不在乎，因為其他的事情基本上都會在單元測試的部份裡測。 這時候可能會有人覺">
+<meta name="twitter:description" content="昨天幫我們用 Template Driven Forms 所撰寫的登入系統寫完單元測試之後，今天則是要來為它寫整合測試。 大家還記得整合測試的目標是要測什麼嗎？我幫大家複習一下：  整合測試的測試目標是要測試兩個或是兩個以上的類別之間的互動是否符合我們的預期。  再更直接一點地說，整合測試就是在測互動關係，其他的事情我們都不在乎，因為其他的事情基本上都會在單元測試的部份裡測。 這時候可能會有人覺">
 <meta name="twitter:image" content="https://blog.leochen.dev/images/og_image.png">
 
 
@@ -180,7 +180,7 @@
 <p>昨天幫我們用 <strong>Template Driven Forms</strong> 所撰寫的登入系統寫完單元測試之後，今天則是要來為它寫整合測試。</p>
 <p>大家還記得整合測試的目標是要測什麼嗎？我幫大家複習一下：</p>
 <blockquote>
-<p>整合測試的測試目標是要測是<strong>兩個</strong>或是<strong>兩個以上</strong>的類別之間的<strong>互動</strong>是否符合我們的預期。</p>
+<p>整合測試的測試目標是要測試<strong>兩個</strong>或是<strong>兩個以上</strong>的類別之間的<strong>互動</strong>是否符合我們的預期。</p>
 </blockquote>
 <p>再更直接一點地說，整合測試就是在測<strong>互動關係</strong>，其他的事情我們都不在乎，因為其他的事情基本上都會在<strong>單元測試</strong>的部份裡測。</p>
 <p>這時候可能會有人覺得奇怪，我們現在就只有一個 Component ，並沒有符合「<strong>兩個</strong>或是<strong>兩個以上</strong>的類別」，這樣是要怎麼測試？</p>
