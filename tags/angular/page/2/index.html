@@ -159,6 +159,139 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-09-17T00:36:10.000Z">2021-09-17</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    13 分鐘 閱讀文 (大約 1913 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/09/17/angular-30days-form-and-test-02/">Angular 深入淺出三十天：表單與測試 Day02 - Template Driven Forms 實作 - 以登入為例</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/EL8b9Ws.jpg" alt="Day2"></p>
+<p>今天要來用 <strong>Template Driven Forms</strong> 的方式實作一個簡單的登入系統，撇開 UI 不談，具體的功能需求規格如下：</p>
+<ul>
+<li>帳號<ul>
+<li>格式為 Email Address，相關規則請參考<a href="https://zh.wikipedia.org/wiki/%E9%9B%BB%E5%AD%90%E9%83%B5%E4%BB%B6%E5%9C%B0%E5%9D%80" target="_blank" rel="noopener">維基百科</a>，此處則直接使用正規表示法 <code>/^\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b$/gi</code> 來檢驗，驗證有誤時需在欄位後方顯示錯誤訊息：<code>格式有誤，請重新輸入</code></li>
+<li>此欄位必填，驗證有誤時需需在欄位後方顯示錯誤訊息：<code>此欄位必填</code></li>
+</ul>
+</li>
+<li>密碼<ul>
+<li>長度最短不得低於 8 碼，驗證有誤時需需在欄位後方顯示錯誤訊息：<code>密碼長度最短不得低於8碼</code></li>
+<li>長度最長不得超過 16碼</li>
+<li>此欄位必填，驗證有誤時需需在欄位後方顯示錯誤訊息：<code>此欄位必填</code></li>
+</ul>
+</li>
+<li>以上驗證皆需在使用者輸入時動態檢查</li>
+<li>任一驗證有誤時，登入按鈕皆呈現不可被點選之狀態。</li>
+</ul>
+<p>規格需求看清楚之後，我們就來開始實作吧！</p>
+<blockquote>
+<p>實作時大家可以自己開一個專案來練習，抑或是用 <a href="https://stackblitz.com/" target="_blank" rel="noopener">Stackblitz</a> 開一個 Angular 的專案來練習，我就不再贅述囉！</p>
+<p>如果正在閱讀此篇文章的你還不知道要怎麼開始一個 Angular 專案的話，請先閱讀我的 <a href="https://ithelp.ithome.com.tw/users/20090728/ironman/1600" target="_blank" rel="noopener">Angular 深入淺出三十天</a>後再來閱讀此系列文章會比較恰當噢！</p>
+</blockquote>
+<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>首先我們先準備好基本的 HTML ：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">form</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"account"</span>&gt;</span>帳號：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"email"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"account"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"account"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"password"</span>&gt;</span>密碼：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"password"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"password"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"password"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span>&gt;</span>登入<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>未經美化的畫面應該會長這樣：</p>
+<p><img src="https://i.imgur.com/UzH8WrV.png" alt="Template view"></p>
+<p>接著到 <code>app.module.ts</code> 裡 import <code>FormsModule</code> ：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; NgModule &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> &#123; BrowserModule &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/platform-browser'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> &#123; FormsModule &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; AppComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.component'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@NgModule</span>(&#123;</span><br><span class="line">  imports: [</span><br><span class="line">    BrowserModule, </span><br><span class="line">    FormsModule</span><br><span class="line">  ],</span><br><span class="line">  declarations: [AppComponent],</span><br><span class="line">  bootstrap: [AppComponent]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppModule &#123; &#125;</span><br></pre></td></tr></table></figure>
+
+<p>然後將要綁在 Template 的屬性跟方法都準備好：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent &#123;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// 綁定在帳號欄位上</span></span><br><span class="line">  account = <span class="hljs-string">''</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 綁定在密碼欄位上</span></span><br><span class="line">  password = <span class="hljs-string">''</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// 帳號欄位的錯誤訊息</span></span><br><span class="line">  accountErrorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// 密碼欄位的錯誤訊息</span></span><br><span class="line">  passwordErrorMessage = <span class="hljs-string">''</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在年齡欄位上，當使用者改變被保險人的年齡時，會觸發此函式，並取得對應的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; account</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;ValidationErrors&#125; errors</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  accountValueChange(account: <span class="hljs-built_in">string</span>, errors: ValidationErrors): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.account = account;</span><br><span class="line">    <span class="hljs-keyword">this</span>.validationCheck(errors, <span class="hljs-string">'account'</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在密碼欄位上，當使用者改變密碼時會觸發此函式</span></span><br><span class="line"><span class="hljs-comment">   * </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; password</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;ValidationErrors&#125; errors</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  passwordValueChange(password: <span class="hljs-built_in">string</span>, errors: ValidationErrors): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.password = password;</span><br><span class="line">    <span class="hljs-keyword">this</span>.validationCheck(errors, <span class="hljs-string">'password'</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 綁定在表單上，當使用者按下登入按鈕時會觸發此函式</span></span><br><span class="line">  login(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// do login...</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 透過欄位裡的 ValidationErrors 來設定該欄位的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   * </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;ValidationErrors&#125; errors 欲驗證的欄位的錯誤 (by Angular)</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;'account' | 'password'&#125; fieldName 欄位名稱</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">private</span> validationCheck(</span><br><span class="line">    errors: ValidationErrors,</span><br><span class="line">    fieldName: <span class="hljs-string">'account'</span> | <span class="hljs-string">'password'</span></span><br><span class="line">  ): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> errorMessage: <span class="hljs-built_in">string</span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!errors) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (errors.required) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (errors.pattern) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'格式有誤，請重新輸入'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (errors.minlength) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'密碼長度最短不得低於8碼'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">this</span>.setErrorMessage(fieldName, errorMessage);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 設定指定欄位的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   * </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;'account' | 'password'&#125; fieldName 欲設定錯誤訊息的欄位名稱</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; errorMessage 欲設定的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">private</span> setErrorMessage(</span><br><span class="line">    fieldName: <span class="hljs-string">'account'</span> | <span class="hljs-string">'password'</span>,</span><br><span class="line">    errorMessage: <span class="hljs-built_in">string</span></span><br><span class="line">  ): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (fieldName === <span class="hljs-string">'account'</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.accountErrorMessage = errorMessage;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.passwordErrorMessage = errorMessage;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>就可以將這些屬性和方法跟 Template 綁定在一起：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> #<span class="hljs-attr">form</span>=<span class="hljs-string">"ngForm"</span> (<span class="hljs-attr">ngSubmit</span>)=<span class="hljs-string">"login()"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"account"</span>&gt;</span>帳號：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">type</span>=<span class="hljs-string">"email"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">name</span>=<span class="hljs-string">"account"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">id</span>=<span class="hljs-string">"account"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">required</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">pattern</span>=<span class="hljs-string">"\b[\w\.-]+@[\w\.-]+\.\w&#123;2,4&#125;\b"</span></span></span><br><span class="line"><span class="hljs-tag">      #<span class="hljs-attr">accountNgModel</span>=<span class="hljs-string">"ngModel"</span></span></span><br><span class="line"><span class="hljs-tag">      [<span class="hljs-attr">ngModel</span>]=<span class="hljs-string">"account"</span></span></span><br><span class="line"><span class="hljs-tag">      (<span class="hljs-attr">ngModelChange</span>)=<span class="hljs-string">"accountValueChange(accountNgModel.value, accountNgModel.errors)"</span></span></span><br><span class="line"><span class="hljs-tag">    /&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"error-message"</span>&gt;</span>&#123;&#123; accountErrorMessage &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"password"</span>&gt;</span>密碼：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">type</span>=<span class="hljs-string">"password"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">name</span>=<span class="hljs-string">"password"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">id</span>=<span class="hljs-string">"password"</span></span></span><br><span class="line"><span class="hljs-tag">      <span class="hljs-attr">required</span></span></span><br><span class="line"><span class="hljs-tag">      #<span class="hljs-attr">passwordNgModel</span>=<span class="hljs-string">"ngModel"</span></span></span><br><span class="line"><span class="hljs-tag">      [<span class="hljs-attr">minlength</span>]=<span class="hljs-string">"8"</span></span></span><br><span class="line"><span class="hljs-tag">      [<span class="hljs-attr">maxlength</span>]=<span class="hljs-string">"16"</span></span></span><br><span class="line"><span class="hljs-tag">      [<span class="hljs-attr">ngModel</span>]=<span class="hljs-string">"password"</span></span></span><br><span class="line"><span class="hljs-tag">      (<span class="hljs-attr">ngModelChange</span>)=<span class="hljs-string">"passwordValueChange(passwordNgModel.value, passwordNgModel.errors)"</span></span></span><br><span class="line"><span class="hljs-tag">    /&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"error-message"</span>&gt;</span>&#123;&#123; passwordErrorMessage &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> [<span class="hljs-attr">disabled</span>]=<span class="hljs-string">"form.invalid"</span>&gt;</span>登入<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>到目前為止的程式碼你看懂了多少呢？容我稍微說明一下：</p>
+<ol>
+<li><p>首先是關於<strong>必填</strong>檢核，只要 <code>&lt;input ...&gt;</code> 欄位裡加上 HTML 原生的屬性 ─ <code>required</code> 即可。</p>
+</li>
+<li><p>帳號欄位的格式檢查則是使用原生的屬性 ─ <code>pattern</code> ，這個屬性可以直接使用正規表示法的方式來檢查使用者所輸入的值是否符合我們所訂定的格式。不過要注意的是，頭尾不需要特別加上 <code>/^$/</code> ，所以整串表示法只需要用到中間的部份 ─ <code>\b[\w\.-]+@[\w\.-]+\.\w{2,4}\b</code> 。</p>
+</li>
+</ol>
+<blockquote>
+<p>對這個屬性較不熟悉的朋友可以參照 <a href="https://developer.mozilla.org/en-US/docs/Web/HTML/Attributes/pattern" target="_blank" rel="noopener">MDN 的說明文件</a>。</p>
+</blockquote>
+<ol start="3">
+<li><p>字數長度的檢核也是使用原生的屬性 ─ <code>minlength</code> 與 <code>maxlength</code> 。這部份有兩個地方需要特別留意：</p>
+<ol>
+<li>字數長度的檢核不會管你的字元是半型還是全型、是英文還是中文，每個字元都是一樣以<strong>一個</strong>長度來計算，如果有特別需求就不能使用這個方式處理。</li>
+<li>HTML 的原生屬性 ─ <code>maxlength</code> 是會阻擋使用者輸入的，當需求是要檢核長度但不能阻擋使用者輸入的話，就不能使用這個方式。</li>
+</ol>
+</li>
+<li><p>很多人剛學會用 Angular 的朋友，在使用 <code>ngModel</code> 時都會忘記這兩件事情:</p>
+<ol>
+<li>引入 <code>FormsModule</code></li>
+<li><code>input</code> 要有 <code>name</code> 屬性</li>
+</ol>
+</li>
+<li><p>使用範本語法 <code>#accountNgModel=&quot;ngModel&quot;</code> 、 <code>#passwordNgModel=&quot;ngModel&quot;</code> 來取得型別為 <a href="https://angular.io/api/forms/NgModel" target="_blank" rel="noopener">NgModel</a> 的物件，因為我們可以從中取得該欄位的 <code>value</code> 與 <code>errors</code> ，前者指定給其相關屬性，後者用以判斷該欄位的錯誤，以設定相對應的錯誤訊息。</p>
+</li>
+</ol>
+<blockquote>
+<p>單純使用 <code>#accountNgModel</code> 與 <code>#accountNgModel=&quot;ngModel&quot;</code> 的差別在於前者取得的是單純的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLInputElement" target="_blank" rel="noopener">HTMLInputElement</a> 物件。</p>
+</blockquote>
+<ol start="6">
+<li>使用範本語法 <code>#form=&quot;ngForm&quot;</code> 來取得型別為 <a href="https://angular.io/api/forms/NgForm" target="_blank" rel="noopener">NgForm</a> 的表單物件。</li>
+</ol>
+<blockquote>
+<p>單純使用 <code>#form</code> 與 <code>#form=&quot;ngForm&quot;</code> 的差別在於前者取得的是單純的 <a href="https://developer.mozilla.org/en-US/docs/Web/API/HTMLFormElement" target="_blank" rel="noopener">HTMLFormElement</a> 物件。</p>
+</blockquote>
+<ol start="7">
+<li>最後，則是將登入按鈕加上 <code>[disabled]=&quot;form.invalid&quot;</code> 的綁定，讓按鈕在表單無效時，無法按下登入按鈕。</li>
+</ol>
+<p>至此，我們就完成今天的目標囉！是不是很簡單呢？！</p>
+<p>最後的結果應該要像這樣：</p>
+<p><img src="https://i.imgur.com/YYRiSfW.gif" alt="complete gif"></p>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>剛開始學習 Angular 的朋友，通常都會因為不熟悉 Angular 的語法而導致明明很簡單的功能卻要弄得很複雜。</p>
+<p>今天的學習重點主要有以下三點：</p>
+<ol>
+<li>學習如何使用 Angular 的範本語法取得 Angular 已經包裝好的物件，例如 <code>#accountNgModel=&quot;ngModel&quot;</code> 與 <code>#form=&quot;ngForm&quot;</code> 。</li>
+<li>學習使用表單物件 <a href="https://angular.io/api/forms/NgModel" target="_blank" rel="noopener">NgModel</a> 、 <a href="https://angular.io/api/forms/NgForm" target="_blank" rel="noopener">NgForm</a>。</li>
+<li>善用 <a href="https://angular.io/api/forms/NgModel" target="_blank" rel="noopener">NgModel</a> 裡的 <code>ValidationErrors</code> 取得相應的錯誤訊息。</li>
+</ol>
+<p>我會將今日的實作程式碼放在 <a href="https://stackblitz.com/edit/angular-template-driven-forms-sample-login?file=src/app/app.component.ts" target="_blank" rel="noopener">Stackblitz</a> 上供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
+<p>如果有任何的問題或是回饋，也都非常歡迎留言給我讓我知道噢！</p>
+<h2 id="錯誤回報更新"><a href="#錯誤回報更新" class="headerlink" title="錯誤回報更新"></a>錯誤回報更新</h2><ul>
+<li><code>2021-09-19 22:54:50</code> ，感謝熱心讀者「程凱大」指正錯誤，已移除所有的 <code>FormControl</code> ，原因是因為在 <strong>Template Driven Forms</strong> 的範圍裡， <a href="https://angular.io/api/forms/NgModel" target="_blank" rel="noopener">NgModel</a> 本身已有我們所需之屬性，是我自己豬頭捨近求遠，再次衷心感謝。</li>
+</ul>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2021-09-16T01:48:10.000Z">2021-09-16</time>
                 
                 <div class="level-item">
@@ -634,7 +767,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        16
+                        17
                     </p>
                 </div>
             </div>
@@ -696,7 +829,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">15</span>
+                <span class="level-item tag">16</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -720,7 +853,7 @@
                 <span class="level-item">iThome2021鐵人賽</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">11</span>
+                <span class="level-item tag">12</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/新聞/">
@@ -759,6 +892,25 @@
         
         <article class="media">
             
+            <a href="/2021/09/27/angular-30days-form-and-test-12/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day12 - 單元測試實作 - 被保人 by Template Driven Forms">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-27T01:21:10.000Z">2021-09-27</time></div>
+                    <a href="/2021/09/27/angular-30days-form-and-test-12/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day12 - 單元測試實作 - 被保人 by Template Driven Forms</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/09/26/angular-30days-form-and-test-11/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day11 - Reactive Forms 實作 - 動態表單初體驗">
@@ -833,25 +985,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/09/22/angular-30days-form-and-test-07/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day07 - 整合測試實作 - 登入系統 by Template Driven Forms">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-22T00:37:10.000Z">2021-09-22</time></div>
-                    <a href="/2021/09/22/angular-30days-form-and-test-07/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day07 - 整合測試實作 - 登入系統 by Template Driven Forms</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -870,7 +1003,7 @@
                     <span class="level-item">九月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">11</span>
+                    <span class="level-item tag">12</span>
                 </span>
             </a>
         </li>
@@ -935,21 +1068,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">15</span>
+                        <span class="tag is-grey">16</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
@@ -998,7 +1131,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
@@ -1012,7 +1145,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
@@ -1041,6 +1174,25 @@
         
         <article class="media">
             
+            <a href="/2021/09/27/angular-30days-form-and-test-12/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day12 - 單元測試實作 - 被保人 by Template Driven Forms">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-27T01:21:10.000Z">2021-09-27</time></div>
+                    <a href="/2021/09/27/angular-30days-form-and-test-12/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day12 - 單元測試實作 - 被保人 by Template Driven Forms</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/09/26/angular-30days-form-and-test-11/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day11 - Reactive Forms 實作 - 動態表單初體驗">
@@ -1115,25 +1267,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/09/22/angular-30days-form-and-test-07/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day07 - 整合測試實作 - 登入系統 by Template Driven Forms">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-22T00:37:10.000Z">2021-09-22</time></div>
-                    <a href="/2021/09/22/angular-30days-form-and-test-07/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day07 - 整合測試實作 - 登入系統 by Template Driven Forms</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1152,7 +1285,7 @@
                     <span class="level-item">九月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">11</span>
+                    <span class="level-item tag">12</span>
                 </span>
             </a>
         </li>
@@ -1217,21 +1350,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">15</span>
+                        <span class="tag is-grey">16</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
@@ -1280,7 +1413,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
@@ -1294,7 +1427,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">11</span>
+                        <span class="tag is-grey">12</span>
                     </a>
                 </div>
                 
