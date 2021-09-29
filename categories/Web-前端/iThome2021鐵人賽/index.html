@@ -162,6 +162,131 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-09-29T01:38:02.000Z">2021-09-29</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    14 分鐘 閱讀文 (大約 2151 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/09/29/angular-30days-form-and-test-14/">Angular 深入淺出三十天：表單與測試 Day14 - 單元測試實作 - 被保人 by Reactive Forms</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/8vYZNBJ.jpg" alt="Day14"></p>
+<p>今天我們要來為我們用 <strong>Reactive Forms</strong> 所撰寫的被保人表單寫單元測試，如果還沒有相關程式碼的朋友，趕快前往閱讀第十一天的文章： <a href="https://ithelp.ithome.com.tw/articles/10272343" target="_blank" rel="noopener">Reactive Forms 實作 - 動態表單初體驗</a>。</p>
+<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>複習一下目前的程式碼：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAsyncInsuredComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在表單上</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @type &#123;(FormGroup | undefined)&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  formGroup: FormGroup | <span class="hljs-literal">undefined</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   *  用以取得 FormArray</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @readonly</span></span><br><span class="line"><span class="hljs-comment">   * @type &#123;FormArray&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">get</span> formArray(): FormArray &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formGroup?.get(<span class="hljs-string">'insuredList'</span>)! <span class="hljs-keyword">as</span> FormArray;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在送出按鈕上，判斷表單是不是無效</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @readonly</span></span><br><span class="line"><span class="hljs-comment">   * @type &#123;boolean&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">get</span> isFormInvalid(): <span class="hljs-built_in">boolean</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formArray.controls.length === <span class="hljs-number">0</span> || <span class="hljs-keyword">this</span>.formGroup!.invalid;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 透過 DI 取得 FromBuilder 物件，用以建立表單</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;FormBuilder&#125; formBuilder</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> formBuilder: FormBuilder</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 當 Component 初始化的時候初始化表單</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.formGroup = <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">      insuredList: <span class="hljs-keyword">this</span>.formBuilder.array([])</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 新增被保人</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  addInsured(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> formGroup = <span class="hljs-keyword">this</span>.createInsuredFormGroup();</span><br><span class="line">    <span class="hljs-keyword">this</span>.formArray.push(formGroup);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 刪除被保人</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;number&#125; index</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  deleteInsured(index: <span class="hljs-built_in">number</span>): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.formArray.removeAt(index);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 送出表單</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  submit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// do login...</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 透過欄位的 Errors 來取得對應的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; key</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;number&#125; index</span></span><br><span class="line"><span class="hljs-comment">   * @return &#123;*&#125;  &#123;string&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  getErrorMessage(key: <span class="hljs-built_in">string</span>, index: <span class="hljs-built_in">number</span>): <span class="hljs-built_in">string</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> formGroup = <span class="hljs-keyword">this</span>.formArray.controls[index];</span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = formGroup.get(key);</span><br><span class="line">    <span class="hljs-keyword">let</span> errorMessage: <span class="hljs-built_in">string</span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!formControl || !formControl.errors || formControl.pristine) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.required) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.minlength) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'姓名至少需兩個字以上'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.maxlength) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'姓名至多只能輸入十個字'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> errorMessage!;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 建立被保人的表單</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @private</span></span><br><span class="line"><span class="hljs-comment">   * @return &#123;*&#125;  &#123;FormGroup&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">private</span> createInsuredFormGroup(): FormGroup &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">      name: [</span><br><span class="line">        <span class="hljs-string">''</span>,</span><br><span class="line">        [Validators.required, Validators.minLength(<span class="hljs-number">2</span>), Validators.maxLength(<span class="hljs-number">10</span>)]</span><br><span class="line">      ],</span><br><span class="line">      gender: [<span class="hljs-string">''</span>, Validators.required],</span><br><span class="line">      age: [<span class="hljs-string">''</span>, Validators.required]</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以目前的程式碼來看，我們要驗的單元一共有以下這些函式：</p>
+<ul>
+<li><code>formArray</code></li>
+<li><code>isFormInvalid</code></li>
+<li><code>ngOnInit</code></li>
+<li><code>addInsured</code></li>
+<li><code>deleteInsured</code></li>
+<li><code>getErrorMessage</code> </li>
+</ul>
+<p>以下就按照順序來撰寫測試吧！</p>
+<blockquote>
+<p>開始撰寫測試案例前，記得先處理好依賴，如果忘記的話，可以先回到<a href="https://ithelp.ithome.com.tw/articles/10268883" target="_blank" rel="noopener">第六天的文章</a>複習，我就不再贅述囉！</p>
+</blockquote>
+<p>不過今天的測試案例幾乎都建立在 <code>ngOnInit</code> 被觸發後的情況之下，所以這次我打算直接把 <code>fixture.detectChanges()</code> 放在一開始的 <code>beforeEach</code> 裡，這樣就不用在每個測試案例加了。</p>
+<p>像這樣：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// 其他省略</span></span><br><span class="line">  fixture.detectChanges();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<h3 id="測試單元-formArray"><a href="#測試單元-formArray" class="headerlink" title="測試單元 - formArray"></a>測試單元 - formArray</h3><p>這個單元很單純，基本只要驗在 <code>ngOnInit</code> 被觸發後，可以取得 <code>formArray</code> 即可。</p>
+<p>程式碼如下：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'formArray'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should get the FormArray from the FormGroup after "ngOnInit" being trigger'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> formArray = component.formGroup?.get(<span class="hljs-string">'insuredList'</span>) <span class="hljs-keyword">as</span> FormArray;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.formArray).toBe(formArray);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>測試結果：</p>
+<p><img src="https://i.imgur.com/uXgAL69.png" alt="testing result"></p>
+<h3 id="測試單元-isFormInvalid"><a href="#測試單元-isFormInvalid" class="headerlink" title="測試單元 - isFormInvalid"></a>測試單元 - isFormInvalid</h3><p>這個單元基本上要測三個狀況：</p>
+<ol>
+<li><code>formArray</code> 裡的 <code>controls</code> 的長度為 <code>0</code> 時，回傳 <code>true</code></li>
+<li><code>formGroup</code> 裡有任何 <code>errors</code> 時，回傳 <code>true</code></li>
+<li><code>formArray</code> 裡的 <code>controls</code> 的長度不為 <code>0</code> 且 <code>formGroup</code> 裡也沒有任何 <code>errors</code> 時，回傳 <code>false</code></li>
+</ol>
+<p>程式碼如下：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'isFormInvalid'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should be true when there are not any insureds'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> expectedResult = component.isFormInvalid;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(expectedResult).toBe(<span class="hljs-literal">true</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should be true when there are any errors'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = <span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">''</span>, Validators.required);</span><br><span class="line">    component.formArray.push(formControl);</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> expectedResult = component.isFormInvalid;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(expectedResult).toBe(<span class="hljs-literal">true</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should be false when there are not any errors'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = <span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">''</span>);</span><br><span class="line">    component.formArray.push(formControl);</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> expectedResult = component.isFormInvalid;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(expectedResult).toBe(<span class="hljs-literal">false</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>測試結果：</p>
+<p><img src="https://i.imgur.com/XpS2won.png" alt="testing result"></p>
+<h3 id="測試單元-ngOnInit"><a href="#測試單元-ngOnInit" class="headerlink" title="測試單元 - ngOnInit"></a>測試單元 - ngOnInit</h3><p><code>ngOnInit</code> 要驗證的情況也很簡單，就是看執行完有沒有順利地把 <code>formGroup</code> 建立出來。</p>
+<p>不過要驗證到什麼地步就看個人了，例如我們可以很簡單地這樣子驗：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'ngOnInit'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should initialize property "formGroup"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    fixture.detectChanges();</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.formGroup).toBeTruthy();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>也可以驗稍微仔細一點：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'ngOnInit'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should initialize property "formGroup"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    fixture.detectChanges();</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.formGroup).toBeInstanceOf(FormGroup);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>驗得越粗糙，測試對你的單元保護力越低；反之則越高。所以就看你想要提供給你要測的單元怎麼樣的保護。</p>
+<p>測試結果：</p>
+<p><img src="https://i.imgur.com/5p4w7zx.png" alt="testing result"></p>
+<h3 id="測試單元-addInsured-amp-deleteInsured"><a href="#測試單元-addInsured-amp-deleteInsured" class="headerlink" title="測試單元 - addInsured &amp; deleteInsured"></a>測試單元 - addInsured &amp; deleteInsured</h3><p>這兩個單元就更沒難度了，一個只是驗證執行後， <code>formArray</code> 的長度有沒有增加；另一個則是減少 <code>formArray</code> 的長度。</p>
+<p>程式碼如下：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'addInsured'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should push a "formGroup" into the "formArray"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.addInsured();</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.formArray.length).toBe(<span class="hljs-number">1</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">describe(<span class="hljs-string">'deleteInsured'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should remove the "formGroup" from the "formArray" by the index'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> index = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> formGroup = <span class="hljs-keyword">new</span> FormGroup(&#123;&#125;);</span><br><span class="line">    component.formArray.push(formGroup);</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.deleteInsured(index);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.formArray.length).toBe(<span class="hljs-number">0</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>測試結果：</p>
+<p><img src="https://i.imgur.com/XUYyalw.png" alt="testing result"></p>
+<p>我知道一定有人會有一個疑問：「為什麼測 <code>deleteInsured</code> 的時候， <strong>Arrange</strong> 的部分不直接用 <code>component.addInsured()</code> 就好，還要自己敲？」。</p>
+<p>這是因為我們要做到<strong>測試隔離</strong>，大家還記得嗎？不記得的趕快回去翻第五天的文章：<a href="https://ithelp.ithome.com.tw/articles/10268160" target="_blank" rel="noopener">如何寫出優秀的測試？</a></p>
+<p>大家可以想想，如果今天我們真的使用了 <code>component.addInsured()</code> ，之後哪一天 <code>addInsured</code> 這個函式被改壞了不就也連帶導致了 <code>deleteInsured</code> 這個不相干的測試也會跑失敗嗎？</p>
+<p>雖然廣義一點來講，一個跑失敗跟兩個跑失敗貌似沒什麼區別，都是失敗。但在實質意義上來說就差很多，這點務必請大家銘記在心。</p>
+<h3 id="測試單元-getErrorMessage"><a href="#測試單元-getErrorMessage" class="headerlink" title="測試單元 - getErrorMessage"></a>測試單元 - getErrorMessage</h3><p>最後是大家都非常熟悉的 <code>getErrorMessage</code> ，有沒有一種整天都在測這個案例的感覺？</p>
+<p>雖然前面都測得比較<del>隨便</del>粗糙，我們這個單元測仔細一點好了。</p>
+<p>要驗證的項目如下：</p>
+<ul>
+<li>如果用錯誤的 <code>key</code> 值導致找不到對應的 <code>FormControl</code> ，則回傳空字串。 </li>
+<li>如果該欄位沒有任何錯誤，則回傳空字串。 </li>
+<li>如果該欄位的 <code>pristine</code> 為 <code>true</code>，則回傳空字串。 </li>
+<li>如果該欄位的有 <code>required</code> 的錯誤，則回傳 <code>此欄位必填</code></li>
+<li>如果該欄位的有 <code>minlength</code> 的錯誤，則回傳 <code>姓名至少需兩個字以上</code></li>
+<li>如果該欄位的有 <code>maxlength</code> 的錯誤，則回傳 <code>姓名至多只能輸入十個字</code></li>
+</ul>
+<p>程式碼如下：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'getErrorMessage'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> formGroup: FormGroup;</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> nameControl = <span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">''</span>, [</span><br><span class="line">      Validators.required,</span><br><span class="line">      Validators.minLength(<span class="hljs-number">2</span>),</span><br><span class="line">      Validators.maxLength(<span class="hljs-number">10</span>)</span><br><span class="line">    ]);</span><br><span class="line">    formGroup = <span class="hljs-keyword">new</span> FormGroup(&#123;</span><br><span class="line">      name: nameControl,</span><br><span class="line">    &#125;);</span><br><span class="line">    component.formArray.push(formGroup);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should return empty string with the wrong key'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> key = <span class="hljs-string">'leo'</span></span><br><span class="line">    <span class="hljs-keyword">const</span> index = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = component.getErrorMessage(key, index);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(errorMessage).toBe(<span class="hljs-string">''</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should return empty string when the "formControl" without errors'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> key = <span class="hljs-string">'name'</span></span><br><span class="line">    <span class="hljs-keyword">const</span> index = <span class="hljs-number">0</span>;</span><br><span class="line">    formGroup.get(key)?.setValue(<span class="hljs-string">'Leo'</span>);</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = component.getErrorMessage(key, index);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(errorMessage).toBe(<span class="hljs-string">''</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should return empty string when property "pristine" of the "formControl" is `true`'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> key = <span class="hljs-string">'name'</span></span><br><span class="line">    <span class="hljs-keyword">const</span> index = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = component.getErrorMessage(key, index);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(errorMessage).toBe(<span class="hljs-string">''</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should return "此欄位必填" when the "formControl" has the required error'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> key = <span class="hljs-string">'name'</span></span><br><span class="line">    <span class="hljs-keyword">const</span> index = <span class="hljs-number">0</span>;</span><br><span class="line">    formGroup.get(key)?.markAsDirty();</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = component.getErrorMessage(key, index);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(errorMessage).toBe(<span class="hljs-string">'此欄位必填'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should return "姓名至少需兩個字以上" when the "formControl" has the min-length error'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> key = <span class="hljs-string">'name'</span></span><br><span class="line">    <span class="hljs-keyword">const</span> index = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = formGroup.get(key)!;</span><br><span class="line">    formControl.setValue(<span class="hljs-string">'A'</span>)</span><br><span class="line">    formControl.markAsDirty();</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = component.getErrorMessage(key, index);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(errorMessage).toBe(<span class="hljs-string">'姓名至少需兩個字以上'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should return "姓名至多只能輸入十個字" when the "formControl" has the max-length error'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> key = <span class="hljs-string">'name'</span></span><br><span class="line">    <span class="hljs-keyword">const</span> index = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = formGroup.get(key)!;</span><br><span class="line">    formControl.setValue(<span class="hljs-string">'ABCDEF123456'</span>)</span><br><span class="line">    formControl.markAsDirty();</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = component.getErrorMessage(key, index);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(errorMessage).toBe(<span class="hljs-string">'姓名至多只能輸入十個字'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>測試結果：</p>
+<p><img src="https://i.imgur.com/lFOUKfG.png" alt="testing result"></p>
+<p>今天所有測試的結果：</p>
+<p><img src="https://i.imgur.com/rwo9Vu0.png" alt="testing result"></p>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>跟昨天一樣的是，其實測試手法大致上差不多就這些，當然更複雜的情境會用到其他的手法，但目前主要還是以讓大家多熟悉、多練習為主，後面才會提到更複雜的情況。</p>
+<p>我個人覺得，提高撰寫測試的功力不外乎就是<strong>練習</strong>以及多跟他人<strong>交流</strong>，所以如果在公司沒人可以幫你 code review 或是你也不會幫其他人 code review 的話，是很可惜的一件事。</p>
+<p>今天實作程式碼一樣會放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day14" target="_blank" rel="noopener">Github - Branch: day14</a> 上供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
+<p>如果有任何的問題或是回饋，也都非常歡迎留言給我讓我知道噢！</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2021-09-28T02:02:02.000Z">2021-09-28</time>
                 
                 <div class="level-item">
@@ -1601,128 +1726,6 @@
 
 
 
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2021-09-19T00:24:10.000Z">2021-09-19</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    14 分鐘 閱讀文 (大約 2123 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2021/09/19/angular-30days-form-and-test-04/">Angular 深入淺出三十天：表單與測試 Day04 - 開始撰寫測試之前必須要知道的二三事</a>
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://i.imgur.com/SVDM3en.jpg" alt="Day4"></p>
-<p>在開始撰寫測試之前，先帶大家來了解一下 Angular 預設使用的測試框架 ─ <a href="https://karma-runner.github.io/latest/index.html" target="_blank" rel="noopener">Karma</a> 。</p>
-<p><img src="https://i.imgur.com/euq7yDV.png" alt="Karma 的 logo"></p>
-<p>Karma 的原名是 Testacular ， Google 在 2012 年的時候將其開源， 2013 年時將其改名為 Karma ，它是基於 <a href="https://jasmine.github.io/" target="_blank" rel="noopener">Jasmine</a> 與 <a href="https://www.selenium.dev/" target="_blank" rel="noopener">Selenium</a> 所開發出來的 JavaScript 測試執行過程管理工具（Test Runner）。</p>
-<p>一般我們會使用它來撰寫<strong>單元測試</strong>與<strong>整合測試</strong>，測試的檔案名稱通常會命名為 <code>xxx.spec.ts</code> ，而只要是使用 Angular CLI 所建立的檔案，在預設的情況下都會連帶產生該檔案，像是： <code>xxx.component.spec.ts</code> 、  <code>xxx.service.spec.ts</code> 。 </p>
-<p>當我們想要執行測試程式時，只要使用指令 <code>npm test</code> or  <code>yarn test</code> or <code>ng test</code> ，就可以看到它的執行結果：</p>
-<p><img src="https://i.imgur.com/NntaiLf.png" alt="Karma&#39;s log"></p>
-<p><img src="https://i.imgur.com/V2YjAZX.png" alt="Karma&#39;s view"></p>
-<p>當 Karma 執行起來後，只要我們不停掉它的 server 且不關掉它的視窗，只要我們有修改我們的測試並存檔後，它就會偵測到我們的變動並再重新跑一次測試，是個很方便且強大的功能。</p>
-<blockquote>
-<p>關於執行測試時的更多參數，請參考<a href="https://angular.io/cli/test" target="_blank" rel="noopener">Angular 官方 API 文件</a></p>
-<p>想了解更多的話，可參考網路文章：<a href="https://codertw.com/%E5%89%8D%E7%AB%AF%E9%96%8B%E7%99%BC/272465/" target="_blank" rel="noopener">JavaScript 測試工具之 Karma-Jasmine 的安裝和使用詳解</a>與 <a href="https://karma-runner.github.io/6.3/intro/how-it-works.html" target="_blank" rel="noopener">Karma 官方文件</a></p>
-</blockquote>
-<h2 id="測試的檔案內容"><a href="#測試的檔案內容" class="headerlink" title="測試的檔案內容"></a>測試的檔案內容</h2><p>上述提到，在 Angular 裡的測試檔案一般我們會將其命名為 <code>xxx.spec.ts</code> ，而檔案內容大致上會長這樣：</p>
-<p><img src="https://i.imgur.com/BpUndsd.png" alt="Testing Sample"></p>
-<p>或是這樣：</p>
-<p><img src="https://i.imgur.com/nihtiba.png" alt="Testing Sample"></p>
-<p>從中我們可以發現，它是一種巢狀式的結構，外層會是一個名字叫 <code>describe</code> 的函式，內層則有許多名為 <code>it</code> 的函式，這些函式各是什麼意思呢？</p>
-<h3 id="it"><a href="#it" class="headerlink" title="it"></a>it</h3><p><code>it</code> 指的是 <strong>測試案例（Test case）</strong>，通常會在 <code>describe</code> 函式的裡面，使用方式如下所示：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">it(<span class="hljs-string">'說明文字'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// test content</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>第一個參數是該<strong>測試案例</strong>的說明文字，讓我們在閱讀時可以很清楚、直接地知道這個<strong>測試案例</strong>會有什麼結果，通常建議以 <code>should</code> 做開頭，整體閱讀起來較為順暢，例如：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">it(<span class="hljs-string">'should be created'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// test content</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>或者像是：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">it(<span class="hljs-string">'should have as title "Angular"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// test content</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>第二個參數是一個函式，裡面就是該<strong>測試案例</strong>所要執行的程式碼，也就是我們實際上要測試的內容。</p>
-<h3 id="describe"><a href="#describe" class="headerlink" title="describe"></a>describe</h3><p><code>describe</code> 指的是 <strong>測試集合（Test suite）</strong>，主要是用於將測試案例分組、分類，類似資料夾的概念，這樣我們在閱讀程式碼的時候與其測試結果時，才會比較好閱讀</p>
-<p>使用方式如下所示：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'說明文字'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// test cases</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>跟 <code>it</code> 一樣，第一個參數是該<strong>測試集合</strong>的說明文字，讓我們在閱讀時可以很清楚、直接地知道這個<strong>測試集合</strong>的主要測試目標，例如：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'LoginComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  describe(<span class="hljs-string">'Component logic'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    describe(<span class="hljs-string">'login'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-comment">// test cases</span></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">  describe(<span class="hljs-string">'Template logic'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    describe(<span class="hljs-string">'When login button be clicked'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-comment">// test cases</span></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>第二個參數是一個函式，裡面是該<strong>測試集合</strong>所要執行的<strong>測試案例</strong>。</p>
-<p><code>describe</code> 除了分類、分組的功能外，他還有一個很重要的特性 ─ <strong>作用域（Scoping）</strong> 。</p>
-<h4 id="作用域（Scoping）"><a href="#作用域（Scoping）" class="headerlink" title="作用域（Scoping）"></a>作用域（Scoping）</h4><p>在寫測試案例的時候，我們可能會遇到某些情況是在需要事先做一些配置，又或者是驗證完之後需要把某些狀態還原，如果將這些事情寫在每一個 <code>it</code> 裡又覺得很囉嗦且不好維護，這時候我們就會使用以下這些函式來幫我們：</p>
-<ul>
-<li><code>beforeAll</code> ─ 在執行所有的測試案例之前，會先執行這裡面的程式碼。</li>
-<li><code>beforeEach</code> ─ 在執行每一個測試案例之前，會先執行這裡面的程式碼。</li>
-<li><code>afterAll</code> ─ 在執行完所有的測試案例之後，會再執行這裡面的程式碼。</li>
-<li><code>afterEach</code> ─ 在執行完每一個測試案例之後，會再執行這裡面的程式碼。</li>
-</ul>
-<p>舉個例子，如果我們有個測試集合長這樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'Test Suite'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  beforeAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeAll'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeEach'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'test case - 1'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'test case - 1'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'test case - 2'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'test case - 2'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  afterEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'afterEach'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  afterAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'afterAll'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>它的執行結果會是這樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// beforeAll</span></span><br><span class="line"><span class="hljs-comment">// beforeEach</span></span><br><span class="line"><span class="hljs-comment">// test case - 1</span></span><br><span class="line"><span class="hljs-comment">// afterEach</span></span><br><span class="line"><span class="hljs-comment">// beforeEach</span></span><br><span class="line"><span class="hljs-comment">// test case - 2</span></span><br><span class="line"><span class="hljs-comment">// afterEach</span></span><br><span class="line"><span class="hljs-comment">// afterAll</span></span><br></pre></td></tr></table></figure>
-
-<p>從上述結果中可以看出，在一個<strong>測試集合</strong>裡會先執行的是 <code>beforeAll</code> 裡的程式，接著會是 <code>beforeEach</code> ，然後才會是<strong>測試案例</strong>；而在測試案例之後，則會先執行 <code>afterEach</code> 才會輪到下一個測試案例之前的 <code>beforeEach</code>，再接著下一個<strong>測試案例</strong>，之後一樣會是那個測試案例之後的 <code>afterEach</code> 。直到最後沒有測試案例時，就執行 <code>afterAll</code> 裡面的程式，結束這個測試集合。</p>
-<p>有比較理解了嗎？如果有的話，我們來試試比較複雜一點的巢狀結構：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'Test Suite - 1'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  beforeAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeAll - 1'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeEach - 1'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'test case - 1'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'test case - 1'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'test case - 2'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'test case - 2'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  describe(<span class="hljs-string">'Test Suite - 2'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    beforeAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeAll - 2'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'beforeEach - 2'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    it(<span class="hljs-string">'test case - 3'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'test case - 3'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    it(<span class="hljs-string">'test case - 4'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'test case - 4'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    afterEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'afterEach - 2'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    afterAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'afterAll - 2'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  afterEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'afterEach - 1'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  afterAll(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'afterAll - 1'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>它的執行結果會是這樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// beforeAll - 1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// beforeEach - 1</span></span><br><span class="line"><span class="hljs-comment">// test case - 1</span></span><br><span class="line"><span class="hljs-comment">// afterEach - 1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// beforeEach - 1</span></span><br><span class="line"><span class="hljs-comment">// test case - 2</span></span><br><span class="line"><span class="hljs-comment">// afterEach - 1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// beforeAll - 2</span></span><br><span class="line"><span class="hljs-comment">// beforeEach - 1</span></span><br><span class="line"><span class="hljs-comment">// beforeEach - 2</span></span><br><span class="line"><span class="hljs-comment">// test case - 3</span></span><br><span class="line"><span class="hljs-comment">// afterEach - 2</span></span><br><span class="line"><span class="hljs-comment">// afterEach - 1</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// beforeEach - 1</span></span><br><span class="line"><span class="hljs-comment">// beforeEach - 2</span></span><br><span class="line"><span class="hljs-comment">// test case - 4</span></span><br><span class="line"><span class="hljs-comment">// afterEach - 2</span></span><br><span class="line"><span class="hljs-comment">// afterEach - 1</span></span><br><span class="line"><span class="hljs-comment">// afterAll - 2</span></span><br><span class="line"></span><br><span class="line"><span class="hljs-comment">// afterAll - 1</span></span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>為讓大家比較好閱讀，我將每個測試案例稍微隔開方便大家觀察其中規律。</p>
-</blockquote>
-<p>雖然這個例子比較複雜，但邏輯上來說跟上一個例子一樣：在開始測試某<strong>測試集合</strong>裡面的測試案例之前，會先執行該測試集合的 <code>beforeAll</code> ，接著是每一個測試案例的 <code>beforeEach</code> ，然後執行<strong>測試案例</strong>，執行完測試案例後就是 <code>afterEach</code> 。</p>
-<p>比較特別需要注意的就是當要開始執行 <code>test case - 3</code> 之前，會先執行的是  <code>Test Suite - 2</code> 的  <code>beforeAll</code> 。原因就像上面提過的：「在開始測試某<strong>測試集合</strong>裡面的測試案例之前，會先執行該測試集合的 <code>beforeAll</code> 」， <code>test case - 3</code> 是 <code>Test Suite - 2</code> 裡面的測試案例，所以在開始測試 <code>test case - 3</code> 之前，自然會先執行該測試集合裡的 <code>beforeAll</code> ，接著是<strong>父層</strong>測試集合裡的 <code>beforeEach</code> ，才會輪到 <code>Test Suite - 2</code> 裡面的 <code>beforeEach</code> 。</p>
-<blockquote>
-<p>這個概念在大多數的前端測試框架裡是差不多的，學一次基本適用在大多數的測試框架裡， CP 值非常之高。</p>
-</blockquote>
-<p>雖然上述的測試執行過程看似有序，但實際上我們不能依賴這種有序，原因跟如何撰寫出優秀的測試有關，不過相信今天的內容應該已經夠燒腦了，所以明天再跟大家分享如何撰寫出優秀的測試吧！</p>
-<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天的文章內容主要是要讓大家在開始撰寫測試之前，先對 Angular 的測試框架、測試檔案的內容結構有個初步的理解，如此一來有兩個好處：</p>
-<ol>
-<li>後續不用再解釋，文章內容可以比較精簡</li>
-<li>有需要時可以回來複習</li>
-</ol>
-<p>此外，今天的重點主要是以下三點：</p>
-<ol>
-<li>認識 Angular 預設所使用的測試框架。</li>
-<li>了解測試檔案的內容結構。</li>
-<li>理解<strong>作用域（Scoping）</strong> 的邏輯。</li>
-</ol>
-<p>尤其是關於<strong>作用域（Scoping）</strong> 的部份，這在後續撰寫測試時，會非常常使用，所以如果有任何的問題或是回饋，請務必留言給我讓我知道噢！</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -1787,7 +1790,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        18
+                        19
                     </p>
                 </div>
             </div>
@@ -1849,7 +1852,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">17</span>
+                <span class="level-item tag">18</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -1873,7 +1876,7 @@
                 <span class="level-item">iThome2021鐵人賽</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">13</span>
+                <span class="level-item tag">14</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/新聞/">
@@ -1912,6 +1915,25 @@
         
         <article class="media">
             
+            <a href="/2021/09/29/angular-30days-form-and-test-14/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day14 - 單元測試實作 - 被保人 by Reactive Forms">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-29T01:38:02.000Z">2021-09-29</time></div>
+                    <a href="/2021/09/29/angular-30days-form-and-test-14/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day14 - 單元測試實作 - 被保人 by Reactive Forms</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/09/28/angular-30days-form-and-test-13/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day13 - 整合測試實作 - 被保人 by Template Driven Forms">
@@ -1986,25 +2008,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/09/24/angular-30days-form-and-test-09/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day09 - 整合測試實作 - 登入系統 by Reactive Forms">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-24T01:05:10.000Z">2021-09-24</time></div>
-                    <a href="/2021/09/24/angular-30days-form-and-test-09/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day09 - 整合測試實作 - 登入系統 by Reactive Forms</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2023,7 +2026,7 @@
                     <span class="level-item">九月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">13</span>
+                    <span class="level-item tag">14</span>
                 </span>
             </a>
         </li>
@@ -2088,21 +2091,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">17</span>
+                        <span class="tag is-grey">18</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
@@ -2151,7 +2154,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
@@ -2165,7 +2168,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
@@ -2194,6 +2197,25 @@
         
         <article class="media">
             
+            <a href="/2021/09/29/angular-30days-form-and-test-14/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day14 - 單元測試實作 - 被保人 by Reactive Forms">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-29T01:38:02.000Z">2021-09-29</time></div>
+                    <a href="/2021/09/29/angular-30days-form-and-test-14/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day14 - 單元測試實作 - 被保人 by Reactive Forms</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/09/28/angular-30days-form-and-test-13/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day13 - 整合測試實作 - 被保人 by Template Driven Forms">
@@ -2268,25 +2290,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/09/24/angular-30days-form-and-test-09/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day09 - 整合測試實作 - 登入系統 by Reactive Forms">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-24T01:05:10.000Z">2021-09-24</time></div>
-                    <a href="/2021/09/24/angular-30days-form-and-test-09/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day09 - 整合測試實作 - 登入系統 by Reactive Forms</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2305,7 +2308,7 @@
                     <span class="level-item">九月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">13</span>
+                    <span class="level-item tag">14</span>
                 </span>
             </a>
         </li>
@@ -2370,21 +2373,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">17</span>
+                        <span class="tag is-grey">18</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
@@ -2433,7 +2436,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
@@ -2447,7 +2450,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">13</span>
+                        <span class="tag is-grey">14</span>
                     </a>
                 </div>
                 
