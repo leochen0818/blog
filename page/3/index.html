@@ -2,7 +2,7 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>彙整: 2021/5 - Leo&#39;s Coding Life</title>
+<title>Leo&#39;s Coding Life</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <base href="/">
 
@@ -10,7 +10,7 @@
 
     <meta property="og:type" content="website">
 <meta property="og:title" content="Leo&#39;s Coding Life">
-<meta property="og:url" content="https://blog.leochen.dev/archives/2021/05/index.html">
+<meta property="og:url" content="https://blog.leochen.dev/page/3/index.html">
 <meta property="og:site_name" content="Leo&#39;s Coding Life">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
@@ -143,38 +143,99 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
-
-<div class="card widget">
-    <div class="card-content">
-        <h3 class="tag is-link">
-        五月 2021
-        </h3>
-        <div class="timeline">
+    <div class="card">
+    
+    <div class="card-content article ">
         
-            <article class="media">
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-10-24T14:29:58.000Z">2019-10-24</time>
                 
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2021-05-13T02:46:03.000Z">2021-05-13</time>
-                        <a href="/2021/05/13/angular-v12-is-available-now/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular v12 來了！！</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/新聞/">新聞</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/Nx/">Nx</a>
                 </div>
-            </article>
-        
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    3 分鐘 閱讀文 (大約 403 個字)
+                </span>
+                
+                
+            </div>
         </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/10/24/my-nx-note-impot-scss-from-library/">我的 Nx 筆記 - 如何在你的 Application 裡，用很漂亮的方式引入 Library 的 SCSS</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://imgur.com/kuD3tVS.png" alt="Nx"></p>
+<p>最近在開始研究 <a href="https://nx.dev/angular" target="_blank" rel="noopener">Nx</a> 這個非常好用的開發工具，當然也撞了不少牆…（鼻青臉腫中）。</p>
+<p>今天主要要分享的是：</p>
+<p><strong>如何在你的 Application 裡，用很漂亮的方式引入 Library 裡的 SCSS</strong></p>
+<p>而這個方法是我在<a href="https://github.com/nrwl/nx/issues/1542" target="_blank" rel="noopener">這個 issue</a> 裡看到的，留言的人是 <code>tcoz</code> 。</p>
+<p>在開始之前，請先準備 Nx 的專案，且裡面有一個 Application 名為 <code>sample</code> 、 一個 Library 名為 <code>sample-lib</code> ，然後在 <code>sample-lib</code> 裡準備一個 <code>abc.scss</code> 。</p>
+<p>scss 的內容很簡單：</p>
+<figure class="highlight css hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-selector-tag">h1</span> &#123;</span><br><span class="line">    <span class="hljs-attribute">color</span>: red;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接著把 <code>sample</code> 跑起來，應該會看到以下畫面：</p>
+<p><img src="https://i.imgur.com/Fls370X.png" alt="sample 的起始畫面"></p>
+<p>然後先在 Nx 的 <code>angular.json</code> 裡，找到你的專案的 <code>build</code> 配置，大概長這樣：</p>
+<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">  <span class="hljs-attr">"projects"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"sample"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      <span class="hljs-attr">"architect"</span>: &#123;</span><br><span class="line">        <span class="hljs-attr">"build"</span>: &#123;</span><br><span class="line">          <span class="hljs-attr">"builder"</span>: <span class="hljs-string">"@angular-devkit/build-angular:browser"</span>,</span><br><span class="line">          <span class="hljs-attr">"options"</span>: &#123;</span><br><span class="line">            <span class="hljs-attr">"outputPath"</span>: <span class="hljs-string">"dist/apps/sample"</span>,</span><br><span class="line">            <span class="hljs-attr">"index"</span>: <span class="hljs-string">"apps/sample/src/index.html"</span>,</span><br><span class="line">            <span class="hljs-attr">"main"</span>: <span class="hljs-string">"apps/sample/src/main.ts"</span>,</span><br><span class="line">            <span class="hljs-attr">"polyfills"</span>: <span class="hljs-string">"apps/sample/src/polyfills.ts"</span>,</span><br><span class="line">            <span class="hljs-attr">"tsConfig"</span>: <span class="hljs-string">"apps/sample/tsconfig.app.json"</span>,</span><br><span class="line">            <span class="hljs-attr">"aot"</span>: <span class="hljs-literal">false</span>,</span><br><span class="line">            <span class="hljs-attr">"assets"</span>: [<span class="hljs-string">"apps/sample/src/favicon.ico"</span>, <span class="hljs-string">"apps/sample/src/assets"</span>],</span><br><span class="line">            <span class="hljs-attr">"styles"</span>: [<span class="hljs-string">"apps/sample/src/styles.scss"</span>],</span><br><span class="line">            <span class="hljs-attr">"scripts"</span>: []</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然後加上 <code>stylePreprocessorOptions</code> 跟 <code>extractCss</code> 的配置，像這樣：</p>
+<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">  <span class="hljs-attr">"projects"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"sample"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      <span class="hljs-attr">"architect"</span>: &#123;</span><br><span class="line">        <span class="hljs-attr">"build"</span>: &#123;</span><br><span class="line">          <span class="hljs-attr">"builder"</span>: <span class="hljs-string">"@angular-devkit/build-angular:browser"</span>,</span><br><span class="line">          <span class="hljs-attr">"options"</span>: &#123;</span><br><span class="line">            <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line"></span><br><span class="line">            <span class="hljs-attr">"stylePreprocessorOptions"</span>: &#123;</span><br><span class="line">              <span class="hljs-attr">"includePaths"</span>: [<span class="hljs-string">"libs/sample-lib/src/lib/scss"</span>]</span><br><span class="line">            &#125;,</span><br><span class="line">            <span class="hljs-attr">"extractCss"</span>: <span class="hljs-literal">true</span>,</span><br><span class="line"></span><br><span class="line">            <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">          &#125;,</span><br><span class="line">        &#125;,</span><br><span class="line">        <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>includePaths</code> 裡的路徑就是要處理的 SCSS 的資料夾路徑。</p>
+</blockquote>
+<p>如此一來，就可以到 <code>sample</code> 裡的 SCSS 裡 import （我在 <code>sample</code> 裡的 <code>style.scss</code> import ）：</p>
+<figure class="highlight scss hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">@import</span> <span class="hljs-string">"abc"</span>;</span><br></pre></td></tr></table></figure>
+
+<p>結果：</p>
+<p><img src="https://imgur.com/bJmD3w8.png" alt="import 了 abc 之後的結果"></p>
+<h2 id="參考資料"><a href="#參考資料" class="headerlink" title="參考資料"></a>參考資料</h2><ul>
+<li><a href="https://angular.io/guide/workspace-config#style-preprocessor-options" target="_blank" rel="noopener">Angular 官方文件</a></li>
+</ul>
+
+        </div>
+        
+        
+        
     </div>
 </div>
 
 
+
+
+
+
+
+
+
+    
+<div class="card card-transparent">
+    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
+        <div class="pagination-previous">
+            <a class="is-flex-grow has-text-black-ter" href="/page/2/">上一頁</a>
+        </div>
+        <div class="pagination-next is-invisible is-hidden-mobile">
+            <a class="is-flex-grow has-text-black-ter" href="/page/4/">下一頁</a>
+        </div>
+        <ul class="pagination-list is-hidden-mobile">
+            
+            <li><a class="pagination-link has-text-black-ter" href="/">1</a></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/page/2/">2</a></li>
+            
+            <li><a class="pagination-link is-current" href="/page/3/">3</a></li>
+            
+        </ul>
+    </nav>
+</div>
 </div>
                 
 
