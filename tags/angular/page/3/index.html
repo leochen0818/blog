@@ -159,6 +159,80 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2019-10-31T07:16:03.000Z">2019-10-31</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/Nx/">Nx</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    4 分鐘 閱讀文 (大約 661 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2019/10/31/my-nx-note-tsconfig/">我的 Nx 筆記 - tsconfig.json 的坑</a>
+            
+        </h1>
+        <div class="content">
+            <p>我最近在研究 Nx 時遇到了一個坑，這個坑讓我卡了兩、三個小時，所以我將這件事情筆記下來，希望如果以後有人遇到類似的問題，這篇筆記多少可以幫得上忙。</p>
+<hr>
+<h2 id="問題描述"><a href="#問題描述" class="headerlink" title="問題描述"></a>問題描述</h2><p>在 Angular 專案裡我們經常會看到各種 <code>tsconfig.json</code> ，而這些 <code>tsconfig.json</code> 又繼承來繼承去的，雖然一般我們不會特別去動他們的設定，但當我們因為某些緣故需要去調整的時候，就要特別小心「覆蓋」的問題。</p>
+<p>而我遇到的狀況是，我在使用 <code>JSZip</code> 這個套件時，遇到了下圖中的 Error ：</p>
+<p><img src="https://imgur.com/OycKi6h.png" alt="JSZip 的 Error"></p>
+<p>解決辦法是在 <code>apps/app-name/tsconfig.app.json</code> 的 <code>compilerOptions</code> 裡加上 <code>path</code> 的配置：</p>
+<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">  <span class="hljs-attr">"compilerOptions"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"//"</span>: <span class="hljs-string">"..."</span>,</span><br><span class="line">    <span class="hljs-attr">"paths"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"jszip"</span>: [</span><br><span class="line">        <span class="hljs-string">"node_modules/jszip/dist/jszip.min.js"</span></span><br><span class="line">      ]</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-string">"//"</span>: <span class="hljs-string">"..."</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>加上之後， <code>JSZip</code> 的問題解決了，但變成下圖中的 Error ：</p>
+<p><img src="https://imgur.com/A1e70Q3.png" alt="找不到 libs 裡的 Module"></p>
+<p>我百思不得其解，因為 <code>ng serve</code> 沒有問題，但 <code>build</code> 的時候就會說找不到，而我也試了很多方式都解不掉這個問題。</p>
+<p>後來我想到，會不會是因為設定會被覆蓋的關係？！</p>
+<p>因為原本 <code>libs</code> 裡的 import 路徑會在專案根目錄的 <code>tsconfig.json</code> 裡設定，而 <code>tsconfig.json</code> 們會像下圖這樣繼承配置：</p>
+<p><img src="https://imgur.com/HfUhT58.png" alt="tsconfig.json 的繼承方式示意圖"></p>
+<ol>
+<li><code>apps/app-name/tsconfig.json</code> 繼承 <code>./tsconfig.json</code> 裡的配置 。</li>
+<li><code>apps/app-name/tsconfig.app.json</code> 再繼承 <code>apps/app-name/tsconfig.json</code> 裡的配置。</li>
+</ol>
+<p>因此，當我們一開始在 <code>apps/app-name/tsconfig.app.json</code> 加上因應 <code>JSZip</code> 的 <code>paths</code> 配置時，就覆蓋掉原本在 <code>./tsconfig.json</code> 裡的 <code>paths</code> 配置，造成找不到 <code>libs</code> 裡 export 的 module 的問題。</p>
+<h2 id="解決辦法"><a href="#解決辦法" class="headerlink" title="解決辦法"></a>解決辦法</h2><p>解決這個問題的辦法基本上有兩個：</p>
+<ol>
+<li>在 <code>apps/app-name/tsconfig.app.json</code> 的 <code>paths</code> 補上原本在 <code>./tsconfig.json</code> 的 <code>paths</code> 配置。</li>
+<li>將 <code>JSZip</code> 的配置從 <code>apps/app-name/tsconfig.app.json</code> 移到 <code>./tsconfig.json</code> 裡。</li>
+</ol>
+<p>相對來說，第二個方式絕對會比第一個方式好得多。</p>
+<h2 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h2><p>一般來說，其他的 <code>tsconfig.json</code> 都不太會需要去動，因此只要我們養成習慣，都只在修改在專案根目錄下的 <code>tsconfig.json</code> 的配置就不會有問題了。</p>
+<h2 id="參考連結"><a href="#參考連結" class="headerlink" title="參考連結"></a>參考連結</h2><ul>
+<li><a href="https://stackoverflow.com/questions/43281741/how-to-use-paths-in-tsconfig-json?fbclid=IwAR0jb1yPvfhQhdkNvWPkyRS8HYRc-L3lgPvgjbzZHfrnPJlV2r8iQY7_9wA" target="_blank" rel="noopener">How to use paths in tsconfig.json?</a></li>
+<li><a href="https://www.typescriptlang.org/docs/handbook/module-resolution.html" target="_blank" rel="noopener">TypeScript - Module Resolution</a></li>
+</ul>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2019-10-24T14:29:58.000Z">2019-10-24</time>
                 
                 <div class="level-item">
@@ -291,7 +365,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        22
+                        23
                     </p>
                 </div>
             </div>
@@ -353,7 +427,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">21</span>
+                <span class="level-item tag">22</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -377,7 +451,7 @@
                 <span class="level-item">iThome2021鐵人賽</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">17</span>
+                <span class="level-item tag">18</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/新聞/">
@@ -416,6 +490,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/03/angular-30days-form-and-test-18/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day18 - 與 Cypress 的初次見面（上）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-03T07:53:02.000Z">2021-10-03</time></div>
+                    <a href="/2021/10/03/angular-30days-form-and-test-18/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day18 - 與 Cypress 的初次見面（上）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/02/angular-30days-form-and-test-17/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day17 - E2E 自動化測試工具簡介">
@@ -490,25 +583,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/09/28/angular-30days-form-and-test-13/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day13 - 整合測試實作 - 被保人 by Template Driven Forms">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-28T02:02:02.000Z">2021-09-28</time></div>
-                    <a href="/2021/09/28/angular-30days-form-and-test-13/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day13 - 整合測試實作 - 被保人 by Template Driven Forms</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -527,7 +601,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -603,21 +677,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">21</span>
+                        <span class="tag is-grey">22</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">17</span>
+                        <span class="tag is-grey">18</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">17</span>
+                        <span class="tag is-grey">18</span>
                     </a>
                 </div>
                 
@@ -666,7 +740,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">17</span>
+                        <span class="tag is-grey">18</span>
                     </a>
                 </div>
                 
@@ -680,7 +754,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">17</span>
+                        <span class="tag is-grey">18</span>
                     </a>
                 </div>
                 
@@ -709,6 +783,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/03/angular-30days-form-and-test-18/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day18 - 與 Cypress 的初次見面（上）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-03T07:53:02.000Z">2021-10-03</time></div>
+                    <a href="/2021/10/03/angular-30days-form-and-test-18/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day18 - 與 Cypress 的初次見面（上）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/02/angular-30days-form-and-test-17/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day17 - E2E 自動化測試工具簡介">
@@ -783,25 +876,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/09/28/angular-30days-form-and-test-13/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day13 - 整合測試實作 - 被保人 by Template Driven Forms">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-28T02:02:02.000Z">2021-09-28</time></div>
-                    <a href="/2021/09/28/angular-30days-form-and-test-13/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day13 - 整合測試實作 - 被保人 by Template Driven Forms</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -820,7 +894,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">2</span>
+                    <span class="level-item tag">3</span>
                 </span>
             </a>
         </li>
@@ -896,21 +970,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">21</span>
+                        <span class="tag is-grey">22</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">17</span>
+                        <span class="tag is-grey">18</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">17</span>
+                        <span class="tag is-grey">18</span>
                     </a>
                 </div>
                 
@@ -959,7 +1033,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">17</span>
+                        <span class="tag is-grey">18</span>
                     </a>
                 </div>
                 
@@ -973,7 +1047,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">17</span>
+                        <span class="tag is-grey">18</span>
                     </a>
                 </div>
                 
