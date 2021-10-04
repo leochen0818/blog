@@ -159,6 +159,79 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-03-25T15:35:03.000Z">2021-03-25</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/Angular-之深入解析/">Angular 之深入解析</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    6 分鐘 閱讀文 (大約 900 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/03/25/get-to-the-meet-of-angular-injector/">Angular 之 Injector 探討</a>
+            
+        </h1>
+        <div class="content">
+            <p>關於 Angular 的 Injector ，雖然我之前在寫「<a href="https://ithelp.ithome.com.tw/users/20090728/ironman/1600" target="_blank" rel="noopener">Angular 深入淺出三十天</a>」的系列文時，就有在<a href="https://ithelp.ithome.com.tw/articles/10207283" target="_blank" rel="noopener">基礎結構說明（四）</a>這篇文章裡介紹過，不過今天我在跟朋友們聊到相關的話題時，除了好好的做了個實驗，並把程式碼保留下來之外，也忽然起了個念頭，覺得是該把這個問題寫成文章，讓剛學 Angular 或是對 Angular 的了解沒那麼深的朋友們可以比較容易理解、比較不會用錯（就我個人的經驗來看，沒有注意到這個部分的朋友們還滿多的）。</p>
+<hr>
+<h2 id="問題描述"><a href="#問題描述" class="headerlink" title="問題描述"></a>問題描述</h2><p>在 Angular 裡寫 Service 的時候，我們一般會用以下三種方式註冊它：</p>
+<ol>
+<li>在該 Service 的 <code>@Injectable()</code> 裡加上 <code>{ providedIn: &#39;root&#39; }</code> 的 Metadata （ Angular 7+ 推薦寫法），抑或者在 AppModule 的 <code>providers</code> 裡註冊它（ Angular 6- 的寫法）。</li>
+<li>在相關的功能模組的 <code>providers</code> 裡註冊它。</li>
+<li>在某個 Component 的 <code>providers</code> 裡註冊它。</li>
+</ol>
+<blockquote>
+<p>其實在 Angular 9 之後的版本，除了 <code>providedIn: &#39;root&#39;</code> 之外，還多了 <code>&#39;platform&#39;</code> 與 <code>&#39;any&#39;</code> 這兩個選擇，不過此篇文章不討論這個部分。</p>
+</blockquote>
+<p>這三種註冊方式其中的第一種與第三種，大家比較不會有問題，比較會有問題的是第二種，很多人可能會覺得，我使用起來明明就是同一個實體呀？怎麼官方說是不同實體呢？</p>
+<h2 id="實驗開始"><a href="#實驗開始" class="headerlink" title="實驗開始"></a>實驗開始</h2><p>為了釐清這個問題，我做了個實驗，程式碼在這裡：<a href="https://stackblitz.com/edit/angular-ivy-5fdo5y?file=src/app/app.component.html" target="_blank" rel="noopener">https://stackblitz.com/edit/angular-ivy-5fdo5y?file=src/app/app.component.html</a></p>
+<p>在這個實驗裡，我用了四個 Module ─ <code>AboutModule</code>、<code>ContactModule</code>、<code>HomeModule</code>、<code>WhateverModule</code> 與兩個 Service ─ <code>ASservice</code> 與 <code>BService</code> 來模擬大部分會遇到的情況：</p>
+<ul>
+<li><code>AService</code> 使用 <code>providedIn: &#39;root&#39;</code> 註冊。</li>
+<li><code>HomeModule</code>、<code>ContactModule</code>、<code>WhateverModule</code> 都 import 到 AppModule 裡。</li>
+<li><code>AboutModule</code> 用 <strong>LazyLoading</strong> 的方式載入。</li>
+<li><code>BService</code> 則分別註冊在 <code>ContactModule</code>、<code>HomeModule</code>、<code>AboutModule</code> 的 <code>providers</code> 裡與 <code>WhateverComponent</code> 的 <code>providers</code> 裡。</li>
+</ul>
+<p>結果：</p>
+<p><img src="https://i.imgur.com/KnvmBFp.png" alt="實驗結果"></p>
+<p>有看懂嗎？ <code>BService</code> 在 <code>HomeComponent</code> 與 <code>ContactComponet</code> 裡是用同一個實體，這是因為他們都有被 import 到 AppModule 裡，這時 AppModule（上層 Module）會接手 <code>ContactModule</code>、<code>HomeModule</code>（子層 Module）的 injector，所以他們雖然有分別註冊 <code>BService</code> ，但實際上還是共用了同一個實體。</p>
+<p>這部份其實官網文件有寫到：</p>
+<p><img src="https://imgur.com/tCWTAua.png" alt="官網文件"></p>
+<p>網址在這：<a href="https://angular.io/guide/hierarchical-dependency-injection#moduleinjector" target="_blank" rel="noopener">https://angular.io/guide/hierarchical-dependency-injection#moduleinjector</a></p>
+<p>不過我這裡只有實驗一層的情況，如果 Module 一層一層的接下去，是不是也是一樣的狀況我就沒有特別做實驗了，大家可以自己玩看看。</p>
+<p>至於 <code>AboutComponent</code> 跟 <code>WhateverComponent</code> 呢，很明顯都是使用不同的<br> <code>BService</code> 的實體，前者因為使用 <strong>LazyLoading</strong> 的關係，跟 AppModule 沒有直接關聯，後者則是因為是使用了第三種註冊方式的關係。</p>
+<h2 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h2><p>總而言之，官方之所以提供了不同的註冊方式給我們，就是希望我們可以在不同的情況下使用不同的註冊方式來解決我們的問題，只要能夠熟知這其中的差異，就可以寫出好維護又高品質的系統囉！</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2019-10-31T07:16:03.000Z">2019-10-31</time>
                 
                 <div class="level-item">
@@ -365,7 +438,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        23
+                        24
                     </p>
                 </div>
             </div>
@@ -427,7 +500,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">22</span>
+                <span class="level-item tag">23</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -451,7 +524,7 @@
                 <span class="level-item">iThome2021鐵人賽</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">18</span>
+                <span class="level-item tag">19</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/新聞/">
@@ -490,6 +563,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/04/angular-30days-form-and-test-19/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day19 - 與 Cypress 的初次見面（下）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-04T01:04:05.000Z">2021-10-04</time></div>
+                    <a href="/2021/10/04/angular-30days-form-and-test-19/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day19 - 與 Cypress 的初次見面（下）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/03/angular-30days-form-and-test-18/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day18 - 與 Cypress 的初次見面（上）">
@@ -564,25 +656,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/09/29/angular-30days-form-and-test-14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day14 - 單元測試實作 - 被保人 by Reactive Forms">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-29T01:38:02.000Z">2021-09-29</time></div>
-                    <a href="/2021/09/29/angular-30days-form-and-test-14/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day14 - 單元測試實作 - 被保人 by Reactive Forms</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -601,7 +674,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -677,21 +750,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">22</span>
+                        <span class="tag is-grey">23</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">18</span>
+                        <span class="tag is-grey">19</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">18</span>
+                        <span class="tag is-grey">19</span>
                     </a>
                 </div>
                 
@@ -740,7 +813,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">18</span>
+                        <span class="tag is-grey">19</span>
                     </a>
                 </div>
                 
@@ -754,7 +827,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">18</span>
+                        <span class="tag is-grey">19</span>
                     </a>
                 </div>
                 
@@ -783,6 +856,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/04/angular-30days-form-and-test-19/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day19 - 與 Cypress 的初次見面（下）">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-04T01:04:05.000Z">2021-10-04</time></div>
+                    <a href="/2021/10/04/angular-30days-form-and-test-19/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day19 - 與 Cypress 的初次見面（下）</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/03/angular-30days-form-and-test-18/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day18 - 與 Cypress 的初次見面（上）">
@@ -857,25 +949,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/09/29/angular-30days-form-and-test-14/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day14 - 單元測試實作 - 被保人 by Reactive Forms">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-09-29T01:38:02.000Z">2021-09-29</time></div>
-                    <a href="/2021/09/29/angular-30days-form-and-test-14/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day14 - 單元測試實作 - 被保人 by Reactive Forms</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -894,7 +967,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">3</span>
+                    <span class="level-item tag">4</span>
                 </span>
             </a>
         </li>
@@ -970,21 +1043,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">22</span>
+                        <span class="tag is-grey">23</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">18</span>
+                        <span class="tag is-grey">19</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">18</span>
+                        <span class="tag is-grey">19</span>
                     </a>
                 </div>
                 
@@ -1033,7 +1106,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">18</span>
+                        <span class="tag is-grey">19</span>
                     </a>
                 </div>
                 
@@ -1047,7 +1120,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">18</span>
+                        <span class="tag is-grey">19</span>
                     </a>
                 </div>
                 
