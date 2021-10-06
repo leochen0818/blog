@@ -160,6 +160,131 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-10-06T01:09:41.000Z">2021-10-06</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    16 分鐘 閱讀文 (大約 2335 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/10/06/angular-30days-form-and-test-21/">Angular 深入淺出三十天：表單與測試 Day21 - E2E 測試實作 - 被保人表單</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/UGk2uOx.jpg" alt="Day21"></p>
+<p>大家如果對於昨天的 E2E 測試如果沒有什麼問題的話，今天就來為我們的被保人表單撰寫 E2E 測試吧！</p>
+<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><blockquote>
+<p>撰寫測試前的準備昨天有說過了，今天就不再贅述囉！不知道該幹嘛的朋友可以參考昨天實作開始的一開始的做了些什麼事情。</p>
+</blockquote>
+<p>首先我們一樣先建立一個測試檔 <code>insured-form.spec.js</code>，然後打開剛建立的測試檔加上此句語法讓編輯器可以知道我們在寫 Cypress 以方便撰寫測試程式碼：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">/// &lt;reference types="cypress" /&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>原理昨天一樣有介紹過了，忘記或不知道的朋友可以複習一下<a href="https://ithelp.ithome.com.tw/articles/10277741" target="_blank" rel="noopener">昨天的文章</a>。</p>
+</blockquote>
+<h3 id="被保人表單的第一個-E2E-測試的測試案例"><a href="#被保人表單的第一個-E2E-測試的測試案例" class="headerlink" title="被保人表單的第一個 E2E 測試的測試案例"></a>被保人表單的第一個 E2E 測試的測試案例</h3><p>接著我們打開剛建立的測試檔，來寫我們的第一個 E2E 測試的測試案例，以驗證我們的環境已準備好。</p>
+<p>程式碼如下：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'Insured Form'</span>, () =&gt; &#123;</span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    cy.visit(<span class="hljs-string">'http://localhost:4200'</span>);</span><br><span class="line">    cy.get(<span class="hljs-string">'ul li'</span>).contains(title).click();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'have title "Reactive Forms 實作 ─ 被保險人"'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> title = <span class="hljs-string">'Reactive Forms 實作 ─ 被保險人'</span>;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    cy.get(<span class="hljs-string">'h1'</span>).should(<span class="hljs-string">'have.text'</span>, title);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>執行結果：</p>
+<p><img src="https://i.imgur.com/nDuYWb3.jpg" alt="Testing Result"></p>
+<p>還記得之前在介紹 Test Runner 的時候有稍稍帶過 <code>contains</code> 這個 Command 嗎？</p>
+<blockquote>
+<p>確切是在第 19 天的文章： <a href="https://ithelp.ithome.com.tw/articles/10277229" target="_blank" rel="noopener">與 Cypress 的初次見面（下）</a></p>
+</blockquote>
+<p>這次特別使用一次給大家看，因為如果不使用這個方式， CSS Selector 可能就要寫成： <code>cy.get(&#39;ul li:last-child &gt; a&#39;).click();</code> ，滿醜的。</p>
+<p>當然根據官方的 Best Practice ，直接在上面加個 <code>data-cy=&quot;insured-form-page-link&quot;</code> 的屬性是最好的。</p>
+<blockquote>
+<p>原因一樣在第 19 天的文章： <a href="https://ithelp.ithome.com.tw/articles/10277229" target="_blank" rel="noopener">與 Cypress 的初次見面（下）</a> 有說明過，不知道的朋友可以回去複習一下。</p>
+</blockquote>
+<h3 id="撰寫測試案例"><a href="#撰寫測試案例" class="headerlink" title="撰寫測試案例"></a>撰寫測試案例</h3><p>藉由第一個測試案例來驗證環境沒問題後，我們就可以正式來寫需求的測試案例了。</p>
+<p>複習並整理一下要驗的案例：</p>
+<ul>
+<li>要可以新增被保險人</li>
+<li>要可以刪除被保險人</li>
+<li>輸入正確姓名與選擇年齡後，但沒選擇性別，送出按鈕為 disabled 的狀態</li>
+<li>輸入正確姓名與選擇性別後，但沒選擇年齡，送出按鈕為 disabled 的狀態</li>
+<li>選擇性別與年齡後，但沒輸入姓名，送出按鈕為 disabled 的狀態</li>
+</ul>
+<p>程式碼如下：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'Insured Form'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    cy.visit(<span class="hljs-string">'http://localhost:4200'</span>);</span><br><span class="line">    cy.get(<span class="hljs-string">'ul li'</span>).contains(<span class="hljs-string">'Reactive Forms 實作 ─ 被保險人'</span>).click();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'have title "Reactive Forms 實作 ─ 被保險人"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> title = <span class="hljs-string">'Reactive Forms 實作 ─ 被保險人'</span>;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    cy.get(<span class="hljs-string">'h1'</span>).should(<span class="hljs-string">'have.text'</span>, title);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should can add the insured'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> name = <span class="hljs-string">'Leo'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> gender = <span class="hljs-string">'male'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> age = <span class="hljs-string">'18'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    cy.get(<span class="hljs-string">'[type="button"]'</span>).click();</span><br><span class="line">    cy.get(<span class="hljs-string">'#name-0'</span>).type(name);</span><br><span class="line">    cy.get(<span class="hljs-string">`[for="<span class="hljs-subst">$&#123;gender&#125;</span>-0"]`</span>).click();</span><br><span class="line">    cy.get(<span class="hljs-string">'#age-0'</span>).select(age);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    cy.get(<span class="hljs-string">'[type="submit"]'</span>).should(<span class="hljs-string">'be.enabled'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should can delete the insured'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    cy.get(<span class="hljs-string">'[type="button"]'</span>).click();</span><br><span class="line">    cy.get(<span class="hljs-string">'fieldset'</span>).contains(<span class="hljs-string">'刪除'</span>).click();</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    cy.get(<span class="hljs-string">'fieldset'</span>).should(<span class="hljs-string">'have.length'</span>, <span class="hljs-number">0</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should can not add the insured when the age is not valid'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> name = <span class="hljs-string">'Leo'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> gender = <span class="hljs-string">'male'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    cy.get(<span class="hljs-string">'[type="button"]'</span>).click();</span><br><span class="line">    cy.get(<span class="hljs-string">'#name-0'</span>).type(name);</span><br><span class="line">    cy.get(<span class="hljs-string">`[for="<span class="hljs-subst">$&#123;gender&#125;</span>-0"]`</span>).click();</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    cy.get(<span class="hljs-string">'[type="submit"]'</span>).should(<span class="hljs-string">'be.disabled'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should can not add the insured when the gender is not valid'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> name = <span class="hljs-string">'Leo'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> age = <span class="hljs-string">'18'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    cy.get(<span class="hljs-string">'[type="button"]'</span>).click();</span><br><span class="line">    cy.get(<span class="hljs-string">'#name-0'</span>).type(name);</span><br><span class="line">    cy.get(<span class="hljs-string">'#age-0'</span>).select(age);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    cy.get(<span class="hljs-string">'[type="submit"]'</span>).should(<span class="hljs-string">'be.disabled'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should can not add the insured when the name is not valid'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> gender = <span class="hljs-string">'male'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> age = <span class="hljs-string">'18'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    cy.get(<span class="hljs-string">'[type="button"]'</span>).click();</span><br><span class="line">    cy.get(<span class="hljs-string">`[for="<span class="hljs-subst">$&#123;gender&#125;</span>-0"]`</span>).click();</span><br><span class="line">    cy.get(<span class="hljs-string">'#age-0'</span>).select(age);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    cy.get(<span class="hljs-string">'[type="submit"]'</span>).should(<span class="hljs-string">'be.disabled'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>執行結果：</p>
+<p><img src="https://i.imgur.com/yZ5NiCZ.jpg" alt="Testing Result"></p>
+<p>大家有覺得昨天寫過一次後，今天再寫一次有比較熟悉一點了嗎？</p>
+<p>雖然這次驗的情境比較多，但我覺得如果大多的情境都已經有被整合測試覆蓋到的話，或許只需要驗證第一個情境就好。</p>
+<p>不過在現實中，寫整合測試的人不一定跟寫 E2E 測試的人是同一個，所以寫 E2E 的人照著需求規格寫，多驗一點情境也是很好的。</p>
+<p>在今天的測試程式碼中，比較值得一提的是使用 <code>cy.select()</code> 的使用，它的參數可以欲選擇選項的 <code>value</code> 值，或者是選項的名稱，更可以是選項的 <code>index</code> ，是非常方便的一個 Command 。</p>
+<p>此外，在選年齡時，如果大家不是跟我一樣是點擊 <code>Label</code> ，而是直接點選 Radio Button 的話，記得要使用 <code>cy.check()</code> 的 Command。</p>
+<h3 id="Cypress-的錯誤訊息"><a href="#Cypress-的錯誤訊息" class="headerlink" title="Cypress 的錯誤訊息"></a>Cypress 的錯誤訊息</h3><p>不過就算寫錯也無所謂，因為 Cypress 這個貼心鬼其實都會跟你說你哪裡寫錯、可以怎麼寫。</p>
+<p>例如剛剛說的 <code>cy.select()</code> ，如果我們使用 <code>cy.click()</code> ， Cypress 就會跟你說你可以用 <code>cy.select()</code> 來替代唷！而且還會跟你說你寫錯的地方是在哪一行：</p>
+<p><img src="https://i.imgur.com/Hhmk0Wc.jpg" alt="Error Message"></p>
+<p>又或者你使用了 <code>cy.select()</code> ，但忘記帶參數，它也會跟你說你漏了什麼參數：</p>
+<p><img src="https://i.imgur.com/ZmF5HeG.jpg" alt="Error Message"></p>
+<blockquote>
+<p>Cypress 真是個貼心鬼</p>
+</blockquote>
+<p>撰寫了兩次的 E2E 測試之後，也累積了不少測試案例，這時候大家應該會發現有一些重複的東西散落在不同的測試檔案之中，又或者會有某些 <strong>Hard Code</strong> 在測試程式碼裡的東西應該要被抽出來，以利後續維護。</p>
+<p>這時我們就可以善用在<a href="https://ithelp.ithome.com.tw/articles/10276874" target="_blank" rel="noopener">第 18 天的文章</a>裡曾經提過 <code>fixtures</code> 與 Cypress 的 <code>cypress.json</code> 的配置來達成。</p>
+<h3 id="E2E-測試小技巧-─-環境變數"><a href="#E2E-測試小技巧-─-環境變數" class="headerlink" title="E2E 測試小技巧 ─ 環境變數"></a>E2E 測試小技巧 ─ 環境變數</h3><p>舉例來說，如果你的 E2E 的測試專案都是在測同一個網域的網頁，那我們就可以在 <code>cypress.json</code> 加上 <code>baseUrl</code> 的設置：</p>
+<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"baseUrl"</span>: <span class="hljs-string">"http://localhost:4200"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如此就可讓我們後續使用 <code>cy.visit()</code> 、 <code>cy.request()</code> 或是 <code>cy.intercept()</code> 時，就可以不用再傳入一樣的字串。</p>
+<p>而且這個用法還會有一個好處，就是當需要執行不同環境的測試時，我們可以用像是這樣子的方式來替換掉該變數：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> CYPRESS_BASE_URL=https://product.domain.com cypress run</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>更多的環境變數小技巧請詳閱官方的 <a href="https://docs.cypress.io/guides/guides/environment-variables" target="_blank" rel="noopener">Environment Variables</a> 文件。</p>
+</blockquote>
+<h3 id="E2E-測試小技巧-─-fixtures"><a href="#E2E-測試小技巧-─-fixtures" class="headerlink" title="E2E 測試小技巧 ─ fixtures"></a>E2E 測試小技巧 ─ fixtures</h3><p>上述提到的環境變數一般常用在會因為測試環境改變時需要改變的值上，但其實還有很多值是不會因為環境改變而改變的，這時就可以用上現在這個小技巧。</p>
+<p>這個小技巧其實我也有在第 18 天的文章 ─ <a href="https://ithelp.ithome.com.tw/articles/10276874" target="_blank" rel="noopener">與 Cypress 的初次見面（上）</a> 裡稍微提到過，就是我們可以在 <code>/fixtures</code> 的資料夾底下新增 <code>.json</code> 檔，然後我們可以將值放在裡面，需要的時候再從裡面拿。</p>
+<p>像現在我們可以在 <code>/fixtures</code> 裡新增一個 <code>insured-form.json</code> 的檔案，然後內容大概會是這樣：</p>
+<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"title"</span>: <span class="hljs-string">"Reactive Forms 實作 ─ 被保險人"</span>,</span><br><span class="line">  <span class="hljs-attr">"name"</span>: <span class="hljs-string">"Leo"</span>,</span><br><span class="line">  <span class="hljs-attr">"gender"</span>: <span class="hljs-string">"male"</span>,</span><br><span class="line">  <span class="hljs-attr">"age"</span>: <span class="hljs-string">"18"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然後在 <code>insured-form.spec.js</code> 就可以改成這樣：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> insuredForm <span class="hljs-keyword">from</span> <span class="hljs-string">'../fixtures/insured-form.json'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="hljs-string">'Insured Form'</span>, () =&gt; &#123;</span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    cy.visit(<span class="hljs-string">''</span>);</span><br><span class="line">    cy.get(<span class="hljs-string">'ul li'</span>).contains(insuredForm.title).click();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'have title "Reactive Forms 實作 ─ 被保險人"'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> title = insuredForm.title;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    cy.get(<span class="hljs-string">'h1'</span>).should(<span class="hljs-string">'have.text'</span>, title);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should can add the insured'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> name = insuredForm.name;</span><br><span class="line">    <span class="hljs-keyword">const</span> gender = insuredForm.gender;</span><br><span class="line">    <span class="hljs-keyword">const</span> age = insuredForm.age;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    cy.get(<span class="hljs-string">'[type="button"]'</span>).click();</span><br><span class="line">    cy.get(<span class="hljs-string">'#name-0'</span>).type(name);</span><br><span class="line">    cy.get(<span class="hljs-string">`[for="<span class="hljs-subst">$&#123;gender&#125;</span>-0"]`</span>).click();</span><br><span class="line">    cy.get(<span class="hljs-string">'#age-0'</span>).select(age);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    cy.get(<span class="hljs-string">'[type="submit"]'</span>).should(<span class="hljs-string">'be.enabled'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 以下省略...</span></span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>如此一來，未來當驗證的資料需要改變時，就只要到 <code>/fixtures</code> 裡的 <code>insured-form.json</code> 改就好，維護起來就更加輕鬆愉快囉！</p>
+<blockquote>
+<p>今天我故意沒有用自訂 Command 的技巧來重構我的測試程式碼，大家不妨試著自己自訂看看吧！</p>
+</blockquote>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天的重點主要是後面的兩個小技巧，這兩個小技巧對於日後大家真的在自己的專案或為公司專案撰寫 E2E 測試會非常有幫助，請務必多加熟悉。</p>
+<p>不過平常都用 TypeScript 寫的我覺得很不習慣，明天就來分享怎麼樣把它變成 TypeScript 的版本吧！</p>
+<p>今天的實作程式碼會放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day21" target="_blank" rel="noopener">Github - Branch: day21</a> 上供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
+<p>如果你有任何的問題或是回饋，還請麻煩留言給我讓我知道！</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2021-10-05T01:26:51.000Z">2021-10-05</time>
                 
                 <div class="level-item">
@@ -1594,143 +1719,6 @@
 
 
 
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2021-09-25T23:10:10.000Z">2021-09-26</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    16 分鐘 閱讀文 (大約 2372 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2021/09/26/angular-30days-form-and-test-11/">Angular 深入淺出三十天：表單與測試 Day11 - Reactive Forms 實作 - 動態表單初體驗</a>
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://i.imgur.com/o5VDqEY.jpg" alt="Day11"></p>
-<p>今天要來用 <strong>Reactive Forms</strong> 的方式再來實作一次昨天的表單。</p>
-<p>具體的規格需求跟昨天差不多，如下所示：</p>
-<ul>
-<li>被保險人的欄位：<ul>
-<li>姓名（文字輸入框）<ul>
-<li>最少需要填寫兩個字，如驗證有誤則顯示錯誤訊息<code>姓名至少需兩個字以上</code></li>
-<li>最多只能填寫十個字，如驗證有誤則顯示錯誤訊息<code>姓名最多只能十個字</code></li>
-</ul>
-</li>
-<li>性別（單選）<ul>
-<li>選項：男性、女性</li>
-</ul>
-</li>
-<li>年齡（下拉選單）<ul>
-<li>選項： 18 歲、 20 歲、 70 歲、 75 歲</li>
-</ul>
-</li>
-</ul>
-</li>
-<li>以上欄位皆為必填，如驗證有誤則顯示錯誤訊息<code>此欄位為必填</code></li>
-<li>以上驗證皆需在使用者輸入時動態檢查</li>
-<li>按下新增被保險人按鈕可以新增被保險人</li>
-<li>按下刪除被保險人按鈕可以刪除被保險人</li>
-<li>任一驗證有誤時，送出按鈕皆呈現不可被點選之狀態</li>
-<li>沒有被保險人時，送出按鈕皆呈現不可被點選之狀態</li>
-</ul>
-<p>規格需求看清楚之後，我們就來開始實作吧！</p>
-<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>首先我們一樣先準備好基本的 HTML ：</p>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"formGroup"</span> [<span class="hljs-attr">formGroup</span>]=<span class="hljs-string">"formGroup"</span> (<span class="hljs-attr">ngSubmit</span>)=<span class="hljs-string">"submit()"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">fieldset</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">legend</span>&gt;</span>被保人<span class="hljs-tag">&lt;/<span class="hljs-name">legend</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"name"</span>&gt;</span>姓名：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"name"</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"name"</span> /&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"error-message"</span>&gt;</span>&#123;&#123; getErrorMessage("name") &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">      性別：</span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"male"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"male"</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"gender"</span> /&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"male"</span>&gt;</span>男<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"female"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"female"</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"gender"</span> /&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"female"</span>&gt;</span>女<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"age"</span>&gt;</span>年齡：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"age"</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"age"</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>&gt;</span>請選擇<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"18"</span>&gt;</span>18歲<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"20"</span>&gt;</span>20歲<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"70"</span>&gt;</span>70歲<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"75"</span>&gt;</span>75歲<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"error-message"</span>&gt;</span>&#123;&#123; getErrorMessage("age") &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"button"</span>&gt;</span>刪除<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">fieldset</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"button"</span>&gt;</span>新增被保險人<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span>&gt;</span>送出<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>未經美化的畫面跟昨天長得一樣：</p>
-<p><img src="https://i.imgur.com/U3YxbnN.png" alt="Template view"></p>
-<p>接著跟昨天一樣先把它當成<strong>靜態表單</strong>來準備相關的屬性與方法：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; Component, OnInit &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> &#123; FormBuilder, FormGroup, Validators &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'app-template-driven-forms-async-insured'</span>,</span><br><span class="line">  templateUrl: <span class="hljs-string">'./template-driven-forms-async-insured.component.html'</span>,</span><br><span class="line">  styleUrls: [<span class="hljs-string">'./template-driven-forms-async-insured.component.scss'</span>]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> TemplateDrivenFormsAsyncInsuredComponent &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在表單上</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @type &#123;(FormGroup | undefined)&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  formGroup: FormGroup | <span class="hljs-literal">undefined</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 透過 DI 取得 FromBuilder 物件，用以建立表單</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;FormBuilder&#125; formBuilder</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> formBuilder: FormBuilder</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 當 Component 初始化的時候初始化表單</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.formGroup = <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">      name: [</span><br><span class="line">        <span class="hljs-string">''</span>,</span><br><span class="line">        [Validators.required, Validators.minLength(<span class="hljs-number">2</span>), Validators.maxLength(<span class="hljs-number">10</span>)]</span><br><span class="line">      ],</span><br><span class="line">      gender: [<span class="hljs-string">''</span>, Validators.required],</span><br><span class="line">      age: [<span class="hljs-string">''</span>, Validators.required]</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 透過欄位的 Errors 來取得對應的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; key</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;number&#125; index</span></span><br><span class="line"><span class="hljs-comment">   * @return &#123;*&#125;  &#123;string&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  getErrorMessage(key: <span class="hljs-built_in">string</span>): <span class="hljs-built_in">string</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = <span class="hljs-keyword">this</span>.formGroup?.get(key);</span><br><span class="line">    <span class="hljs-keyword">let</span> errorMessage: <span class="hljs-built_in">string</span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!formControl || !formControl.errors || formControl.pristine) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.required) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.minlength) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'姓名至少需兩個字以上'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.maxlength) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'姓名至多只能輸入十個字'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> errorMessage!;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在表單上，當按下送出按鈕時會觸發此函式</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @memberof TemplateDrivenFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  submit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// do submit...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>準備好相關的屬性和方法之後，我們直接把他們跟 Template 綁定：</p>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"formGroup"</span> [<span class="hljs-attr">formGroup</span>]=<span class="hljs-string">"formGroup"</span> (<span class="hljs-attr">ngSubmit</span>)=<span class="hljs-string">"submit()"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">fieldset</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">legend</span>&gt;</span>被保人<span class="hljs-tag">&lt;/<span class="hljs-name">legend</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"name"</span>&gt;</span>姓名：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">input</span></span></span><br><span class="line"><span class="hljs-tag">        <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span></span></span><br><span class="line"><span class="hljs-tag">        <span class="hljs-attr">id</span>=<span class="hljs-string">"name"</span></span></span><br><span class="line"><span class="hljs-tag">        <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"name"</span></span></span><br><span class="line"><span class="hljs-tag">      /&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"error-message"</span>&gt;</span>&#123;&#123; getErrorMessage('name') &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">      性別：</span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"male"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"male"</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"gender"</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"male"</span>&gt;</span>男<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"female"</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"female"</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"gender"</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"female"</span>&gt;</span>女<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">label</span> <span class="hljs-attr">for</span>=<span class="hljs-string">"age"</span>&gt;</span>年齡：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">id</span>=<span class="hljs-string">"age"</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"age"</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>&gt;</span>請選擇<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"18"</span>&gt;</span>18歲<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"20"</span>&gt;</span>20歲<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"70"</span>&gt;</span>70歲<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"75"</span>&gt;</span>75歲<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"error-message"</span>&gt;</span>&#123;&#123; getErrorMessage('age') &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"button"</span>&gt;</span>刪除<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">fieldset</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"button"</span>&gt;</span>新增被保險人<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span>&gt;</span>送出<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>目前為止，大體上跟我們上次的實作差不多，應該沒有什麼難度。</p>
-<p>不過這次綁定 <code>FormControl</code> 的方式，我改成用 <code>formControlName=&quot;name&quot;</code> ，而不是上次的 <code>[formControl]=&quot;nameControl&quot;</code> ，大家可以自行選用喜歡的方式。</p>
-<blockquote>
-<p>如果大家在這邊有遇到問題，可以檢查看看自己有沒有引入 <code>FormsModule</code> 與 <code>ReactiveFormsModule</code> ，我就不再贅述囉。</p>
-</blockquote>
-<p>目前的結果：</p>
-<p><img src="https://i.imgur.com/6bALBlp.gif" alt="result"></p>
-<p>有了基本的互動效果之後，我們就可以開始來思考怎麼樣把這個表單變成動態的。</p>
-<p>跟昨天一樣的是，既然我們要讓被保人可以被新增或刪除，表示我們應該是會用陣列來表達這些被保人的資料，也就是說，我們現在的 <code>FormGroup</code> 要從 <strong>1</strong> 個變成 <strong>N</strong> 個。</p>
-<p>之前曾經提到，我們如果從資料面來看， <code>{}</code> 代表表單，也就是 <code>FormGroup</code>； <code>&#39;&#39;</code> 代表表單裡的子欄位，也就是 <code>FormControl</code> ；那  <code>[]</code> 呢？</p>
-<p>答案是 ─ <code>FormArray</code> ！</p>
-<p>不過 <code>FormArray</code> 不能直接跟 <code>form</code> 元素綁定，唯一可以跟 <code>form</code> 元素綁定的只有 <code>FormGroup</code> ，所以 <code>FormArray</code> 一定要在 <code>FormGroup</code> 裡面，就像這樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">this</span>.formGroup = <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">  insuredList: <span class="hljs-keyword">this</span>.formBuilder.array([])</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>這邊要注意的是， <code>FormArray</code> 一定要透過 <code>FormBuilder</code> 或是 <code>FormArray</code> 的建構式來建立，像上面示範的那樣，或是這樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">this</span>.formGroup = <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">  insuredList: <span class="hljs-keyword">new</span> FormArray([])</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>絕對不能偷懶寫成這樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">this</span>.formGroup = <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">  insuredList: []</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>這樣的話，就會變成普通的 <code>FormControl</code> 囉！切記切記！</p>
-<p>接著我們就可以將原本的程式碼修改成用陣列的方式，並把新增被保人、刪除被保人與判斷表單是否有效的函式都補上：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Component</span>(&#123;</span><br><span class="line">  <span class="hljs-comment">// 省略...</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在表單上</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @type &#123;(FormGroup | undefined)&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  formGroup: FormGroup | <span class="hljs-literal">undefined</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   *  用以取得 FormArray</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @readonly</span></span><br><span class="line"><span class="hljs-comment">   * @type &#123;FormArray&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">get</span> formArray(): FormArray &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formGroup?.get(<span class="hljs-string">'insuredList'</span>)! <span class="hljs-keyword">as</span> FormArray;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在送出按鈕上，判斷表單是不是無效</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @readonly</span></span><br><span class="line"><span class="hljs-comment">   * @type &#123;boolean&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">get</span> isFormInvalid(): <span class="hljs-built_in">boolean</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formArray.controls.length === <span class="hljs-number">0</span> || <span class="hljs-keyword">this</span>.formGroup!.invalid;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 透過 DI 取得 FromBuilder 物件，用以建立表單</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;FormBuilder&#125; formBuilder</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> formBuilder: FormBuilder</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 當 Component 初始化的時候初始化表單</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.formGroup = <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">      insuredList: <span class="hljs-keyword">this</span>.formBuilder.array([])</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 新增被保人</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  addInsured(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> formGroup = <span class="hljs-keyword">this</span>.createInsuredFormGroup();</span><br><span class="line">    <span class="hljs-keyword">this</span>.formArray.push(formGroup);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 刪除被保人</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;number&#125; index</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  deleteInsured(index: <span class="hljs-built_in">number</span>): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.formArray.controls.splice(index, <span class="hljs-number">1</span>);</span><br><span class="line">    <span class="hljs-keyword">this</span>.formArray.updateValueAndValidity();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 送出表單</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  submit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// do login...</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 透過欄位的 Errors 來取得對應的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; key</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;number&#125; index</span></span><br><span class="line"><span class="hljs-comment">   * @return &#123;*&#125;  &#123;string&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  getErrorMessage(key: <span class="hljs-built_in">string</span>, index: <span class="hljs-built_in">number</span>): <span class="hljs-built_in">string</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> formGroup = <span class="hljs-keyword">this</span>.formArray.controls[index];</span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = formGroup.get(key);</span><br><span class="line">    <span class="hljs-keyword">let</span> errorMessage: <span class="hljs-built_in">string</span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!formControl || !formControl.errors || formControl.pristine) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.required) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.minlength) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'姓名至少需兩個字以上'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.maxlength) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'姓名至多只能輸入十個字'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> errorMessage!;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 建立被保人的表單</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @private</span></span><br><span class="line"><span class="hljs-comment">   * @return &#123;*&#125;  &#123;FormGroup&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">private</span> createInsuredFormGroup(): FormGroup &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">      name: [</span><br><span class="line">        <span class="hljs-string">''</span>,</span><br><span class="line">        [Validators.required, Validators.minLength(<span class="hljs-number">2</span>), Validators.maxLength(<span class="hljs-number">10</span>)]</span><br><span class="line">      ],</span><br><span class="line">      gender: [<span class="hljs-string">''</span>, Validators.required],</span><br><span class="line">      age: [<span class="hljs-string">''</span>, Validators.required]</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>接著我們到 Template 裡，把原本綁定的方式調整一下：</p>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"formGroup"</span> [<span class="hljs-attr">formGroup</span>]=<span class="hljs-string">"formGroup"</span> (<span class="hljs-attr">submit</span>)=<span class="hljs-string">"submit()"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">ng-container</span></span></span><br><span class="line"><span class="hljs-tag">    <span class="hljs-attr">formArrayName</span>=<span class="hljs-string">"insuredList"</span></span></span><br><span class="line"><span class="hljs-tag">    *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let control of formArray.controls; let index = index"</span></span></span><br><span class="line"><span class="hljs-tag">  &gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">fieldset</span> [<span class="hljs-attr">formGroupName</span>]=<span class="hljs-string">"index"</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">legend</span>&gt;</span>被保人<span class="hljs-tag">&lt;/<span class="hljs-name">legend</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">label</span> [<span class="hljs-attr">for</span>]=<span class="hljs-string">"'name-' + index"</span>&gt;</span>姓名：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> [<span class="hljs-attr">id</span>]=<span class="hljs-string">"'name-' + index"</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"name"</span> /&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"error"</span>&gt;</span>&#123;&#123; getErrorMessage("name", index) &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">        性別：</span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">input</span></span></span><br><span class="line"><span class="hljs-tag">          <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span></span></span><br><span class="line"><span class="hljs-tag">          [<span class="hljs-attr">id</span>]=<span class="hljs-string">"'male-' + index"</span></span></span><br><span class="line"><span class="hljs-tag">          <span class="hljs-attr">value</span>=<span class="hljs-string">"male"</span></span></span><br><span class="line"><span class="hljs-tag">          <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"gender"</span></span></span><br><span class="line"><span class="hljs-tag">        /&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">label</span> [<span class="hljs-attr">for</span>]=<span class="hljs-string">"'male-' + index"</span>&gt;</span>男<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">input</span></span></span><br><span class="line"><span class="hljs-tag">          <span class="hljs-attr">type</span>=<span class="hljs-string">"radio"</span></span></span><br><span class="line"><span class="hljs-tag">          [<span class="hljs-attr">id</span>]=<span class="hljs-string">"'female-' + index"</span></span></span><br><span class="line"><span class="hljs-tag">          <span class="hljs-attr">value</span>=<span class="hljs-string">"female"</span></span></span><br><span class="line"><span class="hljs-tag">          <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"gender"</span></span></span><br><span class="line"><span class="hljs-tag">        /&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">label</span> [<span class="hljs-attr">for</span>]=<span class="hljs-string">"'female-' + index"</span>&gt;</span>女<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">label</span> [<span class="hljs-attr">for</span>]=<span class="hljs-string">"'age-' + index"</span>&gt;</span>年齡：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"age"</span> [<span class="hljs-attr">id</span>]=<span class="hljs-string">"'age-' + index"</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"age"</span>&gt;</span></span><br><span class="line">          <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>&gt;</span>請選擇<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">          <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"18"</span>&gt;</span>18歲<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">          <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"20"</span>&gt;</span>20歲<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">          <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"70"</span>&gt;</span>70歲<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">          <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"75"</span>&gt;</span>75歲<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">span</span> <span class="hljs-attr">class</span>=<span class="hljs-string">"error"</span>&gt;</span>&#123;&#123; getErrorMessage("age", index) &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">span</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"button"</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"deleteInsured(index)"</span>&gt;</span>刪除<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">fieldset</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">ng-container</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"button"</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"addInsured()"</span>&gt;</span>新增被保險人<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"submit"</span> [<span class="hljs-attr">disabled</span>]=<span class="hljs-string">"isFormInvalid"</span>&gt;</span>送出<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>初次看到這種綁定方式的 Angular 初學者可能會傻眼，不過靜下心來看之後你會發現，其實這只是我們所建立的 <code>FormGroup</code> 裡的階層關係，這樣綁定 Angular 才能從一層層的表單之中開始往下找。</p>
-<p>如果我們把其他的 HTML 都拿掉的話其實會清楚很多：</p>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"formGroup"</span> [<span class="hljs-attr">formGroup</span>]=<span class="hljs-string">"formGroup"</span> (<span class="hljs-attr">submit</span>)=<span class="hljs-string">"submit()"</span>&gt;</span></span><br><span class="line">  <span class="hljs-comment">&lt;!-- 其他省略 --&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>最外層的這個大家應該都知道，就是我們在 <code>.ts</code> 裡的 <code>formGroup</code> 。</p>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"formGroup"</span> [<span class="hljs-attr">formGroup</span>]=<span class="hljs-string">"formGroup"</span> (<span class="hljs-attr">submit</span>)=<span class="hljs-string">"submit()"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">ng-container</span></span></span><br><span class="line"><span class="hljs-tag">    <span class="hljs-attr">formArrayName</span>=<span class="hljs-string">"insuredList"</span></span></span><br><span class="line"><span class="hljs-tag">    *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let control of formArray.controls; let index = index"</span></span></span><br><span class="line"><span class="hljs-tag">  &gt;</span></span><br><span class="line">    <span class="hljs-comment">&lt;!-- 其他省略 --&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">ng-container</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>而這裡呢，就像我們寫靜態表單的時候，會從 <code>FormGroup</code> 裡根據對應的 <code>key</code> 值找到對應的 <code>FormControl</code> 一樣，這裡則是把對應的 <code>FormArray</code> 找出來。</p>
-<p>然後再用 <code>*ngFor</code> 的方式，把 <code>FormArray</code> 底下的 <code>AbstractControl</code> 都迴圈出來。</p>
-<blockquote>
-<p>關於 <code>AbstractControl</code> ，它其實是一個<strong>抽象類別</strong>，而 <code>FormGroup</code> 、 <code>FormArray</code> 與 <code>FormControl</code> 這三種類型其實都繼承於這個類別，所以大家不知道有沒有注意到，一般我們在 <code>.ts</code> 裡使用的時候，我們會特別用 <code>as FormControl</code> 或是 <code>as FormArray</code> 的方式來讓編譯器知道現在取得的物件實體是什麼型別，以便後續使用。</p>
-<p>想知道更多 <code>AbstractControl</code> 的資訊的話，請參考官方 API 文件： <a href="https://angular.io/api/forms/AbstractControl" target="_blank" rel="noopener">https://angular.io/api/forms/AbstractControl</a> 。</p>
-</blockquote>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"formGroup"</span> [<span class="hljs-attr">formGroup</span>]=<span class="hljs-string">"formGroup"</span> (<span class="hljs-attr">submit</span>)=<span class="hljs-string">"submit()"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">ng-container</span></span></span><br><span class="line"><span class="hljs-tag">    <span class="hljs-attr">formArrayName</span>=<span class="hljs-string">"insuredList"</span></span></span><br><span class="line"><span class="hljs-tag">    *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let control of formArray.controls; let index = index"</span></span></span><br><span class="line"><span class="hljs-tag">  &gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">fieldset</span> [<span class="hljs-attr">formGroupName</span>]=<span class="hljs-string">"index"</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">fieldset</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">ng-container</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>最後再用索引值 <code>index</code> 找出對應的 <code>FormGroup</code> 。</p>
-<p>而要做這件事情其實要有相對應的階層關係的 HTML 來幫忙，但因為我的 HTML 的階層關係少一層，所以我才會用 <code>ng-container</code> 多做一層階層，好讓我的表單可以順利綁上去。</p>
-<p>如果今天你做的 HTML 的階層數是足夠的，就可以不用用 <code>ng-container</code> 多做一層階層，例如把上面的 HTML 改成這樣其實也可以：</p>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"formGroup"</span> [<span class="hljs-attr">formGroup</span>]=<span class="hljs-string">"formGroup"</span> (<span class="hljs-attr">submit</span>)=<span class="hljs-string">"submit()"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">div</span></span></span><br><span class="line"><span class="hljs-tag">    <span class="hljs-attr">formArrayName</span>=<span class="hljs-string">"insuredList"</span></span></span><br><span class="line"><span class="hljs-tag">    *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let control of formArray.controls; let index = index"</span></span></span><br><span class="line"><span class="hljs-tag">  &gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">fieldset</span> [<span class="hljs-attr">formGroupName</span>]=<span class="hljs-string">"index"</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">fieldset</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">div</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>不過用 <code>ng-container</code> 的好處是這個元素並不會真的出現在畫面上，大家可以視情況斟酌使用。</p>
-<p>改完之後就大功告成囉！來看看最後的結果：</p>
-<p><img src="https://i.imgur.com/5nFYq1v.gif" alt="result"></p>
-<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天的學習重點主要是在圍繞在 <code>FormArray</code> 上，因為多了這個階層的關係，所以在與 Template 的綁定上看起來會較為複雜一點點。</p>
-<p>話雖如此，大家可以拿今天的 template 與昨天的 template 互相比較一下，除了 <code>for</code> 與 <code>id</code> 這兩個屬性因為天生侷限的關係真的沒辦法之外，但 <code>name</code> 的部份就不用再去處理了，還是很方便的。</p>
-<p>今天的程式碼我會放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day11" target="_blank" rel="noopener">Github - Branch: day11</a> 上供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
-<p>如果有任何的問題或是回饋，也都非常歡迎留言給我讓我知道噢！</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -1797,7 +1785,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        25
+                        26
                     </p>
                 </div>
             </div>
@@ -1859,7 +1847,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">24</span>
+                <span class="level-item tag">25</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -1883,7 +1871,7 @@
                 <span class="level-item">iThome2021鐵人賽</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">20</span>
+                <span class="level-item tag">21</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/新聞/">
@@ -1922,6 +1910,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/06/angular-30days-form-and-test-21/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day21 - E2E 測試實作 - 被保人表單">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-06T01:09:41.000Z">2021-10-06</time></div>
+                    <a href="/2021/10/06/angular-30days-form-and-test-21/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day21 - E2E 測試實作 - 被保人表單</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/05/angular-30days-form-and-test-20/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day20 - E2E 測試實作 - 登入系統">
@@ -1996,25 +2003,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/01/angular-30days-form-and-test-16/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day16 - Template Driven Forms vs Reactive Forms">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-01T01:15:02.000Z">2021-10-01</time></div>
-                    <a href="/2021/10/01/angular-30days-form-and-test-16/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day16 - Template Driven Forms vs Reactive Forms</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2033,7 +2021,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -2109,21 +2097,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">24</span>
+                        <span class="tag is-grey">25</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">20</span>
+                        <span class="tag is-grey">21</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">20</span>
+                        <span class="tag is-grey">21</span>
                     </a>
                 </div>
                 
@@ -2172,7 +2160,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">20</span>
+                        <span class="tag is-grey">21</span>
                     </a>
                 </div>
                 
@@ -2186,7 +2174,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">20</span>
+                        <span class="tag is-grey">21</span>
                     </a>
                 </div>
                 
@@ -2215,6 +2203,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/06/angular-30days-form-and-test-21/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day21 - E2E 測試實作 - 被保人表單">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-06T01:09:41.000Z">2021-10-06</time></div>
+                    <a href="/2021/10/06/angular-30days-form-and-test-21/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day21 - E2E 測試實作 - 被保人表單</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/05/angular-30days-form-and-test-20/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day20 - E2E 測試實作 - 登入系統">
@@ -2289,25 +2296,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/01/angular-30days-form-and-test-16/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day16 - Template Driven Forms vs Reactive Forms">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-01T01:15:02.000Z">2021-10-01</time></div>
-                    <a href="/2021/10/01/angular-30days-form-and-test-16/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day16 - Template Driven Forms vs Reactive Forms</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2326,7 +2314,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">5</span>
+                    <span class="level-item tag">6</span>
                 </span>
             </a>
         </li>
@@ -2402,21 +2390,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">24</span>
+                        <span class="tag is-grey">25</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">20</span>
+                        <span class="tag is-grey">21</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">20</span>
+                        <span class="tag is-grey">21</span>
                     </a>
                 </div>
                 
@@ -2465,7 +2453,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">20</span>
+                        <span class="tag is-grey">21</span>
                     </a>
                 </div>
                 
@@ -2479,7 +2467,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">20</span>
+                        <span class="tag is-grey">21</span>
                     </a>
                 </div>
                 
