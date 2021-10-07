@@ -160,6 +160,115 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-10-07T01:15:02.000Z">2021-10-07</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    9 分鐘 閱讀文 (大約 1418 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/10/07/angular-30days-form-and-test-22/">Angular 深入淺出三十天：表單與測試 Day22 - 把 Cypress 變成 TypeScript 版</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/lXYaC6G.jpg" alt="Day22"></p>
+<p>平常都用慣 TypeScript 版的 Cypress，但這兩天都用 JavaScript 在寫測試，令我有點不太習慣。</p>
+<p>雖然 JS 版或 TS 版的差別並沒有多大，但少了一些開發時期的型別檢查與 Intellisense 還是令人感到彆扭。</p>
+<p>因此，我們今天就來分享如何把 JS 版的 Cypress 變成 TS 版吧！</p>
+<h2 id="Angular-專案"><a href="#Angular-專案" class="headerlink" title="Angular 專案"></a>Angular 專案</h2><p>首先，如果你的專案是 Angular ，預設不會配有任何 E2E 自動化測試工具，如果我們想要在 Angular 的專案使用 Cypress ，可以直接在終端機輸入以下指令：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> ng add @cypress/schematic</span><br></pre></td></tr></table></figure>
+
+<p>等待它執行完成後，你會發現 Angular Schematics 除了幫你裝好 Cypress 之後，也在 <code>package.json</code> 裡的 <code>scripts</code> 區段增加了以下三個指令：</p>
+<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"e2e"</span>: <span class="hljs-string">"ng e2e"</span>,</span><br><span class="line">    <span class="hljs-attr">"cypress:open"</span>: <span class="hljs-string">"cypress open"</span>,</span><br><span class="line">    <span class="hljs-attr">"cypress:run"</span>: <span class="hljs-string">"cypress run"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>並且在 <code>angular.json</code> 裡的 <code>architect</code> 區段添加了以下設定：</p>
+<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"cypress-run"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"builder"</span>: <span class="hljs-string">"@cypress/schematic:cypress"</span>,</span><br><span class="line">    <span class="hljs-attr">"options"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"devServerTarget"</span>: <span class="hljs-string">"ng-with-cypress:serve"</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="hljs-attr">"configurations"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"production"</span>: &#123;</span><br><span class="line">        <span class="hljs-attr">"devServerTarget"</span>: <span class="hljs-string">"ng-with-cypress:serve:production"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-attr">"cypress-open"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"builder"</span>: <span class="hljs-string">"@cypress/schematic:cypress"</span>,</span><br><span class="line">    <span class="hljs-attr">"options"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"watch"</span>: <span class="hljs-literal">true</span>,</span><br><span class="line">      <span class="hljs-attr">"headless"</span>: <span class="hljs-literal">false</span></span><br><span class="line">    &#125;</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-attr">"e2e"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"builder"</span>: <span class="hljs-string">"@cypress/schematic:cypress"</span>,</span><br><span class="line">    <span class="hljs-attr">"options"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"devServerTarget"</span>: <span class="hljs-string">"ng-with-cypress:serve"</span>,</span><br><span class="line">      <span class="hljs-attr">"watch"</span>: <span class="hljs-literal">true</span>,</span><br><span class="line">      <span class="hljs-attr">"headless"</span>: <span class="hljs-literal">false</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="hljs-attr">"configurations"</span>: &#123;</span><br><span class="line">      <span class="hljs-attr">"production"</span>: &#123;</span><br><span class="line">        <span class="hljs-attr">"devServerTarget"</span>: <span class="hljs-string">"ng-with-cypress:serve:production"</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p><code>e2e</code> 的部份如果原本是使用 <code>Protractor</code> ，也會被調整過來。</p>
+</blockquote>
+<p>這段設定的用意是讓 Angular CLI 知道，當我們要執行 <code>cypress run</code> 、 <code>cypress open</code> 或是 <code>ng e2e</code> 的指令時，會連帶啟動 Angular 的服務，方便開發者使用時，不需額外自己啟動。</p>
+<blockquote>
+<p><del>葛來芬多</del> Cypress 加 10 分！</p>
+</blockquote>
+<p>此外，不可少的 <code>cypress.json</code> 與 <code>/cypress</code> 資料夾當然也已經新增好了，而且 <code>cypress.json</code> 裡還已經幫我們配置了以下設定：</p>
+<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"integrationFolder"</span>: <span class="hljs-string">"cypress/integration"</span>,</span><br><span class="line">  <span class="hljs-attr">"supportFile"</span>: <span class="hljs-string">"cypress/support/index.ts"</span>,</span><br><span class="line">  <span class="hljs-attr">"videosFolder"</span>: <span class="hljs-string">"cypress/videos"</span>,</span><br><span class="line">  <span class="hljs-attr">"screenshotsFolder"</span>: <span class="hljs-string">"cypress/screenshots"</span>,</span><br><span class="line">  <span class="hljs-attr">"pluginsFile"</span>: <span class="hljs-string">"cypress/plugins/index.ts"</span>,</span><br><span class="line">  <span class="hljs-attr">"fixturesFolder"</span>: <span class="hljs-string">"cypress/fixtures"</span>,</span><br><span class="line">  <span class="hljs-attr">"baseUrl"</span>: <span class="hljs-string">"http://localhost:4200"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原本 <code>/cypress</code> 資料夾裡的 <code>.js</code> 檔也都變成了 <code>.ts</code> 檔，至此，我們就成功地把 Cypress 加入的 Angular 專案之中了，是不是超方便、超簡單的？！</p>
+<blockquote>
+<p><del>Angular + Cypress 真的會把開發者寵壞</del></p>
+<p>想知道什麼是 Angular Schematics 嗎？可以閱讀我的系列文：<a href="https://ithelp.ithome.com.tw/users/20090728/ironman/2149" target="_blank" rel="noopener">高效 Coding 術：Angular Schematics 實戰三十天</a>。</p>
+<p>其他更多資訊，可以參考 Cypress 官方文件：<a href="https://docs.cypress.io/guides/migrating-to-cypress/protractor#Recommended-Installation" target="_blank" rel="noopener">https://docs.cypress.io/guides/migrating-to-cypress/protractor#Recommended-Installation</a></p>
+</blockquote>
+<p>額外告訴大家一個小故事：其實這個 Schematics 原本不是官方維護的，這個 Schematics 的原身一開始是這個 <a href="https://www.npmjs.com/package/@briebug/cypress-schematic" target="_blank" rel="noopener">@briebug/cypress-schematic</a> ，不過後來被官方採用，才改由 Cypress 團隊維護。</p>
+<blockquote>
+<p>衷心感謝所有曾經或正在為 Open Source 貢獻心力的每一個人。</p>
+</blockquote>
+<h2 id="其他類型專案"><a href="#其他類型專案" class="headerlink" title="其他類型專案"></a>其他類型專案</h2><p>Angular 專案有 Angular Schematics ，但其他類型的專案或者是單單只有 Cypress 的專案怎辦？</p>
+<p>別擔心，其實要做的事情也不會太繁瑣或困難。</p>
+<p>首先，我們可以先在專案裡輸入以下指令以安裝 TypeScript ：</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> npm install typescript --save-dev</span><br></pre></td></tr></table></figure>
+
+<p>or</p>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> yarn add typescript --dev</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果你的專案裡已經有安裝 TypeScript 的話請略過此步驟</p>
+</blockquote>
+<p>然後在 <code>/cypress</code> 資料夾內新增一個 <code>tsconfig.json</code> 檔，並添加以下內容：</p>
+<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"compilerOptions"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"target"</span>: <span class="hljs-string">"es5"</span>,</span><br><span class="line">    <span class="hljs-attr">"lib"</span>: [<span class="hljs-string">"es5"</span>, <span class="hljs-string">"dom"</span>],</span><br><span class="line">    <span class="hljs-attr">"types"</span>: [<span class="hljs-string">"cypress"</span>]</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-attr">"include"</span>: [<span class="hljs-string">"**/*.ts"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然後就可以把我們的 <code>.js</code> 檔都改成 <code>.ts</code> 檔，並把所有的 <code>/// &lt;reference types=&quot;cypress&quot; /&gt;</code> 都拿掉囉！</p>
+<p>不過別高興地太早，還有一件事情需要我們留意與調整。</p>
+<h3 id="自訂-Command"><a href="#自訂-Command" class="headerlink" title="自訂 Command"></a>自訂 Command</h3><p>之前在 JS 版本使用自訂 Command 時，自訂的 Command 沒有 Intellisense 很不方便，而且參數也都沒有辦法定義型別，也增加了後續維護的困難度。</p>
+<p>而現在我們升級成 TS 版本後，想要享受 TS 所帶來的好處之前，我們需要在我們的 <code>command.ts</code> 檔的開頭增加以下程式碼：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">declare</span> <span class="hljs-keyword">namespace</span> Cypress &#123;</span><br><span class="line">  <span class="hljs-keyword">interface</span> Chainable &#123;</span><br><span class="line">    <span class="hljs-comment">// 這裡面擺放的是自訂 Command 的宣告</span></span><br><span class="line">    <span class="hljs-comment">// 例如：</span></span><br><span class="line">    fillWith(account: <span class="hljs-built_in">string</span>, password: <span class="hljs-built_in">string</span>): Chainable&lt;<span class="hljs-built_in">string</span>&gt;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>原本的自訂 Command 的區塊也可以一併調整成這樣：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Cypress.Commands.add(<span class="hljs-string">'fillWith'</span>, <span class="hljs-function">(<span class="hljs-params">account: <span class="hljs-built_in">string</span>, password: <span class="hljs-built_in">string</span></span>) =&gt;</span> &#123;</span><br><span class="line">  cy.get(<span class="hljs-string">'#account'</span>).type(account);</span><br><span class="line">  cy.get(<span class="hljs-string">'#password'</span>).type(password);</span><br><span class="line">&#125;)</span><br></pre></td></tr></table></figure>
+
+<p>如此一來，我們在寫測試案例的時候即可享有 Intellisense 與型別檢查的好處囉！</p>
+<blockquote>
+<p>想知道更多可以參考官方的 <a href="https://docs.cypress.io/guides/tooling/typescript-support" target="_blank" rel="noopener">TypeScript Support</a> 文件</p>
+</blockquote>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天的重點主要是升級完成後，千萬記得要在 <code>command.ts</code> 加上 <code>namespace</code> 的宣告，這點可能會是很多人會不小心忘記的地方。</p>
+<p>此外，也記得將 <code>/// &lt;reference types=&quot;cypress&quot; /&gt;</code> 從程式碼中移除，這個語法主要是針對 JS 的，升級 TS 之後有它反而會錯。</p>
+<p>我今天的實作程式碼會放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day22" target="_blank" rel="noopener">Github - Branch: day22</a> 上供大家參考，不過雖然該專案是 Angular 專案，但我是使用「其他專案」的方式，所以在測試時會需要自己啟動 Angular 的服務。</p>
+<p>同時也建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
+<p>如果你有任何的問題或是回饋，還請麻煩留言給我讓我知道！</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2021-10-06T01:09:41.000Z">2021-10-06</time>
                 
                 <div class="level-item">
@@ -1598,127 +1707,6 @@
 
 
 
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2021-09-27T01:21:10.000Z">2021-09-27</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    14 分鐘 閱讀文 (大約 2071 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2021/09/27/angular-30days-form-and-test-12/">Angular 深入淺出三十天：表單與測試 Day12 - 單元測試實作 - 被保人 by Template Driven Forms</a>
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://i.imgur.com/UPPvTBB.jpg" alt="Day12"></p>
-<blockquote>
-<p>今天我們要來為我們用 <strong>Template Driven Forms</strong> 所撰寫的被保人表單寫單元測試，如果還沒有相關程式碼的朋友，趕快前往閱讀第十天的文章： <a href="https://ithelp.ithome.com.tw/articles/10271703" target="_blank" rel="noopener">Template Driven Forms 實作 - 動態表單初體驗</a>。</p>
-<p>此外，由於許多同樣的事情已在第六天的文章：<a href="https://ithelp.ithome.com.tw/articles/10268883" target="_blank" rel="noopener">單元測試實作 - 登入系統 by Template Driven Forms</a> 講過了，例如前置作業的部份，我就不再重複贅述囉！</p>
-</blockquote>
-<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>個人習慣要撰寫測試時的第一件事情，就是先把目標類別的依賴都先準備好，例如我們的被保人表單至少會需要 <code>FormsModule</code> 。</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; TestBed &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core/testing'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> &#123; TemplateDrivenFormsAsyncInsuredComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./template-driven-forms-async-insured.component'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="hljs-string">'TemplateDrivenFormsAsyncInsuredComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> component: TemplateDrivenFormsAsyncInsuredComponent;</span><br><span class="line">  <span class="hljs-keyword">let</span> fixture: ComponentFixture&lt;TemplateDrivenFormsAsyncInsuredComponent&gt;;</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">await</span> TestBed.configureTestingModule(&#123;</span><br><span class="line">      declarations: [TemplateDrivenFormsAsyncInsuredComponent],</span><br><span class="line">      imports: [FormsModule]</span><br><span class="line">    &#125;).compileComponents();</span><br><span class="line"></span><br><span class="line">    fixture = TestBed.createComponent(TemplateDrivenFormsAsyncInsuredComponent);</span><br><span class="line">    component = fixture.componentInstance;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should create'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    expect(component).toBeTruthy();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>加完之後使用 <code>ng test</code> 的指令將測試程式啟動起來，應該要能通過我們的第一個測試案例 <code>should create</code>。</p>
-<blockquote>
-<p>雖然有些人可能會發現，當前這個階段如果不加不會報錯，其實這是因為我們的程式一開始沒有任何表單（空陣列），一旦後續測試時加了之後一定會報錯噢！</p>
-</blockquote>
-<p>再次幫大家複習：單元測試主要是要用來驗證<strong>單個類別</strong>的<strong>函式</strong>其實際執行結果是否符合我們預期的執行結果。</p>
-<p>開始前先打開 <code>.ts</code> 來看一下要寫哪些案例：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> TemplateDrivenFormsAsyncInsuredComponent &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 被保險人清單</span></span><br><span class="line">  insuredList: Insured[] = [];</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 根據索引來重新渲染有更改的節點</span></span><br><span class="line"><span class="hljs-comment">   * 詳情請參考官方文件：https://angular.tw/api/common/NgForOf</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; index</span></span><br><span class="line"><span class="hljs-comment">   * @return &#123;*&#125;  &#123;number&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof AppComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">   trackByIndex(index: <span class="hljs-built_in">number</span>): <span class="hljs-built_in">number</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> index;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在姓名欄位上，當使用者改變被保險人的姓名時，會觸發此函式，並取得對應的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; name</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;ValidationErrors | null&#125; errors</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;Insured&#125; insured</span></span><br><span class="line"><span class="hljs-comment">   * @memberof TemplateDrivenFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  insuredNameChange(name: <span class="hljs-built_in">string</span>, errors: ValidationErrors | <span class="hljs-literal">null</span>, insured: Insured): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    insured.name = name;</span><br><span class="line">    insured.nameErrorMessage = <span class="hljs-keyword">this</span>.getErrorMessage(errors);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在年齡欄位上，當使用者改變被保險人的年齡時，會觸發此函式，並取得對應的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; age</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;ValidationErrors | null&#125; errors</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;Insured&#125; insured</span></span><br><span class="line"><span class="hljs-comment">   * @memberof TemplateDrivenFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">   insuredAgeChange(age: <span class="hljs-built_in">string</span>, errors: ValidationErrors | <span class="hljs-literal">null</span>, insured: Insured): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    insured.age = age;</span><br><span class="line">    insured.ageErrorMessage = <span class="hljs-keyword">this</span>.getErrorMessage(errors);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 新增被保險人</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @memberof TemplateDrivenFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  addInsured(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> insured: Insured = &#123;</span><br><span class="line">      name: <span class="hljs-string">''</span>,</span><br><span class="line">      gender: <span class="hljs-string">''</span>,</span><br><span class="line">      age: <span class="hljs-string">''</span>,</span><br><span class="line">      nameErrorMessage: <span class="hljs-string">''</span>,</span><br><span class="line">      ageErrorMessage: <span class="hljs-string">''</span></span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="hljs-keyword">this</span>.insuredList.push(insured);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 刪除被保險人</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;number&#125; index</span></span><br><span class="line"><span class="hljs-comment">   * @memberof TemplateDrivenFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  deleteInsured(index: <span class="hljs-built_in">number</span>): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.insuredList.splice(index, <span class="hljs-number">1</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 根據 FormControl 的 errors 屬性取得相應的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @private</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;ValidationErrors | null&#125; errors - FormControl 的 errors</span></span><br><span class="line"><span class="hljs-comment">   * @return &#123;*&#125;  &#123;string&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof TemplateDrivenFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">private</span> getErrorMessage(errors: ValidationErrors | <span class="hljs-literal">null</span>): <span class="hljs-built_in">string</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> errorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (errors?.required) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (errors?.minlength) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'姓名至少需兩個字以上'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> errorMessage;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以目前的程式碼來看，我們要測的單元有 <code>trackByIndex</code> 、 <code>insuredNameChange</code> 、 <code>insuredAgeChange</code> 、 <code>addInsured</code> 與 <code>deleteInsured</code> 這五個，接下來我們照順序先從 <code>trackByIndex</code> 來寫好了。</p>
-<h3 id="測試單元-trackByIndex"><a href="#測試單元-trackByIndex" class="headerlink" title="測試單元 - trackByIndex"></a>測試單元 - trackByIndex</h3><p>這個測試單元非常簡單，不多說直接看程式碼：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'trackByIndex'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should just return the index'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> index = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.trackByIndex(index)).toBe(index);</span><br><span class="line">  &#125;)</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>測試結果：</p>
-<p><img src="https://i.imgur.com/gzRggNz.png" alt="testing result"></p>
-<h3 id="測試單元-insuredNameChange"><a href="#測試單元-insuredNameChange" class="headerlink" title="測試單元 - insuredNameChange"></a>測試單元 - insuredNameChange</h3><p>接下來要測的單元是 <code>insuredNameChange</code> ，要測的案例有：</p>
-<ol>
-<li>會將傳入的 <code>name</code> 的值賦值給傳入的 <code>insured</code> 裡的 <code>name</code> 。</li>
-<li>如果傳入的 <code>errors</code> 有 <code>required</code> 欄位，則會將錯誤訊息 <code>此欄位必填</code> 賦值給傳入的 <code>insured</code> 裡的 <code>nameErrorMessage</code> 。</li>
-<li>如果傳入的 <code>errors</code> 有 <code>minlength</code> 欄位，則會將錯誤訊息 <code>姓名至少需兩個字以上</code> 賦值傳入的 <code>insured</code> 裡的 <code>nameErrorMessage</code> 。</li>
-</ol>
-<p>程式碼如下：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'insuredNameChange'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> insured: Insured;</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    insured = &#123;</span><br><span class="line">      name: <span class="hljs-string">''</span>,</span><br><span class="line">      gender: <span class="hljs-string">''</span>,</span><br><span class="line">      age: <span class="hljs-string">''</span>,</span><br><span class="line">      nameErrorMessage: <span class="hljs-string">''</span>,</span><br><span class="line">      ageErrorMessage: <span class="hljs-string">''</span></span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should assign the value of the formControl to property "name" of the insured'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> value = <span class="hljs-string">'Leo'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = <span class="hljs-literal">null</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.insuredNameChange(value, errors, insured);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(insured.name).toBe(value);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should assign error message "此欄位必填" to property "nameErrorMessage" of the insured when the value of the formControl is empty string'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> value = <span class="hljs-string">''</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = &#123; required: <span class="hljs-literal">true</span> &#125;;</span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.insuredNameChange(value, errors, insured);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(insured.nameErrorMessage).toBe(errorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should assign error message "姓名至少需兩個字以上" to property "nameErrorMessage" of the insured when the value\;s length of the formControl less than 2'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> value = <span class="hljs-string">'L'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = &#123;</span><br><span class="line">      minlength: &#123;</span><br><span class="line">        actualLength: <span class="hljs-number">1</span>,</span><br><span class="line">        requiredLength: <span class="hljs-number">2</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = <span class="hljs-string">'姓名至少需兩個字以上'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.insuredNameChange(value, errors, insured);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(insured.nameErrorMessage).toBe(errorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>這邊的程式碼大家應該都還算熟悉，比較特別需要提醒的是，記得要把初始化這件事寫在 <code>beforeEach</code> 裡，讓每個測試案例在執行之前都能拿到重新初始化過後的值，避免與其他的測試案例共用同個資料或物件。</p>
-<p>測試結果：</p>
-<p><img src="https://i.imgur.com/4GQ2NGz.png" alt="testing result"></p>
-<h3 id="測試單元-insuredAgeChange"><a href="#測試單元-insuredAgeChange" class="headerlink" title="測試單元 - insuredAgeChange"></a>測試單元 - insuredAgeChange</h3><p>下個要測的單元是 <code>insuredAgeChange</code> ，基本上跟 <code>insuredNameChange</code> 相似度高達 87% ，要測試的案例有：</p>
-<ol>
-<li>會將傳入的 <code>age</code> 的值賦值給傳入的 <code>insured</code> 裡的 <code>name</code> 。</li>
-<li>如果傳入的 <code>errors</code> 有 <code>required</code> 欄位，則會將錯誤訊息 <code>此欄位必填</code> 賦值給傳入的 <code>insured</code> 裡的 <code>nameErrorMessage</code> 。</li>
-</ol>
-<p>程式碼如下：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'insuredAgeChange'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> insured: Insured;</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    insured = &#123;</span><br><span class="line">      name: <span class="hljs-string">''</span>,</span><br><span class="line">      gender: <span class="hljs-string">''</span>,</span><br><span class="line">      age: <span class="hljs-string">''</span>,</span><br><span class="line">      nameErrorMessage: <span class="hljs-string">''</span>,</span><br><span class="line">      ageErrorMessage: <span class="hljs-string">''</span></span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should assign the value of the formControl to property "age" of the insured'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> age = <span class="hljs-string">'18'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = <span class="hljs-literal">null</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.insuredAgeChange(age, errors, insured);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(insured.age).toBe(age);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should assign error message "此欄位必填" to property "ageErrorMessage" of the insured when the value of the formControl is empty string'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> age = <span class="hljs-string">''</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = &#123; required: <span class="hljs-literal">true</span> &#125;;</span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.insuredAgeChange(age, errors, insured);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(insured.ageErrorMessage).toBe(errorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>測試結果：</p>
-<p><img src="https://i.imgur.com/e74DSHj.png" alt="testing result"></p>
-<h3 id="測試單元-addInsured"><a href="#測試單元-addInsured" class="headerlink" title="測試單元 - addInsured"></a>測試單元 - addInsured</h3><p>這個單元的測試也是相當簡單，基本上只要驗證執行後會新增一個被保人表單的資料即可。</p>
-<p>程式碼如下：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'addInsured'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should add a new insured data into property "insuredList" after being triggered'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> expectResult: Insured[] = [&#123;</span><br><span class="line">      name: <span class="hljs-string">''</span>,</span><br><span class="line">      gender: <span class="hljs-string">''</span>,</span><br><span class="line">      age: <span class="hljs-string">''</span>,</span><br><span class="line">      nameErrorMessage: <span class="hljs-string">''</span>,</span><br><span class="line">      ageErrorMessage: <span class="hljs-string">''</span></span><br><span class="line">    &#125;];</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.addInsured();</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.insuredList).toEqual(expectResult);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>測試結果：</p>
-<p><img src="https://i.imgur.com/e74DSHj.png" alt="testing result"></p>
-<p>雖然很間單，但大家有沒有注意到，在這我裡我不是用 <code>toBe</code> 而是用 <code>toEqual</code> 來驗證？</p>
-<p><code>toBe</code> 的比較一般會用在原始型別的對比上，但如果今天要對比的是物件就要改成用 <code>toEqual</code> 來驗證了。</p>
-<blockquote>
-<p>如果不知道為什麼的朋友，可能要先複習一下 JS 的核心概念囉！</p>
-<p>參考文件：<a href="https://developer.mozilla.org/zh-TW/docs/Web/JavaScript/Equality_comparisons_and_sameness#%E7%90%86%E8%A7%A3%E7%9B%B8%E7%AD%89%E6%AF%94%E8%BC%83%E6%A8%A1%E5%9E%8B" target="_blank" rel="noopener">MDN 官方文件 - 理解相等比較模型</a>。</p>
-</blockquote>
-<p>測試結果：</p>
-<p><img src="https://i.imgur.com/w69OySD.png" alt="testing result"></p>
-<h3 id="測試單元-deleteInsured"><a href="#測試單元-deleteInsured" class="headerlink" title="測試單元 - deleteInsured"></a>測試單元 - deleteInsured</h3><p>最後一個單元也非常簡單，基本上只要驗證能將被保人的資料從 <code>insuredList</code> 中刪除即可。</p>
-<p>程式碼如下</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'deleteInsured'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should delete the insured data by the index after being triggered'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    component.insuredList = [&#123;</span><br><span class="line">      name: <span class="hljs-string">''</span>,</span><br><span class="line">      gender: <span class="hljs-string">''</span>,</span><br><span class="line">      age: <span class="hljs-string">''</span>,</span><br><span class="line">      nameErrorMessage: <span class="hljs-string">''</span>,</span><br><span class="line">      ageErrorMessage: <span class="hljs-string">''</span></span><br><span class="line">    &#125;];</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.deleteInsured(<span class="hljs-number">0</span>);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.insuredList).toEqual([]);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>測試結果：</p>
-<p><img src="https://i.imgur.com/qqAEhTB.png" alt="testing result"></p>
-<p>今天所有的測試結果：</p>
-<p><img src="https://i.imgur.com/CCLG169.png" alt="testing result"></p>
-<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>不知道大家有沒有覺得今天的單元測試很簡單，甚至是有點無聊了呢？</p>
-<p>與一開始還沒接觸時相比，是不是覺得其實寫單元測試也沒花多少時間，而且更可以保證程式碼的品質呢？</p>
-<p>沒錯，這一切都會隨著熟練度的提升而變得愈加容易！</p>
-<p>今天的學習重點主要是：</p>
-<ol>
-<li>清楚 <code>toBe</code> 與 <code>toEqual</code> 的差別。</li>
-<li>測試隔離</li>
-<li>練習寫測試</li>
-</ol>
-<p>今天的程式碼會放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day12" target="_blank" rel="noopener">Github - Branch: day12</a> 上供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
-<p>如果有任何的問題或是回饋，也都非常歡迎留言給我讓我知道噢！</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -1785,7 +1773,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        26
+                        27
                     </p>
                 </div>
             </div>
@@ -1847,7 +1835,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">25</span>
+                <span class="level-item tag">26</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -1871,7 +1859,7 @@
                 <span class="level-item">iThome2021鐵人賽</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">21</span>
+                <span class="level-item tag">22</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/新聞/">
@@ -1910,6 +1898,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/07/angular-30days-form-and-test-22/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day22 - 把 Cypress 變成 TypeScript 版">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-07T01:15:02.000Z">2021-10-07</time></div>
+                    <a href="/2021/10/07/angular-30days-form-and-test-22/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day22 - 把 Cypress 變成 TypeScript 版</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/06/angular-30days-form-and-test-21/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day21 - E2E 測試實作 - 被保人表單">
@@ -1984,25 +1991,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/02/angular-30days-form-and-test-17/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day17 - E2E 自動化測試工具簡介">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-02T09:02:02.000Z">2021-10-02</time></div>
-                    <a href="/2021/10/02/angular-30days-form-and-test-17/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day17 - E2E 自動化測試工具簡介</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2021,7 +2009,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -2097,21 +2085,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">25</span>
+                        <span class="tag is-grey">26</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">21</span>
+                        <span class="tag is-grey">22</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">21</span>
+                        <span class="tag is-grey">22</span>
                     </a>
                 </div>
                 
@@ -2160,7 +2148,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">21</span>
+                        <span class="tag is-grey">22</span>
                     </a>
                 </div>
                 
@@ -2174,7 +2162,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">21</span>
+                        <span class="tag is-grey">22</span>
                     </a>
                 </div>
                 
@@ -2203,6 +2191,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/07/angular-30days-form-and-test-22/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day22 - 把 Cypress 變成 TypeScript 版">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-07T01:15:02.000Z">2021-10-07</time></div>
+                    <a href="/2021/10/07/angular-30days-form-and-test-22/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day22 - 把 Cypress 變成 TypeScript 版</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/06/angular-30days-form-and-test-21/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day21 - E2E 測試實作 - 被保人表單">
@@ -2277,25 +2284,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/02/angular-30days-form-and-test-17/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day17 - E2E 自動化測試工具簡介">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-02T09:02:02.000Z">2021-10-02</time></div>
-                    <a href="/2021/10/02/angular-30days-form-and-test-17/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day17 - E2E 自動化測試工具簡介</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2314,7 +2302,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">6</span>
+                    <span class="level-item tag">7</span>
                 </span>
             </a>
         </li>
@@ -2390,21 +2378,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">25</span>
+                        <span class="tag is-grey">26</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">21</span>
+                        <span class="tag is-grey">22</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">21</span>
+                        <span class="tag is-grey">22</span>
                     </a>
                 </div>
                 
@@ -2453,7 +2441,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">21</span>
+                        <span class="tag is-grey">22</span>
                     </a>
                 </div>
                 
@@ -2467,7 +2455,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">21</span>
+                        <span class="tag is-grey">22</span>
                     </a>
                 </div>
                 
