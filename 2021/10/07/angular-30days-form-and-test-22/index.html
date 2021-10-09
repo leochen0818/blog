@@ -17,7 +17,7 @@
 <meta property="og:description" content="平常都用慣 TypeScript 版的 Cypress，但這兩天都用 JavaScript 在寫測試，令我有點不太習慣。 雖然 JS 版或 TS 版的差別並沒有多大，但少了一些開發時期的型別檢查與 Intellisense 還是令人感到彆扭。 因此，我們今天就來分享如何把 JS 版的 Cypress 變成 TS 版吧！ Angular 專案首先，如果你的專案是 Angular ，預設不會配有任何">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
-<meta property="og:updated_time" content="2021-10-07T01:14:45.758Z">
+<meta property="og:updated_time" content="2021-10-08T16:49:02.700Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 深入淺出三十天：表單與測試 Day22 - 把 Cypress 變成 TypeScript 版">
 <meta name="twitter:description" content="平常都用慣 TypeScript 版的 Cypress，但這兩天都用 JavaScript 在寫測試，令我有點不太習慣。 雖然 JS 版或 TS 版的差別並沒有多大，但少了一些開發時期的型別檢查與 Intellisense 還是令人感到彆扭。 因此，我們今天就來分享如何把 JS 版的 Cypress 變成 TS 版吧！ Angular 專案首先，如果你的專案是 Angular ，預設不會配有任何">
@@ -163,7 +163,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    9 分鐘 閱讀文 (大約 1418 個字)
+                    12 分鐘 閱讀文 (大約 1741 個字)
                 </span>
                 
                 
@@ -224,6 +224,23 @@
 <figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"compilerOptions"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"target"</span>: <span class="hljs-string">"es5"</span>,</span><br><span class="line">    <span class="hljs-attr">"lib"</span>: [<span class="hljs-string">"es5"</span>, <span class="hljs-string">"dom"</span>],</span><br><span class="line">    <span class="hljs-attr">"types"</span>: [<span class="hljs-string">"cypress"</span>]</span><br><span class="line">  &#125;,</span><br><span class="line">  <span class="hljs-attr">"include"</span>: [<span class="hljs-string">"**/*.ts"</span>]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>然後就可以把我們的 <code>.js</code> 檔都改成 <code>.ts</code> 檔，並把所有的 <code>/// &lt;reference types=&quot;cypress&quot; /&gt;</code> 都拿掉囉！</p>
+<p>不過如果你本來的專案就是 TypeScript 的，這時候你可能會發現你原本非 E2E 測試的 <code>.spec.ts</code> 檔案多了一堆紅色毛毛蟲：</p>
+<p><img src="https://i.imgur.com/iDsSEXC.jpg" alt="VSCode Capture"></p>
+<p>然後你將滑鼠游標移到紅色毛毛蟲上， VSCode 會跟你說：</p>
+<p><img src="https://i.imgur.com/2ctqNxt.jpg" alt="VSCode Capture"></p>
+<p>但是如果我們實際跑測試的話，又都會通過，那到底為什麼會有紅色毛毛蟲呢？</p>
+<p>其實這是因為， VSCode 以為原本非 E2E 測試的 <code>.spec.ts</code> 是 Cypress 的檔案，所以它把原本是 <a href="https://jasmine.github.io/" target="_blank" rel="noopener">Jasmine</a> 的 <code>expect()</code> ：</p>
+<p><img src="https://i.imgur.com/8Q2HqrU.jpg" alt="VSCode Capture"></p>
+<p>誤認為是 <a href="https://www.chaijs.com/" target="_blank" rel="noopener">Chai</a> 的 <code>expect()</code> ：</p>
+<p><img src="https://i.imgur.com/MrFpRUK.jpg" alt="VSCode Capture"></p>
+<p>那該怎麼辦才好呢？</p>
+<p>其實會造成這個狀況是因為 VSCode 它預設會吃 <code>tsconfig.json</code> 的設定，而如果原本根目錄就有 <code>tsconfig.json</code> ，然後又在 <code>/cypress</code> 裡加了 <code>tsconfig.json</code> 的話，就會出現這種狀況。</p>
+<p>這時我們只需要在根目錄的 <code>tsconfig.json</code> 加上這個設定就可以恢復正常了：</p>
+<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"include"</span>: [</span><br><span class="line">    <span class="hljs-string">"src"</span>,</span><br><span class="line">    <span class="hljs-string">"node_modules/cypress"</span></span><br><span class="line">  ],</span><br><span class="line">  <span class="hljs-attr">"exclude"</span>: [</span><br><span class="line">    <span class="hljs-string">"node_modules/cypress"</span></span><br><span class="line">  ]</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>如果這部份有遇到問題的話，可以參考我的 Source Code 的設定。</p>
+</blockquote>
 <p>不過別高興地太早，還有一件事情需要我們留意與調整。</p>
 <h3 id="自訂-Command"><a href="#自訂-Command" class="headerlink" title="自訂 Command"></a>自訂 Command</h3><p>之前在 JS 版本使用自訂 Command 時，自訂的 Command 沒有 Intellisense 很不方便，而且參數也都沒有辦法定義型別，也增加了後續維護的困難度。</p>
 <p>而現在我們升級成 TS 版本後，想要享受 TS 所帶來的好處之前，我們需要在我們的 <code>command.ts</code> 檔的開頭增加以下程式碼：</p>
@@ -353,7 +370,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        28
+                        29
                     </p>
                 </div>
             </div>
@@ -415,7 +432,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">27</span>
+                <span class="level-item tag">28</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -439,7 +456,7 @@
                 <span class="level-item">iThome2021鐵人賽</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">23</span>
+                <span class="level-item tag">24</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/新聞/">
@@ -478,6 +495,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/09/angular-30days-form-and-test-24/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-09T08:04:36.000Z">2021-10-09</time></div>
+                    <a href="/2021/10/09/angular-30days-form-and-test-24/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/08/angular-30days-form-and-test-23/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯">
@@ -552,25 +588,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/04/angular-30days-form-and-test-19/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day19 - 與 Cypress 的初次見面（下）">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-04T01:04:05.000Z">2021-10-04</time></div>
-                    <a href="/2021/10/04/angular-30days-form-and-test-19/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day19 - 與 Cypress 的初次見面（下）</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -589,7 +606,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">8</span>
+                    <span class="level-item tag">9</span>
                 </span>
             </a>
         </li>
@@ -665,21 +682,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">23</span>
+                        <span class="tag is-grey">24</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">23</span>
+                        <span class="tag is-grey">24</span>
                     </a>
                 </div>
                 
@@ -728,7 +745,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">23</span>
+                        <span class="tag is-grey">24</span>
                     </a>
                 </div>
                 
@@ -742,7 +759,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">23</span>
+                        <span class="tag is-grey">24</span>
                     </a>
                 </div>
                 
@@ -771,6 +788,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/09/angular-30days-form-and-test-24/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-09T08:04:36.000Z">2021-10-09</time></div>
+                    <a href="/2021/10/09/angular-30days-form-and-test-24/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/08/angular-30days-form-and-test-23/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯">
@@ -845,25 +881,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/04/angular-30days-form-and-test-19/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day19 - 與 Cypress 的初次見面（下）">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-04T01:04:05.000Z">2021-10-04</time></div>
-                    <a href="/2021/10/04/angular-30days-form-and-test-19/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day19 - 與 Cypress 的初次見面（下）</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -882,7 +899,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">8</span>
+                    <span class="level-item tag">9</span>
                 </span>
             </a>
         </li>
@@ -958,21 +975,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">23</span>
+                        <span class="tag is-grey">24</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">23</span>
+                        <span class="tag is-grey">24</span>
                     </a>
                 </div>
                 
@@ -1021,7 +1038,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">23</span>
+                        <span class="tag is-grey">24</span>
                     </a>
                 </div>
                 
@@ -1035,7 +1052,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">23</span>
+                        <span class="tag is-grey">24</span>
                     </a>
                 </div>
                 

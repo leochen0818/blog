@@ -1,0 +1,1314 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching - Leo&#39;s Coding Life</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<base href="/">
+
+
+
+    <meta name="description" content="在日常生活中，大家應該滿常看到有些系統的搜尋輸入框是可以在一邊打字的同時，一邊將搜尋結果呈現在一個下拉選單裡，非常地貼心且方便。 當然，這其中其實有很多細節，不過我們今天就專注在前端的表單開發上，來用 Reactive Forms 實作這個搜尋輸入框吧！  沒錯，就算只是個搜尋框，它也是個表單噢！  正好最近六角學院即將舉辦第三屆的前端 &amp;amp; UI 修煉精神時光屋的活動，這次它們與交通部合">
+<meta name="keywords" content="angular,form,testing,frontend,web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching">
+<meta property="og:url" content="https://blog.leochen.dev/2021/10/09/angular-30days-form-and-test-24/index.html">
+<meta property="og:site_name" content="Leo&#39;s Coding Life">
+<meta property="og:description" content="在日常生活中，大家應該滿常看到有些系統的搜尋輸入框是可以在一邊打字的同時，一邊將搜尋結果呈現在一個下拉選單裡，非常地貼心且方便。 當然，這其中其實有很多細節，不過我們今天就專注在前端的表單開發上，來用 Reactive Forms 實作這個搜尋輸入框吧！  沒錯，就算只是個搜尋框，它也是個表單噢！  正好最近六角學院即將舉辦第三屆的前端 &amp;amp; UI 修煉精神時光屋的活動，這次它們與交通部合">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
+<meta property="og:updated_time" content="2021-10-09T08:04:50.961Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching">
+<meta name="twitter:description" content="在日常生活中，大家應該滿常看到有些系統的搜尋輸入框是可以在一邊打字的同時，一邊將搜尋結果呈現在一個下拉選單裡，非常地貼心且方便。 當然，這其中其實有很多細節，不過我們今天就專注在前端的表單開發上，來用 Reactive Forms 實作這個搜尋輸入框吧！  沒錯，就算只是個搜尋框，它也是個表單噢！  正好最近六角學院即將舉辦第三屆的前端 &amp;amp; UI 修煉精神時光屋的活動，這次它們與交通部合">
+<meta name="twitter:image" content="https://blog.leochen.dev/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145121750-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', "UA-145121750-1");
+</script>
+
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜尋" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-10-09T08:04:36.000Z">2021-10-09</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    21 分鐘 閱讀文 (大約 3100 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/MyMnZN1.jpg" alt="Day24"></p>
+<p>在日常生活中，大家應該滿常看到有些系統的搜尋輸入框是可以在一邊打字的同時，一邊將搜尋結果呈現在一個下拉選單裡，非常地貼心且方便。</p>
+<p>當然，這其中其實有很多細節，不過我們今天就專注在前端的表單開發上，來用 <strong>Reactive Forms</strong> 實作這個搜尋輸入框吧！</p>
+<blockquote>
+<p>沒錯，就算只是個搜尋框，它也是個表單噢！</p>
+</blockquote>
+<p>正好最近<a href="https://www.hexschool.com/" target="_blank" rel="noopener">六角學院</a>即將舉辦<a href="https://www.hexschool.com/2021/09/09/2021-09-09-the-f2e-3-2021" target="_blank" rel="noopener">第三屆的前端 &amp; UI 修煉精神時光屋</a>的活動，這次它們與交通部合作，並提供了全國最大的<br><a href="https://tdx.transportdata.tw/api-service/swagger" target="_blank" rel="noopener">運輸資料流通服務平台 (TDX) 之交通 API</a> 給大家使用，讓大家可以透過此活動精進自己的實力，非常推薦給大家。</p>
+<blockquote>
+<p>想當初我第一次寫鐵人賽時，也是使用了參加六角舉辦的第一屆前端修煉精神時光屋的素材來寫，雖然這次沒有要參賽，但又跟六角有關係了呢！</p>
+</blockquote>
+<p>總之，藉由這次的機會與交通部提供的 <a href="https://tdx.transportdata.tw/api-service/swagger" target="_blank" rel="noopener">運輸資料流通服務平台 (TDX) 之交通 API</a> ，我們來簡單地做一個可以查詢台北捷運的車站的搜尋輸入框吧！</p>
+<blockquote>
+<p>這次因為有 API 可以使用的關係，會精實很多，如果跟不上的朋友，可能要再多熟悉一下 Angular 噢！</p>
+</blockquote>
+<h2 id="需求規格說明"><a href="#需求規格說明" class="headerlink" title="需求規格說明"></a>需求規格說明</h2><p>簡單來說，這個功能會需要一個輸入框與一個表格，當使用者在輸入框裡打字時，表格的內容也會連動呈現出搜尋結果。</p>
+<blockquote>
+<p>由於 Auto-Complete 的搜尋輸入框如果要自己做會需要處理不少細節，又不想安裝 UI 框架佔篇幅，所以我用這個方式來呈現查詢結果。</p>
+</blockquote>
+<p>表格的欄位有以下這些：</p>
+<ul>
+<li>車站代號</li>
+<li>車站名稱</li>
+<li>車站所屬縣市</li>
+<li>車站所屬鄉鎮區</li>
+<li>假日是否允許自行車進出站</li>
+<li>位置</li>
+</ul>
+<p>最後呈現結果：</p>
+<p><img src="https://i.imgur.com/683p5e2.gif" alt="Auto-Complete Searching View"></p>
+<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>首先，如果在需求明確的情況下，我個人習慣會先把畫面準備好。</p>
+<p>HTML 的部份大概會長這樣：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"請輸入捷運站名稱"</span> /&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">caption</span>&gt;</span></span><br><span class="line">    台北捷運之捷運站查詢結果</span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">caption</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">thead</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站代號<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站名稱<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站所屬縣市<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站所屬鄉鎮區<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>假日是否允許自行車進出站<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>位置<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">thead</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">tbody</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">target</span>=<span class="hljs-string">"_blank"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">""</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">tbody</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>CSS 的部份大家就自行發揮囉！</p>
+</blockquote>
+<p>畫面看起來會像這樣：</p>
+<p><img src="https://i.imgur.com/wp3BKyl.jpg" alt="Auto-Complete Searching View"></p>
+<p>接著我們會需要一個 <code>FormControl</code> 來跟輸入框綁定，所以我們在 <code>.ts</code> 裡新增一個屬性 ─ <code>searchingInputControl</code>：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAutoCompleteSearchingComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  searchingInputControl = <span class="hljs-keyword">new</span> FormControl();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>別忘了先到 <code>.module.ts</code> 裡引入 <code>FormsModule</code> 與 <code>ReactiveFormsModule</code> 噢！</p>
+</blockquote>
+<p>然後將 <code>searchingInputControl</code> 與畫面輸入框綁定：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"請輸入捷運站名稱"</span> [<span class="hljs-attr">formControl</span>]=<span class="hljs-string">"searchingInputControl"</span> /&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>接著我們使用昨天分享過的 <code>valueChanges</code> 來確認是否已正確綁定：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAutoCompleteSearchingComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  searchingInputControl = <span class="hljs-keyword">new</span> FormControl();</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.searchingInputControl.valueChanges.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(value);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>結果：</p>
+<p><img src="https://i.imgur.com/Vl0GEpm.gif" alt="Auto-Complete Searching View"></p>
+<p>看起來已經有正確的跟搜尋輸入框綁定了，那接下來要怎麼做才好呢？</p>
+<h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><p>我們的目的是希望使用者在輸入捷運站名稱的同時，只留下跟使用者的輸入有關聯的捷運站。</p>
+<p>因此，我們會需要一支 Service 來幫我們呼叫交通部所提供的 <a href="https://tdx.transportdata.tw/api-service/swagger" target="_blank" rel="noopener">運輸資料流通服務平台 (TDX) 之交通 API</a> ，並把查詢結果顯示到畫面上。</p>
+<p>Service 的程式碼大概會長這個樣子：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Injectable</span>()</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAutoCompleteSearchingService &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> httpClient: HttpClient</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  searchStation(stationName: <span class="hljs-built_in">string</span>): Observable&lt;MetroStationDTO[]&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> url = <span class="hljs-string">'https://ptx.transportdata.tw/MOTC/v2/Rail/Metro/Station/TRTC?$format=JSON'</span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (stationName) &#123;</span><br><span class="line">      url += <span class="hljs-string">`&amp;$filter=contains(StationName/Zh_tw,'<span class="hljs-subst">$&#123;stationName&#125;</span>')`</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.httpClient.get&lt;MetroStationDTO[]&gt;(url);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程式碼中有以下幾個重點：</p>
+<ol>
+<li><p>要呼叫 API 的話，需要先到 <code>.module.ts</code> 裡引入 <code>HttpClientModule</code> ，才能在 Service 裡使用 <code>HttpClient</code> 來呼叫 API。</p>
+</li>
+<li><p><code>MetroStationDTO</code> 是我根據交通部所提供的 <a href="https://tdx.transportdata.tw/api-service/swagger" target="_blank" rel="noopener">運輸資料流通服務平台 (TDX) 之交通 API</a> 裡定義的資料介面，詳細位置需先選擇「軌道」再點選「捷運」，如下圖所示：</p>
+</li>
+</ol>
+<p><img src="https://i.imgur.com/e2995Ac.jpg" alt="TDX API Document"></p>
+<ol start="3">
+<li><p>由於 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods" target="_blank" rel="noopener">HTTP Method</a> 是 <code>GET</code> 的緣故，所以參數是使用 <code>Query Parameters</code> 的方式帶進 URL 之中。</p>
+</li>
+<li><p>如果使用者沒有輸入站名時，還帶 <code>$filter</code> 參數會收到伺服器回傳的 <code>Bed Request</code> 錯誤，因此增加一個判斷式 ─ 當傳入的 <code>stationName</code> 為 <strong><a href="https://developer.mozilla.org/en-US/docs/Glossary/Truthy" target="_blank" rel="noopener">Truthy</a></strong> 值時，才帶 <code>$filter</code> 參數。</p>
+</li>
+<li><p>參數 <code>$filter</code> 的值該怎麼帶這件事情其實在文件中沒有寫，算是這個文件比較美中不足的地方。好在六角學院的院長 ─ 廖洧杰院長前陣子有開直播課教學，而我猜測院長一定有在那堂課講這件事情，所以去翻了一下該堂直播課的<a href="https://hackmd.io/1nMqecIOQ266nTv9PnjSQw?both" target="_blank" rel="noopener">共筆</a>才找到該怎麼帶它的值。</p>
+</li>
+</ol>
+<p>Service 準備好之後，接下來就要將 <code>FormControl</code> 的 <code>valueChanges</code> 事件與 API 相結合了。</p>
+<blockquote>
+<p>準備好<del>見證神蹟</del>了嗎？</p>
+</blockquote>
+<h3 id="Operators"><a href="#Operators" class="headerlink" title="Operators"></a>Operators</h3><p><a href="https://rxjs.dev/" target="_blank" rel="noopener">RxJS</a> 真的是一個很棒的函式庫，它讓我們可以很好地操作<strong>非同步</strong>與<strong>資料串流</strong>，而且還能讓我們的程式碼非常地簡潔、非常地好閱讀。</p>
+<p>就像我們現在需要把使用者的輸入事件與 API 做結合時，用 RxJS 的 <a href="https://rxjs.dev/guide/operators" target="_blank" rel="noopener">Operators</a> 就可以非常完美、漂亮地結合在一起。</p>
+<p>就像這樣：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAutoCompleteSearchingComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  searchingInputControl = <span class="hljs-keyword">new</span> FormControl();</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> service: ReactiveFormsAutoCompleteSearchingService</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.searchingInputControl.valueChanges.pipe(</span><br><span class="line">      startWith(<span class="hljs-string">''</span>),</span><br><span class="line">      debounceTime(<span class="hljs-number">500</span>),</span><br><span class="line">      switchMap(<span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> <span class="hljs-keyword">this</span>.service.searchStation(value))</span><br><span class="line">    ).subscribe(<span class="hljs-function">(<span class="hljs-params">result</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(result);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>結果：</p>
+<p><img src="https://i.imgur.com/JWTH01j.gif" alt="Auto-Complete Searching View"></p>
+<p>我相信在這邊一定會有非常多朋友看傻眼，這是什麼神操作？！這樣就接好了？！</p>
+<p>沒錯！這樣就接好了，是不是比你想像中簡單非常多呢？</p>
+<p>那這串到底做了什麼事呢？</p>
+<p>首先，我希望這個畫面一開始的時候就會先查詢一次，所以我使用 <code>startWith(&#39;&#39;)</code> 來呼叫查詢 API 。</p>
+<p>再者，我希望查詢的間隔不要太過快速，當使用者「可能」已經打完字的時候才查詢，所以我使用 <code>debounceTime(500)</code> 來讓查詢的時間點會在使用者停止打字 500 毫秒後才呼叫查詢 API。</p>
+<p>最後，則要將原本是 <code>valueChanges</code> 的 Observable 轉換成 <strong>呼叫 API</strong> 的 Observable 這件事情 ，所以我使用 <code>switchMap(value =&gt; this.service.searchStation(value))</code> 。</p>
+<blockquote>
+<p>關於 <code>startWith</code> ，大家可以參考<a href="https://rxjs.dev/api/operators/startWith" target="_blank" rel="noopener">官方文件</a>或是 <a href="https://ithelp.ithome.com.tw/articles/10249369" target="_blank" rel="noopener">Mike 的文章</a>。</p>
+<p>關於 <code>debounceTime</code> ，大家可以參考<a href="https://rxjs.dev/api/operators/debounceTime" target="_blank" rel="noopener">官方文件</a>或是 <a href="https://ithelp.ithome.com.tw/articles/10251680" target="_blank" rel="noopener">Mike 的文章</a>。</p>
+<p>關於 <code>switchMap</code> ，大家可以參考<a href="https://rxjs.dev/api/operators/switchMap" target="_blank" rel="noopener">官方文件</a>或是 <a href="https://ithelp.ithome.com.tw/articles/10248745" target="_blank" rel="noopener">Mike 的文章</a>。</p>
+</blockquote>
+<h3 id="AsyncPipe"><a href="#AsyncPipe" class="headerlink" title="AsyncPipe"></a>AsyncPipe</h3><p>接著，我們要將得到的資料綁定到畫面上，而綁定到畫面上的方式大致上有兩種：</p>
+<ol>
+<li>自己訂閱後將資料指定給 Component 的屬性：</li>
+</ol>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAutoCompleteSearchingComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  searchingInputControl = <span class="hljs-keyword">new</span> FormControl();</span><br><span class="line">  stations: MetroStationDTO[] = []; </span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> service: ReactiveFormsAutoCompleteSearchingService</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.searchingInputControl.valueChanges.pipe(</span><br><span class="line">      startWith(<span class="hljs-string">''</span>),</span><br><span class="line">      debounceTime(<span class="hljs-number">500</span>),</span><br><span class="line">      switchMap(<span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> <span class="hljs-keyword">this</span>.service.searchStation(value))</span><br><span class="line">    ).subscribe(<span class="hljs-function">(<span class="hljs-params">stations</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.stations = stations;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然後再綁到畫面上：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">caption</span>&gt;</span></span><br><span class="line">    台北捷運之捷運站查詢結果</span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">caption</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">thead</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站代號<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站名稱<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站所屬縣市<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站所屬鄉鎮區<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>假日是否允許自行車進出站<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>位置<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">thead</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">tbody</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let station of stations"</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.StationID &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.StationName.Zh_tw &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.LocationCity &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.LocationTown &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.BikeAllowOnHoliday &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">target</span>=<span class="hljs-string">"_blank"</span> [<span class="hljs-attr">href</span>]=<span class="hljs-string">"station.StationPosition"</span>&gt;</span></span><br><span class="line">          &#123;&#123; station.StationPosition &#125;&#125;</span><br><span class="line">        <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">tbody</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>不要自己訂閱，先將 Observable 準備好並用 Component 的屬性儲存起來：</li>
+</ol>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAutoCompleteSearchingComponent &#123;</span><br><span class="line"></span><br><span class="line">  searchingInputControl = <span class="hljs-keyword">new</span> FormControl();</span><br><span class="line">  stations$ = <span class="hljs-keyword">this</span>.searchingInputControl.valueChanges.pipe(</span><br><span class="line">    startWith(<span class="hljs-string">''</span>),</span><br><span class="line">    debounceTime(<span class="hljs-number">500</span>),</span><br><span class="line">    switchMap(<span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> <span class="hljs-keyword">this</span>.service.searchStation(value))</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> service: ReactiveFormsAutoCompleteSearchingService</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然後透過 <code>AsyncPipe</code> 讓 Template 自己訂閱：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">caption</span>&gt;</span></span><br><span class="line">    台北捷運之捷運站查詢結果</span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">caption</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">thead</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站代號<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站名稱<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站所屬縣市<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站所屬鄉鎮區<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>假日是否允許自行車進出站<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>位置<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">thead</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">tbody</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let station of (stations$ | async) || []"</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.StationID &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.StationName.Zh_tw &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.LocationCity &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.LocationTown &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.BikeAllowOnHoliday &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">target</span>=<span class="hljs-string">"_blank"</span> [<span class="hljs-attr">href</span>]=<span class="hljs-string">"station.StationPosition"</span>&gt;</span></span><br><span class="line">          &#123;&#123; station.StationPosition &#125;&#125;</span><br><span class="line">        <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">tbody</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>就結果來說，這兩個方法基本上都可以，但我個人非常推薦使用第二種方式。</p>
+<p>原因是使用第二種的方式一方面可以避免我們在 Component 被 Destroy 時忘記解除訂閱而導致 Memory Leak 的情形，另一方面是 Observable 會比單純資料好用很多。</p>
+<blockquote>
+<p>甚至有時候我們自己訂閱會發生「明明資料就有收到但畫面沒有更新」的詭異狀況。</p>
+</blockquote>
+<p>結果：</p>
+<p><img src="https://i.imgur.com/r1zmX3Z.gif" alt="Auto-Complete Searching View"></p>
+<h3 id="Other-Pipes"><a href="#Other-Pipes" class="headerlink" title="Other Pipes"></a>Other Pipes</h3><p>雖然目前運作良好，但還有一些小東西還沒處理完：</p>
+<ol>
+<li>假日是否允許自行車進出站的欄位我想讓它呈現 <code>是</code> 或是 <code>否</code> 。</li>
+<li>位置的欄位我想讓它以 <code>latitude, longitude</code> 的格式呈現。</li>
+<li>連結我想要可以點擊後用新的頁籤打開 Google Map ，並會看到那個捷運站的位置。</li>
+</ol>
+<p>以上這三個小東西非常地簡單，我想大家應該也都知道該怎麼做，但是既然都已經到了第二十四天了，這邊我覺得我們要使用 <code>Pipe</code> ，而不是像之前一樣直接寫在 Component 裡。</p>
+<p>這是因為，如果像之前的 <code>getErrorMessage</code> 是寫在 Component 裡的話，其實當畫面渲染時，該函式就會被呼叫，不管該值有沒有被改變。</p>
+<p>但是使用 <code>Pipe</code> 的話，在該值被改變前，是不會被呼叫第二次的。</p>
+<p>再者，使用 <code>Pipe</code> 的話，重用性與可維護性也比較好。</p>
+<p>所以我建議大家可以使用 <code>Pipe</code> 來完成最後的小調整。</p>
+<p>我個人會建立三個 <code>Pipe</code> ─ <code>BooleanInZhTwPipe</code> 、 <code>GoogleMapLinkPipe</code> 與 <code>LocationStringPipe</code> 。</p>
+<p>它們的程式碼如下：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Pipe</span>(&#123;</span><br><span class="line">  name: <span class="hljs-string">'booleanInZhTw'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> BooleanInZhTwPipe <span class="hljs-keyword">implements</span> PipeTransform &#123;</span><br><span class="line"></span><br><span class="line">  transform(value: <span class="hljs-built_in">boolean</span>, ...args: unknown[]): <span class="hljs-built_in">string</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> value ? <span class="hljs-string">'是'</span> : <span class="hljs-string">'否'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Pipe</span>(&#123;</span><br><span class="line">  name: <span class="hljs-string">'googleMapLink'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> GoogleMapLinkPipe <span class="hljs-keyword">implements</span> PipeTransform &#123;</span><br><span class="line"></span><br><span class="line">  transform(&#123; PositionLat, PositionLon &#125;: StationPosition, ...args: unknown[]): <span class="hljs-built_in">string</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-string">`https://www.google.com/maps?q=<span class="hljs-subst">$&#123;PositionLat&#125;</span>,<span class="hljs-subst">$&#123;PositionLon&#125;</span>&amp;z=7`</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Pipe</span>(&#123;</span><br><span class="line">  name: <span class="hljs-string">'locationString'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> LocationStringPipe <span class="hljs-keyword">implements</span> PipeTransform &#123;</span><br><span class="line"></span><br><span class="line">  transform(&#123; PositionLat, PositionLon &#125;: StationPosition, ...args: unknown[]): <span class="hljs-built_in">string</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">$&#123;PositionLat&#125;</span>, <span class="hljs-subst">$&#123;PositionLon&#125;</span>`</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最終結果：</p>
+<p><img src="https://i.imgur.com/683p5e2.gif" alt="Auto-Complete Searching View"></p>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天的重點主要是：</p>
+<ol>
+<li>學習如何使用 <a href="https://tdx.transportdata.tw/api-service/swagger" target="_blank" rel="noopener">TDX API</a> 。</li>
+<li>學習如何使用 RxJS 的 Operator ─ <code>startWith</code> 、 <code>debounceTime</code> 與 <code>switchMap</code> 將 <code>valueChanges</code> 與<strong>呼叫 API</strong> 串聯。</li>
+<li>學習如何使用 <strong><a href="https://angular.io/api/forms/AbstractControl#AsyncPipe" target="_blank" rel="noopener">AsyncPipe</a></strong> 。</li>
+<li>學習如何自定 <code>Pipe</code> 。</li>
+</ol>
+<p>今天的練習對於一些剛學 Angular 的朋友來說會滿精實且資訊量有點大的，大家可以多看幾遍，多自己練習、做實驗，相信對大家來說會很有幫助。</p>
+<p>關於 RxJS ，如果大家想知道更多資訊，我推薦大家去看 Mike 的<a href="https://ithelp.ithome.com.tw/users/20020617/ironman/2959" target="_blank" rel="noopener">打通 RxJS 任督二脈</a>系列文，或者是直接買實體書也行。</p>
+<p>雖然今天的實作已經完成了，但還有測試的部份，我們明天來撰寫它吧！</p>
+<p>今天的程式碼會放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day24" target="_blank" rel="noopener">Github - Branch: day24</a> 上供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
+<p>如果有任何的問題或是回饋，還請麻煩留言給我讓我知道！</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/angular/">angular</a>, <a class="has-link-grey -link" href="/tags/form/">form</a>, <a class="has-link-grey -link" href="/tags/frontend/">frontend</a>, <a class="has-link-grey -link" href="/tags/testing/">testing</a>, <a class="has-link-grey -link" href="/tags/web/">web</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2021/10/08/angular-30days-form-and-test-23/">
+                <span class="level-item">Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">評論</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://blog.leochen.dev/2021/10/09/angular-30days-form-and-test-24/';
+        this.page.identifier = '2021/10/09/angular-30days-form-and-test-24/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + "leochen0818" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                        <figure class="image is-128x128 margin-center has-mb-6">
+                            <img class="is-rounded" src="/images/avatar.JPG" alt="Leo">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block has-mb-6">
+                        Leo
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block has-mb-6">
+                        Lilee Systems Sr. Front-end Engineer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Taiwan</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        29
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分類
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        6
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        標籤
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        12
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <!-- <div class="level">
+            <a class="level-item button is-link is-rounded" href="/" target="_blank">
+                追蹤</a>
+        </div> -->
+        
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分類
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Git/">
+            <span class="level-start">
+                <span class="level-item">Git</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/">
+            <span class="level-start">
+                <span class="level-item">Web 前端</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">28</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
+            <span class="level-start">
+                <span class="level-item">Angular 之深入解析</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/Nx/">
+            <span class="level-start">
+                <span class="level-item">Nx</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/iThome2021鐵人賽/">
+            <span class="level-start">
+                <span class="level-item">iThome2021鐵人賽</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">24</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/新聞/">
+            <span class="level-start">
+                <span class="level-item">新聞</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            標籤雲
+        </h3>
+        <a href="/tags/angular/" style="font-size: 20px;">angular</a> <a href="/tags/form/" style="font-size: 16.67px;">form</a> <a href="/tags/frontend/" style="font-size: 16.67px;">frontend</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/homebrew/" style="font-size: 10px;">homebrew</a> <a href="/tags/library/" style="font-size: 13.33px;">library</a> <a href="/tags/macos/" style="font-size: 10px;">macos</a> <a href="/tags/nx/" style="font-size: 13.33px;">nx</a> <a href="/tags/scss/" style="font-size: 10px;">scss</a> <a href="/tags/testing/" style="font-size: 16.67px;">testing</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2021/10/09/angular-30days-form-and-test-24/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-09T08:04:36.000Z">2021-10-09</time></div>
+                    <a href="/2021/10/09/angular-30days-form-and-test-24/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/08/angular-30days-form-and-test-23/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-08T01:12:41.000Z">2021-10-08</time></div>
+                    <a href="/2021/10/08/angular-30days-form-and-test-23/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/07/angular-30days-form-and-test-22/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day22 - 把 Cypress 變成 TypeScript 版">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-07T01:15:02.000Z">2021-10-07</time></div>
+                    <a href="/2021/10/07/angular-30days-form-and-test-22/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day22 - 把 Cypress 變成 TypeScript 版</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/06/angular-30days-form-and-test-21/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day21 - E2E 測試實作 - 被保人表單">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-06T01:09:41.000Z">2021-10-06</time></div>
+                    <a href="/2021/10/06/angular-30days-form-and-test-21/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day21 - E2E 測試實作 - 被保人表單</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/05/angular-30days-form-and-test-20/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day20 - E2E 測試實作 - 登入系統">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-05T01:26:51.000Z">2021-10-05</time></div>
+                    <a href="/2021/10/05/angular-30days-form-and-test-20/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day20 - E2E 測試實作 - 登入系統</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            彙整
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">15</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                標籤
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/angular/">
+                        <span class="tag">angular</span>
+                        <span class="tag is-grey">28</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/form/">
+                        <span class="tag">form</span>
+                        <span class="tag is-grey">24</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/frontend/">
+                        <span class="tag">frontend</span>
+                        <span class="tag is-grey">24</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/homebrew/">
+                        <span class="tag">homebrew</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/library/">
+                        <span class="tag">library</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/macos/">
+                        <span class="tag">macos</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/nx/">
+                        <span class="tag">nx</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/scss/">
+                        <span class="tag">scss</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/testing/">
+                        <span class="tag">testing</span>
+                        <span class="tag is-grey">24</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/typescript/">
+                        <span class="tag">typescript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/web/">
+                        <span class="tag">web</span>
+                        <span class="tag is-grey">24</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2021/10/09/angular-30days-form-and-test-24/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-09T08:04:36.000Z">2021-10-09</time></div>
+                    <a href="/2021/10/09/angular-30days-form-and-test-24/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/08/angular-30days-form-and-test-23/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-08T01:12:41.000Z">2021-10-08</time></div>
+                    <a href="/2021/10/08/angular-30days-form-and-test-23/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/07/angular-30days-form-and-test-22/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day22 - 把 Cypress 變成 TypeScript 版">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-07T01:15:02.000Z">2021-10-07</time></div>
+                    <a href="/2021/10/07/angular-30days-form-and-test-22/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day22 - 把 Cypress 變成 TypeScript 版</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/06/angular-30days-form-and-test-21/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day21 - E2E 測試實作 - 被保人表單">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-06T01:09:41.000Z">2021-10-06</time></div>
+                    <a href="/2021/10/06/angular-30days-form-and-test-21/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day21 - E2E 測試實作 - 被保人表單</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/05/angular-30days-form-and-test-20/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day20 - E2E 測試實作 - 登入系統">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-05T01:26:51.000Z">2021-10-05</time></div>
+                    <a href="/2021/10/05/angular-30days-form-and-test-20/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day20 - E2E 測試實作 - 登入系統</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            彙整
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">9</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">15</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                標籤
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/angular/">
+                        <span class="tag">angular</span>
+                        <span class="tag is-grey">28</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/form/">
+                        <span class="tag">form</span>
+                        <span class="tag is-grey">24</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/frontend/">
+                        <span class="tag">frontend</span>
+                        <span class="tag is-grey">24</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/homebrew/">
+                        <span class="tag">homebrew</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/library/">
+                        <span class="tag">library</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/macos/">
+                        <span class="tag">macos</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/nx/">
+                        <span class="tag">nx</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/scss/">
+                        <span class="tag">scss</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/testing/">
+                        <span class="tag">testing</span>
+                        <span class="tag is-grey">24</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/typescript/">
+                        <span class="tag">typescript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/web/">
+                        <span class="tag">web</span>
+                        <span class="tag is-grey">24</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2021 Leo Chen&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-TW");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到頁首" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="請輸入關鍵字...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '頁面',
+                CATEGORIES: '分類',
+                TAGS: '標籤',
+                UNTITLED: '(無標題)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
