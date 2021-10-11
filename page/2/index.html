@@ -149,6 +149,134 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-10-01T01:15:02.000Z">2021-10-01</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    16 分鐘 閱讀文 (大約 2387 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/10/01/angular-30days-form-and-test-16/">Angular 深入淺出三十天：表單與測試 Day16 - Template Driven Forms vs Reactive Forms</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/KH1mXYk.jpg" alt="Day16"></p>
+<p>這段期間，我們用 <strong>Template Driven Forms</strong> 與 <strong>Reactive Forms</strong> 各自做了一個登入表單（靜態）與被保人表單（動態），而且我們也都為這些表單寫了<strong>單元測試</strong>與<strong>整合測試</strong>，大家應該對於這兩種開發表單的方式有一定的認知與體會。</p>
+<p>因此，我們今天來將這兩種開發表單的方式做個小結與比較，順便沉澱一下這段時間的學習成果。</p>
+<h2 id="Template-Driven-Forms-vs-Reactive-Forms"><a href="#Template-Driven-Forms-vs-Reactive-Forms" class="headerlink" title="Template Driven Forms vs Reactive Forms"></a>Template Driven Forms vs Reactive Forms</h2><p>一般我們在對比這兩個開發表單的方式時，會用以下三個面向來分析優劣：</p>
+<ol>
+<li>開發難易度</li>
+<li>維護難易度</li>
+<li>測試難易度</li>
+</ol>
+<h3 id="開發難易度"><a href="#開發難易度" class="headerlink" title="開發難易度"></a>開發難易度</h3><p>開發難易度指的是，開發者分別使用這兩種開發表單的方式開發同一個表單時的難易程度。</p>
+<p>而這段時間，我也讓大家跟著我一起分別使用這兩種開發表單的方式開發了兩個表單，大家可以自己在心裡比較看看。</p>
+<h4 id="Template-Driven-Forms"><a href="#Template-Driven-Forms" class="headerlink" title="Template Driven Forms"></a>Template Driven Forms</h4><p><strong>Template Driven Forms</strong> 的方式很接近前端原始寫法，資料的驗證與限制都是使用 <strong>HTML 原生的表單機制</strong>，只是再額外加上 Angular 的<strong>資料綁定機制</strong>與<strong>範本語法</strong>來處理，對於剛開始使用框架的初學者較為友善。</p>
+<p>就像這樣：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">input</span></span></span><br><span class="line"><span class="hljs-tag">  <span class="hljs-attr">type</span>=<span class="hljs-string">"email"</span></span></span><br><span class="line"><span class="hljs-tag">  <span class="hljs-attr">name</span>=<span class="hljs-string">"account"</span></span></span><br><span class="line"><span class="hljs-tag">  <span class="hljs-attr">id</span>=<span class="hljs-string">"account"</span></span></span><br><span class="line"><span class="hljs-tag">  <span class="hljs-attr">required</span></span></span><br><span class="line"><span class="hljs-tag">  <span class="hljs-attr">pattern</span>=<span class="hljs-string">"\b[\w\.-]+@[\w\.-]+\.\w&#123;2,4&#125;\b"</span></span></span><br><span class="line"><span class="hljs-tag">  #<span class="hljs-attr">accountNgModel</span>=<span class="hljs-string">"ngModel"</span></span></span><br><span class="line"><span class="hljs-tag">  [<span class="hljs-attr">ngModel</span>]=<span class="hljs-string">"account"</span></span></span><br><span class="line"><span class="hljs-tag">  (<span class="hljs-attr">ngModelChange</span>)=<span class="hljs-string">"</span></span></span><br><span class="line"><span class="hljs-tag"><span class="hljs-string">    accountValueChange(accountNgModel.value, accountNgModel.errors)</span></span></span><br><span class="line"><span class="hljs-tag"><span class="hljs-string">  "</span></span></span><br><span class="line"><span class="hljs-tag">/&gt;</span></span><br></pre></td></tr></table></figure>
+
+<h4 id="Reactive-Forms"><a href="#Reactive-Forms" class="headerlink" title="Reactive Forms"></a>Reactive Forms</h4><p><strong>Reactive Forms</strong> 的方式則是直接用<strong>程式</strong>來創建與操作表單物件 ─ <code>FormGroup</code> ，然後再把相應的 <code>FormControl</code> 綁定到畫面上的表單欄位。</p>
+<p>就像這樣</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> data = &#123;</span><br><span class="line">  account: [<span class="hljs-string">''</span>, [ <span class="hljs-comment">/* Validators... */</span>]]</span><br><span class="line">  password: [<span class="hljs-string">''</span>, [ <span class="hljs-comment">/* Validators... */</span>]]</span><br><span class="line">&#125;;</span><br><span class="line"><span class="hljs-keyword">const</span> formGroup = <span class="hljs-keyword">this</span>.formBuilder.group(data);</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> [<span class="hljs-attr">formGroup</span>]=<span class="hljs-string">"formGroup"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">input</span></span></span><br><span class="line"><span class="hljs-tag">    <span class="hljs-attr">type</span>=<span class="hljs-string">"email"</span></span></span><br><span class="line"><span class="hljs-tag">    <span class="hljs-attr">id</span>=<span class="hljs-string">"account"</span></span></span><br><span class="line"><span class="hljs-tag">    <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"account"</span></span></span><br><span class="line"><span class="hljs-tag">  /&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">input</span></span></span><br><span class="line"><span class="hljs-tag">    <span class="hljs-attr">type</span>=<span class="hljs-string">"password"</span></span></span><br><span class="line"><span class="hljs-tag">    <span class="hljs-attr">id</span>=<span class="hljs-string">"password"</span></span></span><br><span class="line"><span class="hljs-tag">    <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"password"</span></span></span><br><span class="line"><span class="hljs-tag">  /&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>與 <strong>Template Driven Forms</strong> 相比，大部分的程式新手會覺得<strong>較為抽象</strong>，且會有相對來說比較多較困難、較不習慣的觀念要熟悉，<strong>學習成本較高</strong>。</p>
+<p>此外，如果有遇到更複雜的連動邏輯、更動態的表單，會比較需要對 <a href="https://angular.tw/guide/rx-library" target="_blank" rel="noopener">RxJS</a> 有更進一步的認知。</p>
+<h4 id="開發難易度小結"><a href="#開發難易度小結" class="headerlink" title="開發難易度小結"></a>開發難易度小結</h4><p>大部分剛學 Angular 的朋友應該都會覺得 <strong>Template Driven Forms</strong> 比較簡單，不過雖然一開始做的時候好像很簡單且自然，但表單一複雜起來，那沱 HTML 實在是會有點慘不忍睹。</p>
+<p>這還是因為我們這段時間所做的表單其實很陽春、很簡單，如果我們要做的是有著更複雜的連動邏輯、更動態的表單，光想到要處理一堆事情就頭皮發麻、冷汗狂流。</p>
+<p>而 <strong>Reactive Forms</strong> 初接觸時好像感覺很難，但隨著熟悉度的提升，大家一定會覺得它越來越好用，用它來開發又快又輕鬆，尤其當要做的表單越複雜、越動態時，更能體會它的美好。</p>
+<blockquote>
+<p>我自己一開始使用 Angular 的時候也是只會使用 <strong>Template Driven Forms</strong> 的開發方式來開發，甚至還實作過頗為複雜的動態表單。直到我學會了使用 <strong>Reactive Forms</strong> 的開發方式之後，才發現之前做的表單有多麼可怕。</p>
+</blockquote>
+<h3 id="維護難易度"><a href="#維護難易度" class="headerlink" title="維護難易度"></a>維護難易度</h3><p>我這邊的維護難易度主要指的是以<strong>擴充性</strong>、<strong>重用性</strong>這兩種面向來比較這兩種開發方式的難易程度。</p>
+<h4 id="Template-Driven-Forms-1"><a href="#Template-Driven-Forms-1" class="headerlink" title="Template Driven Forms"></a>Template Driven Forms</h4><p>以<strong>擴充性</strong>來說，假如我們一起開發過被保人表單需要新增一個產品欄位，並增加年齡與產品之間的互動邏輯時，除了要在 Template 上新增一個產品欄位與其必須的驗證之外，在 Component 裡也需要加上相應欄位有變動時，與其他欄位的互動、提示訊息的邏輯。</p>
+<p>以<strong>重用性</strong>來說，假如今天有同樣的表單欄位與驗證邏輯要在別的地方使用，但是畫面可能會長得很不一樣，抑或是只是其他表單裡的其中幾個欄位，這時為了要重用也會需調整不少程式碼。</p>
+<p>好一點的情況可能只需要將這些欄位包裝起來並增加 input/output 的邏輯，差一點的情況大概就連重用都很困難，只能盡量把能抽的邏輯抽離，又或者把他們抽成最小最不會有影響的 Component 來使用。</p>
+<h4 id="Reactive-Forms-1"><a href="#Reactive-Forms-1" class="headerlink" title="Reactive Forms"></a>Reactive Forms</h4><p>以<strong>擴充性</strong>來說，不管是要新增欄位還是調整結構，由於 <strong>Reactive Forms</strong> 本身就是用程式來建立表單，所以基本上都只需要在程式裡處理好，而 Template 就只是很簡單的增加該增加的欄位、並給予相應的綁定而已，如 <code>formContorlName=&quot;xxx&quot;</code> ，輕鬆自在。</p>
+<p>以<strong>重用性</strong>來說，這件事在 <strong>Reactive Forms</strong> 看來更是小菜一碟。本來就是用程式建立表單的它，本身基本就具備非常良好的重用性，就算要把原本的表單抽成最小單位的 <code>FormControl</code> ，也只是像<strong>樂高積木</strong>一樣，需要的時候再組合起來就好。</p>
+<h4 id="維護難易度小結"><a href="#維護難易度小結" class="headerlink" title="維護難易度小結"></a>維護難易度小結</h4><p>簡單來說， <strong>Template Driven Forms</strong> 的開發方式有點像在煮<strong>義大利麵</strong>，煮完之後就很難去分離，雖然麵依然是麵、醬汁依然是醬汁，但麵已飽富醬汁、醬汁也難以再還原回原本的食材。</p>
+<p>而 <strong>Reactive Forms</strong> 就像是<strong>樂高積木</strong>，具有豐富的可變性與卓越的彈性，你想要怎麼組合都可以，就算拼成樂高版的義大利麵，也是說拆就拆、說散就散。</p>
+<blockquote>
+<p>雖然整體來說還是要看個人的功力，但就同一個人用這兩種方法來比較的話，應該還是會有差不多的結果。</p>
+</blockquote>
+<h3 id="測試難易度"><a href="#測試難易度" class="headerlink" title="測試難易度"></a>測試難易度</h3><p><strong>測試</strong>嚴格來說應該是維護中的一環，因為每當程式碼有調整時，或者是需求有調整時，都有可能會影響到測試。</p>
+<p>不過此處特別提出來比較主要是想要只在<strong>撰寫測試</strong>這件事情上來比較這兩種方式的難易度，尤其是我們這段時間總計寫了<strong>八篇</strong>的測試，大家應該會比較能感同身受。</p>
+<h4 id="Template-Driven-Forms-2"><a href="#Template-Driven-Forms-2" class="headerlink" title="Template Driven Forms"></a>Template Driven Forms</h4><p><strong>Template Driven Forms</strong> 在撰寫測試上也因為其方式很接近前端原始寫法的關係，我覺得還算好寫，只要檢查元素的屬性與其值即可。</p>
+<p>但由於 <strong>Template Driven Forms</strong> 比較不可控，且其更新時機是<strong>非同步且比較不可預測</strong>的關係，造成想要把它的測試寫得很好並不容易。</p>
+<p>就拿我們寫過的測試來說，我們在<a href="https://ithelp.ithome.com.tw/articles/10269558" target="_blank" rel="noopener">第七天</a>與<a href="https://ithelp.ithome.com.tw/articles/10273782" target="_blank" rel="noopener">第十三天</a>時，都有著過相同的問題，而這問題，說不定其實是我寫不好，並不是框架本身的問題。</p>
+<p>所以說，在某些特定情境下的測試案例，要寫得好其實並不容易。</p>
+<h4 id="Reactive-Forms-2"><a href="#Reactive-Forms-2" class="headerlink" title="Reactive Forms"></a>Reactive Forms</h4><p>而 <strong>Reactive Forms</strong> 的更新時機基本上是<strong>同步且可預測的</strong>，有什麼變化就可以直接驗證到，畢竟它本身就是用程式來建立表單，可控性很高。</p>
+<p>同樣地拿我們寫過的測試來說，相信大家應該都沒有遇到什麼問題，不知道大家是否也覺得它的測試案例相對好寫呢？</p>
+<h4 id="測試難易度小結"><a href="#測試難易度小結" class="headerlink" title="測試難易度小結"></a>測試難易度小結</h4><p>撰寫測試的難易度其實很大程度地影響了開發人員是否會持續撰寫或維護測試程式的意願。</p>
+<p>所以對開發人員來說，當然是越容易越好。</p>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天主要是想明確地讓大家知道 <strong>Template Driven Forms</strong> 與 <strong>Reactive Forms</strong> 之間的不同與更清楚地對比，讓大家未來在遇到需要製作表單的情境時，可以根據需求來選擇最適合的方式。</p>
+<p>下表總結了 <code>Template Driven Forms</code> 與 <code>Reactive Forms</code> 的不同之處：</p>
+<table>
+<thead>
+<tr>
+<th align="center">&nbsp;</th>
+<th align="center">Reactive Forms</th>
+<th align="center">Template Driven Forms</th>
+</tr>
+</thead>
+<tbody><tr>
+<td align="center">表單模型的設置</td>
+<td align="center">清楚的，在 <code>Component</code> 裡建立</td>
+<td align="center">隱晦的，用 <code>Directive</code> 建立</td>
+</tr>
+<tr>
+<td align="center">資料模型</td>
+<td align="center">有結構性且不變的</td>
+<td align="center">鬆散且容易改變</td>
+</tr>
+<tr>
+<td align="center">可預測性</td>
+<td align="center">同步的</td>
+<td align="center">非同步的</td>
+</tr>
+<tr>
+<td align="center">表單驗證方式</td>
+<td align="center">用函式驗證</td>
+<td align="center">用 <code>Directive</code> 驗證</td>
+</tr>
+</tbody></table>
+<p>雖說這段時間有分享如何使用 <strong>Template Driven Forms</strong> 的方式來開發表單，不過我個人在遇到要製作表單的情境時，其實都是選擇用 <strong>Reactive Forms</strong> 的方式來開發，因為實在是真的太好寫了！</p>
+<p>此外，我們的後續文章也將<strong>不會</strong>再分享 <strong>Template Driven Forms</strong> 的開發方式，而是會用 <strong>Reactive Forms</strong> 的方式來分享更多更進階的用法，讓大家可以因應更複雜、更動態的情境。</p>
+<p>如果你有任何的問題或是回饋，還請麻煩留言給我讓我知道，感謝大家！</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2021-09-30T01:15:02.000Z">2021-09-30</time>
                 
                 <div class="level-item">
@@ -1606,123 +1734,6 @@
 
 
 
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2021-09-21T01:15:10.000Z">2021-09-21</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    17 分鐘 閱讀文 (大約 2506 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2021/09/21/angular-30days-form-and-test-06/">Angular 深入淺出三十天：表單與測試 Day06 - 單元測試實作 - 登入系統 by Template Driven Forms</a>
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://i.imgur.com/rlIl9AE.jpg" alt="Day6"></p>
-<p>今天我們要來為我們用 <strong>Template Driven Forms</strong> 所撰寫的登入系統寫單元測試，如果還沒有相關程式碼的朋友，趕快前往閱讀第二天的文章： <a href="https://ithelp.ithome.com.tw/articles/10265809" target="_blank" rel="noopener">Template Driven Forms 實作 - 以登入為例</a>。</p>
-<p>此外，由於使用 Stackblitz 來寫測試比較麻煩一點，所以我建議大家都使用 <code>ng new</code> 建立新的專案，因為 Angular 都幫開發者處理好了，使用 Angular 的開發者就是這麼幸福。</p>
-<p>所以在開始之前，如果當初是用 Stackblitz 練習的話，要先將程式碼複製到專案裡，詳細步驟我就不再贅述囉！</p>
-<blockquote>
-<p>小提醒，將程式碼複製到專案裡之後，記得先使用 <code>ng serve</code> 的指令將其啟動起來看看是不是可以正常運作噢！</p>
-<p>此外，如果是用 Angular v12 以上的同學，預設的 typescript 會是 strict mode 的狀態，也就是說型別檢查會比較嚴格一點，所以如果看到很多紅色毛毛蟲不用太擔心。</p>
-<p>如果有任何問題，我預言會有 80% 的朋友是忘記在 module 裡 import <code>FormsModule</code> ，哈哈！</p>
-</blockquote>
-<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>上述前置作業做完之後，我們就可以先打開 <code>app.component.spec.ts</code>，你應該會看到 Angular CLI 幫我們產生的程式碼：</p>
-<p><img src="https://i.imgur.com/BpUndsd.png" alt="Testing Sample"></p>
-<p>我們先把除了 <code>should create the app</code> 之外的測試案例刪掉，刪完應該要長這樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; TestBed &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core/testing'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> &#123; AppComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.component'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="hljs-string">'AppComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  beforeEach(<span class="hljs-keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">await</span> TestBed.configureTestingModule(&#123;</span><br><span class="line">      declarations: [</span><br><span class="line">        AppComponent</span><br><span class="line">      ],</span><br><span class="line">    &#125;).compileComponents();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should create the app'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> fixture = TestBed.createComponent(AppComponent);</span><br><span class="line">    <span class="hljs-keyword">const</span> app = fixture.componentInstance;</span><br><span class="line">    expect(app).toBeTruthy();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>至此我稍微說明一下，在 <code>beforeEach</code> 裡我們可以看到有段滿特別的程式碼：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">TestBed.configureTestingModule(&#123;</span><br><span class="line">  declarations: [</span><br><span class="line">    AppComponent</span><br><span class="line">  ],</span><br><span class="line">&#125;).compileComponents();</span><br></pre></td></tr></table></figure>
-
-<p>這段程式碼是在配置我們測試集合的環境，就像我們在寫 Angular 的時候一樣， Component 會需要一個模組，而 <code>TestBed</code> 是 Angular 幫我們預先寫好給測試用的一個類型，透過 <code>configureTestingModule</code> 來模擬真實使用情境，最後用 <code>compileComponents</code> 將其實際執行。</p>
-<p>這段配置在 Angular 基本上會是必備的，並且我們還會需要依據 Component 其實際情況來調整該配置，例如我們現在就因為我們的表單需要的關係，要在這裡引入 <code>FormsModule</code> ：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; TestBed &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core/testing'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> &#123; FormsModule &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; AppComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.component'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="hljs-string">'AppComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  beforeEach(<span class="hljs-keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">await</span> TestBed.configureTestingModule(&#123;</span><br><span class="line">      declarations: [AppComponent],</span><br><span class="line">      imports: [FormsModule]</span><br><span class="line">    &#125;).compileComponents();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should create the app'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>接著使用 <code>ng test</code> 的指令將測試程式啟動起來，應該會可以通過我們的第一個測試案例 <code>should create the app</code>：</p>
-<p><img src="https://i.imgur.com/7zjQj5U.png" alt="pass first case"></p>
-<p>通過這個測試基本上意謂著我們要測試的 Component 的配置沒有什麼太大的問題，因為他要可以被正常建立實體才能通過，至此我們就可以開始來撰寫單元測試了。</p>
-<h3 id="欲測試的單元選擇"><a href="#欲測試的單元選擇" class="headerlink" title="欲測試的單元選擇"></a>欲測試的單元選擇</h3><p>在第一天時我有提到，單元測試主要是要用來驗證<strong>單個類別</strong>的<strong>函式</strong>其實際執行結果是否符合我們預期的執行結果。</p>
-<p>所以我們先打開 <code>app.component.ts</code> 來看一下目前的程式碼：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent &#123;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// 綁定在帳號欄位上</span></span><br><span class="line">  account = <span class="hljs-string">''</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 綁定在密碼欄位上</span></span><br><span class="line">  password = <span class="hljs-string">''</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// 帳號欄位的錯誤訊息</span></span><br><span class="line">  accountErrorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// 密碼欄位的錯誤訊息</span></span><br><span class="line">  passwordErrorMessage = <span class="hljs-string">''</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在帳號欄位上，當使用者改變帳號時會觸發此函式</span></span><br><span class="line"><span class="hljs-comment">   * </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; account </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;ValidationErrors&#125; errors </span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  accountValueChange(account: <span class="hljs-built_in">string</span>, errors: ValidationErrors | <span class="hljs-literal">null</span>): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.account = account;</span><br><span class="line">    <span class="hljs-keyword">this</span>.validationCheck(errors, <span class="hljs-string">'account'</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在密碼欄位上，當使用者改變密碼時會觸發此函式</span></span><br><span class="line"><span class="hljs-comment">   * </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; password </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;ValidationErrors&#125; errors </span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  passwordValueChange(password: <span class="hljs-built_in">string</span>, errors: ValidationErrors | <span class="hljs-literal">null</span>): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.password = password;</span><br><span class="line">    <span class="hljs-keyword">this</span>.validationCheck(errors, <span class="hljs-string">'password'</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 綁定在表單上，當使用者按下登入按鈕時會觸發此函式</span></span><br><span class="line">  login(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// do login...</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 透過欄位裡的 ValidationErrors 來設定該欄位的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   * </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;ValidationErrors | null&#125; errors 欲驗證的欄位的錯誤 (by Angular)</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;'account' | 'password'&#125; fieldName 欄位名稱</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">private</span> validationCheck(</span><br><span class="line">    errors: ValidationErrors | <span class="hljs-literal">null</span>,</span><br><span class="line">    fieldName: <span class="hljs-string">'account'</span> | <span class="hljs-string">'password'</span></span><br><span class="line">  ): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> errorMessage: <span class="hljs-built_in">string</span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!errors) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (errors.required) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (errors.pattern) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'格式有誤，請重新輸入'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (errors.minlength) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'密碼長度最短不得低於8碼'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">this</span>.setErrorMessage(fieldName, errorMessage);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 設定指定欄位的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   * </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;'account' | 'password'&#125; fieldName 欲設定錯誤訊息的欄位名稱</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; errorMessage 欲設定的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">private</span> setErrorMessage(</span><br><span class="line">    fieldName: <span class="hljs-string">'account'</span> | <span class="hljs-string">'password'</span>,</span><br><span class="line">    errorMessage: <span class="hljs-built_in">string</span></span><br><span class="line">  ): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (fieldName === <span class="hljs-string">'account'</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.accountErrorMessage = errorMessage;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.passwordErrorMessage = errorMessage;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以目前的程式碼來看，這個 Component 的<strong>函式</strong>有以下這些： </p>
-<ol>
-<li><code>accountValueChange</code></li>
-<li><code>passwordValueChange</code></li>
-<li><code>login</code></li>
-<li><code>validationCheck</code></li>
-<li><code>setErrorMessage</code> </li>
-</ol>
-<p>這五個函式裡，其中 <code>login</code> 沒寫什麼先不測， <code>validationCheck</code> 與 <code>setErrorMessage</code> 是 <code>private</code> 的也不用測，所以我們主要要測試 <code>accountValueChange</code> 與 <code>passwordValueChange</code> 這兩個函式。</p>
-<h3 id="測試單元-accountValueChange"><a href="#測試單元-accountValueChange" class="headerlink" title="測試單元 - accountValueChange"></a>測試單元 - accountValueChange</h3><p>既然如此，我們先加一個 <code>describe</code> ，表明在這裡面的測試案例都是在測 <code>accountValueChange</code> 這個函式：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'AppComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  describe(<span class="hljs-string">'accountValueChange'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 這裡面的測試案例都是要測這個函式</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>然後我們來統整一下這個 <code>accountValueChange</code> 的函式裡會遇到的情況：</p>
-<ol>
-<li>會將傳入的 <code>account</code> 的值賦值給 AppComponent 的屬性 <code>account</code> 。</li>
-<li>如果傳入的 <code>errors</code> 有 <code>required</code> 欄位，則會將錯誤訊息 <code>此欄位必填</code> 賦值給 AppComponent 的屬性 <code>accountErrorMessage</code> 。</li>
-<li>如果傳入的 <code>errors</code> 有 <code>pattern</code> 欄位，則會將錯誤訊息 <code>格式有誤，請重新輸入</code> 賦值給 AppComponent 的屬性 <code>accountErrorMessage</code> 。</li>
-<li>如果傳入的 <code>errors</code> 是 <code>null</code> ，則會將 AppComponent 的屬性 <code>accountErrorMessage</code> 設為空字串。</li>
-</ol>
-<p>統整完之後，就可以將上述情況寫成測試案例：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'accountValueChange'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should set value into property "account"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> account = <span class="hljs-string">'abc123@mail.com'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = <span class="hljs-literal">null</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.accountValueChange(account, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.account).toBe(account);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should set the required error message into property "accountErrorMessage" when the value is empty string'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> account = <span class="hljs-string">''</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = &#123; required: <span class="hljs-literal">true</span> &#125;;</span><br><span class="line">    <span class="hljs-keyword">const</span> accountErrorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.accountValueChange(account, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.accountErrorMessage).toBe(accountErrorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should set the pattern error message into property "accountErrorMessage" when the value is not the correct pattern'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> account = <span class="hljs-string">'abc123'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = &#123;</span><br><span class="line">      pattern: &#123;</span><br><span class="line">        actualValue: <span class="hljs-string">'abc123'</span>,</span><br><span class="line">        requiredPattern: <span class="hljs-string">'^\\b[\\w\\.-]+@[\\w\\.-]+\\.\\w&#123;2,4&#125;\\b$'</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="hljs-keyword">const</span> accountErrorMessage = <span class="hljs-string">'格式有誤，請重新輸入'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.accountValueChange(account, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.accountErrorMessage).toBe(accountErrorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should set empty string into property "accountErrorMessage" when the value is the correct pattern'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> account = <span class="hljs-string">'abc123@mail.com'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = <span class="hljs-literal">null</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> accountErrorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.accountValueChange(account, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.accountErrorMessage).toBe(accountErrorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>測試結果：</p>
-<p><img src="https://i.imgur.com/ugm8Sp0.png" alt="testing result"></p>
-<h3 id="測試單元-passwordValueChange"><a href="#測試單元-passwordValueChange" class="headerlink" title="測試單元 - passwordValueChange"></a>測試單元 - passwordValueChange</h3><p>接下來，我們繼續來撰寫測試案例來測試 <code>passwordValueChange</code> 函式，一樣先加一個 <code>describe</code> ，表明在這裡面的測試案例都是在測 <code>passwordValueChange</code> 函式：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'AppComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  describe(<span class="hljs-string">'passwordValueChange'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 這裡面的測試案例都是要測這個函式</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>然後我們來統整一下這個 <code>passwordValueChange</code> 的函式裡會遇到的情況：</p>
-<ol>
-<li>會將傳入的 <code>password</code> 的值賦值給 AppComponent 的屬性 <code>password</code> 。</li>
-<li>如果傳入的 <code>errors</code> 有 <code>required</code> 欄位，則會將錯誤訊息 <code>此欄位必填</code> 賦值給 AppComponent 的屬性 <code>passwordErrorMessage</code> 。</li>
-<li>如果傳入的 <code>errors</code> 有 <code>minlength</code> 欄位，則會將錯誤訊息 <code>密碼長度最短不得低於8碼</code> 賦值給 AppComponent 的屬性 <code>passwordErrorMessage</code> 。</li>
-<li>如果傳入的 <code>errors</code> 是 <code>null</code> ，則會將 AppComponent 的屬性 <code>passwordErrorMessage</code> 設為空字串。</li>
-</ol>
-<p>統整完之後其實可以發現，這跟剛剛我們測 <code>accountValueChange</code> 的時候很像，所以我們只要複製一下 <code>accountValueChange</code> 的測試案例再稍微改一下就可以用了：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'passwordValueChange'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should set value into property "password"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> password = <span class="hljs-string">'abc123'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = <span class="hljs-literal">null</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.passwordValueChange(password, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.password).toBe(password);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should set the required error message into property "passwordErrorMessage" when the value is empty string'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> password = <span class="hljs-string">''</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = &#123; required: <span class="hljs-literal">true</span> &#125;;</span><br><span class="line">    <span class="hljs-keyword">const</span> passwordErrorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.passwordValueChange(password, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.passwordErrorMessage).toBe(passwordErrorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should set the pattern error message into property "passwordErrorMessage" when the value is not the correct pattern'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> password = <span class="hljs-string">'abc123'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = &#123;</span><br><span class="line">      minlength: &#123;</span><br><span class="line">        actualLength: <span class="hljs-number">7</span>,</span><br><span class="line">        requiredLength: <span class="hljs-number">8</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="hljs-keyword">const</span> passwordErrorMessage = <span class="hljs-string">'密碼長度最短不得低於8碼'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.passwordValueChange(password, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.passwordErrorMessage).toBe(passwordErrorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should set empty string into property "passwordErrorMessage" when the value is the correct pattern'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> password = <span class="hljs-string">'abcd1234'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = <span class="hljs-literal">null</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> passwordErrorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.passwordValueChange(password, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.passwordErrorMessage).toBe(passwordErrorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>測試結果：</p>
-<p><img src="https://i.imgur.com/6K8ih2P.png" alt="testing result"></p>
-<p>至此，我們就完成了單元測試的部份囉！是不是感覺其實很簡單，並沒有想像中的難呢？！俗話說：「萬事起頭難」，只要我們已經跨出第一步，後面就會越來越簡單噢！</p>
-<p>今天的文章就到這邊，大家稍微沉澱、吸收一下，明天我們接著撰寫整合測試的部份。</p>
-<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>再次提醒大家，<strong>單元測試</strong>要驗證的是<strong>某一函式</strong>在<strong>不同情況下的執行結果</strong>是否符合預期，並且記得要盡量做到我在<a href="https://ithelp.ithome.com.tw/articles/10268160" target="_blank" rel="noopener">如何寫出優秀的測試？</a>文中所提到的部份。</p>
-<p>今天的程式碼比較多，且應該會有很多朋友初次接觸到測試所以可能腦筋會比較轉不過來，這時可以先回頭看看我第四天與第五天的文章，複習一下核心概念與測試語法，相信一定會有所幫助。</p>
-<p>我會將今日的實作程式碼放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day6" target="_blank" rel="noopener">Github - Branch: day6</a> 供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
-<p>如果有任何的問題或是回饋，也都非常歡迎留言給我讓我知道噢！</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -1740,6 +1751,8 @@
             <li><a class="pagination-link is-current" href="/page/2/">2</a></li>
             
             <li><a class="pagination-link has-text-black-ter" href="/page/3/">3</a></li>
+            
+            <li><a class="pagination-link has-text-black-ter" href="/page/4/">4</a></li>
             
         </ul>
     </nav>
@@ -1789,7 +1802,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        30
+                        31
                     </p>
                 </div>
             </div>
@@ -1851,7 +1864,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">29</span>
+                <span class="level-item tag">30</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -1875,7 +1888,7 @@
                 <span class="level-item">iThome2021鐵人賽</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">25</span>
+                <span class="level-item tag">26</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/新聞/">
@@ -1914,6 +1927,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/11/angular-30days-form-and-test-26/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day26 - 進階表單開發技巧 - 自訂驗證器">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-11T11:32:17.000Z">2021-10-11</time></div>
+                    <a href="/2021/10/11/angular-30days-form-and-test-26/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day26 - 進階表單開發技巧 - 自訂驗證器</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/10/angular-30days-form-and-test-25/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day25 - 測試進階技巧 - DI 抽換">
@@ -1988,25 +2020,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/06/angular-30days-form-and-test-21/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day21 - E2E 測試實作 - 被保人表單">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-06T01:09:41.000Z">2021-10-06</time></div>
-                    <a href="/2021/10/06/angular-30days-form-and-test-21/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day21 - E2E 測試實作 - 被保人表單</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2025,7 +2038,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">10</span>
+                    <span class="level-item tag">11</span>
                 </span>
             </a>
         </li>
@@ -2101,21 +2114,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">29</span>
+                        <span class="tag is-grey">30</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">25</span>
+                        <span class="tag is-grey">26</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">25</span>
+                        <span class="tag is-grey">26</span>
                     </a>
                 </div>
                 
@@ -2164,7 +2177,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">25</span>
+                        <span class="tag is-grey">26</span>
                     </a>
                 </div>
                 
@@ -2178,7 +2191,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">25</span>
+                        <span class="tag is-grey">26</span>
                     </a>
                 </div>
                 
@@ -2207,6 +2220,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/11/angular-30days-form-and-test-26/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day26 - 進階表單開發技巧 - 自訂驗證器">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-11T11:32:17.000Z">2021-10-11</time></div>
+                    <a href="/2021/10/11/angular-30days-form-and-test-26/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day26 - 進階表單開發技巧 - 自訂驗證器</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/10/angular-30days-form-and-test-25/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day25 - 測試進階技巧 - DI 抽換">
@@ -2281,25 +2313,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/06/angular-30days-form-and-test-21/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day21 - E2E 測試實作 - 被保人表單">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-06T01:09:41.000Z">2021-10-06</time></div>
-                    <a href="/2021/10/06/angular-30days-form-and-test-21/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day21 - E2E 測試實作 - 被保人表單</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2318,7 +2331,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">10</span>
+                    <span class="level-item tag">11</span>
                 </span>
             </a>
         </li>
@@ -2394,21 +2407,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">29</span>
+                        <span class="tag is-grey">30</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">25</span>
+                        <span class="tag is-grey">26</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">25</span>
+                        <span class="tag is-grey">26</span>
                     </a>
                 </div>
                 
@@ -2457,7 +2470,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">25</span>
+                        <span class="tag is-grey">26</span>
                     </a>
                 </div>
                 
@@ -2471,7 +2484,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">25</span>
+                        <span class="tag is-grey">26</span>
                     </a>
                 </div>
                 
