@@ -159,6 +159,133 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-10-13T15:38:05.000Z">2021-10-13</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    14 分鐘 閱讀文 (大約 2133 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/10/13/angular-30days-form-and-test-28/">Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/RfSbRb8.jpg" alt="Day28"></p>
+<p>經過了這段時間的練習與學習，相信大家應該越來越能體會 Angular 表單的強大與便利。</p>
+<p>不過既然 Angular 表單這麼好用，如果能讓自己做的 Component 也像 Angular 表單那樣一般使用該有多好？</p>
+<p>因此，今天想要跟大家分享的是 ─ 如何<strong>自訂表單元件</strong>。</p>
+<h2 id="應用場景"><a href="#應用場景" class="headerlink" title="應用場景"></a>應用場景</h2><p>大家跟我一起想像一下，假設我們今天需要做一個管理平台，在這個管理平台裡，會有很多地方都會需要用到我們昨天做的 <code>DateRangeComponent</code> ，但不一定會是在同一個表單裡，只是剛好也需要 <code>startDate</code> 與 <code>endDate</code> 這兩個欄位，而且畫面與欄位驗證的規則也都是一樣。</p>
+<p>例如：</p>
+<p>A 頁面是一個查詢訂單系統， B 頁面是查詢會員系統，雖然這兩個頁面的查詢條件可能都不太一樣，但恰好都可以根據<strong>起迄日</strong>來查詢相應的資料。</p>
+<p>這時，我們很有可能就會將我們做好的 <code>DateRangeComponent</code> 做成<strong>表單元件</strong>，讓 A 跟 B 在使用它的時候，就像使用一般的表單元件一樣輕鬆、自然。</p>
+<p>那究竟要怎麼做呢？</p>
+<h2 id="ControlValueAccessor"><a href="#ControlValueAccessor" class="headerlink" title="ControlValueAccessor"></a>ControlValueAccessor</h2><p>首先要介紹給大家認識的是 <code>ControlValueAccessor</code> ，它是個 <code>Interface</code> ，而它定義了以下四個函式：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">interface</span> ControlValueAccessor &#123;</span><br><span class="line">  writeValue(obj: <span class="hljs-built_in">any</span>): <span class="hljs-built_in">void</span></span><br><span class="line">  registerOnChange(fn: <span class="hljs-built_in">any</span>): <span class="hljs-built_in">void</span></span><br><span class="line">  registerOnTouched(fn: <span class="hljs-built_in">any</span>): <span class="hljs-built_in">void</span></span><br><span class="line">  setDisabledState(isDisabled: <span class="hljs-built_in">boolean</span>)?: <span class="hljs-built_in">void</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li><code>writeValue(obj: any): void</code> ─ <strong>表單控件</strong>想要將值寫入時，會呼叫此函式</li>
+<li><code>registerOnChange(fn: any): void</code> ─ <strong>表單控件初始化時</strong>會呼叫此函式，並傳入一個<strong>回呼函式</strong>，讓實作此介面的類別在其<strong>值有變動</strong>時，使用該回呼函式並<strong>傳入欲變動的值</strong></li>
+<li><code>registerOnTouched(fn: any): void</code> ─ <strong>表單控件初始化時</strong>會呼叫此函式，並傳入一個<strong>回呼函式</strong>，讓實作此介面的類別在<strong>失去焦點</strong>時，使用該回呼函式以<strong>通知表單控件</strong></li>
+<li><code>setDisabledState(isDisabled: boolean)?: void</code> ─ 當<strong>表單控件的狀態</strong>變成 <code>DISABLED</code> 抑或是從 <code>DISABLED</code> 改變成其他狀態時，會呼叫此函式以通知實作此介面的類別</li>
+</ul>
+<p>雖然我覺得我說的滿清楚的，但大家應該還是覺得很模糊，對吧？</p>
+<p>不要緊，我只是先讓大家有個印象，待會實作時大家就會更加理解了。</p>
+<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>首先，我們需要另一個 Component 來用我們昨天做好的 <code>DateRangeComponent</code> ，像這樣：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"formGroup"</span> [<span class="hljs-attr">formGroup</span>]=<span class="hljs-string">"formGroup"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">app-date-range</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"dateRange"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">app-date-range</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然後在 Component 的 <code>.ts</code> 裡準備好 <code>FormGroup</code> ，像這樣：</p>
+<figure class="highlight ts hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsDateRangeComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  formGroup: FormGroup | <span class="hljs-literal">undefined</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> formBuilder: FormBuilder</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.formGroup = <span class="hljs-keyword">this</span>.formBuilder.group(&#123; dateRange: <span class="hljs-string">''</span> &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接著打開昨天做的 <code>DateRangeComponent</code> ，並在 <code>implements</code> 的後方加上 <code>ControlValueAccessor</code> ，像這樣：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> DateRangeComponent <span class="hljs-keyword">implements</span> OnInit, ControlValueAccessor &#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>這時你應該會發現 <code>DateRangeComponent</code> 出現了一條紅色毛毛蟲，當你把滑鼠游標移到上面的時候，它說：</p>
+<p><img src="https://i.imgur.com/PJLbE8u.jpg" alt="The Tooltip"></p>
+<p>這是因為我們為 <code>DateRangeComponent</code> 加上實作 <code>ControlValueAccessor</code> 的宣告後，編輯器提醒我們要記得實作 <code>ControlValueAccessor</code> 的四個函式，才符合該介面的定義。</p>
+<blockquote>
+<p>這就像是我們如果想要 Cosplay 鋼鐵人，但我什麼盔甲都沒穿就說自己是鋼鐵人，別人只會覺得滿臉問號。</p>
+<p>但只要我們戴上了頭盔，別人就會知道你在扮演鋼鐵人。</p>
+</blockquote>
+<p>所以我們就在 <code>DateRangeComponent</code> 裡加上以下四個函式：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> DateRangeComponent <span class="hljs-keyword">implements</span> OnInit, ControlValueAccessor &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  writeValue(obj: <span class="hljs-built_in">any</span>): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'writeValue'</span>, obj);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  registerOnChange(fn: <span class="hljs-built_in">any</span>): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'registerOnChange'</span>, fn);</span><br><span class="line">  &#125;</span><br><span class="line">  registerOnTouched(fn: <span class="hljs-built_in">any</span>): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'registerOnTouched'</span>, fn);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  setDisabledState(isDisabled: <span class="hljs-built_in">boolean</span>): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'setDisabledState'</span>, isDisabled);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>接下來，我們需要在 <code>DateRangeComponent</code> 的 <strong>MetaData</strong> 裡的 <code>providers</code> 裡加入一些設定，像這樣：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'app-date-range'</span>,</span><br><span class="line">  templateUrl: <span class="hljs-string">'./date-range.component.html'</span>,</span><br><span class="line">  styleUrls: [<span class="hljs-string">'./date-range.component.scss'</span>],</span><br><span class="line">  providers: [</span><br><span class="line">    &#123;</span><br><span class="line">      provide: NG_VALUE_ACCESSOR,</span><br><span class="line">      useExisting: forwardRef(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> DateRangeComponent),</span><br><span class="line">      multi: <span class="hljs-literal">true</span></span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> DateRangeComponent <span class="hljs-keyword">implements</span> OnInit, ControlValueAccessor &#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>我們之前其實也曾經在第二十五天的文章 ─ <a href="https://ithelp.ithome.com.tw/articles/10280031" target="_blank" rel="noopener">測試進階技巧 - DI 抽換</a>裡用過類似的技巧。</p>
+<p>簡單來說，這個設定是為了讓表單可以透過 <code>NG_VALUE_ACCESSOR</code> 這個 <strong>InjectionToken</strong> 取得我們這個實作了 <code>ControlValueAccessor</code> 介面的 <code>DateRangeComponent</code> 實體。</p>
+<blockquote>
+<p>想知道什麼是 <strong>InjectionToken</strong> 的朋友，可以參考 Mike 的 <a href="https://ithelp.ithome.com.tw/articles/10208630" target="_blank" rel="noopener">[Angular 大師之路] Day 23 - 認識 InjectionToken</a> 。</p>
+<p>想知道 <code>useExisting</code> 跟 <code>useValue</code> 、 <code>useClass</code> 與 <code>useFactory</code> 有哪裡不一樣的，也可以參考 Mike 的 <a href="https://ithelp.ithome.com.tw/articles/10207990" target="_blank" rel="noopener">[Angular 大師之路] Day 20 - 在 @NgModule 的 providers: [] 自由更換注入內容 (1)</a> 與 <a href="https://ithelp.ithome.com.tw/articles/10208240" target="_blank" rel="noopener">[Angular 大師之路] Day 21 - 在 @NgModule 的 providers: [] 自由更換注入內容 (2)</a> 。</p>
+<p>而 <code>forwardRef()</code> 的部份，我覺得官網的 <a href="https://angular.io/guide/dependency-injection-in-action#break-circularities-with-a-forward-class-reference-forwardref" target="_blank" rel="noopener">Dependency injection in action - Break circularities with a forward class reference</a> 講得比較清楚。</p>
+<p>最後的 <code>multi: true</code> ，可以參考林穎平 EP 的 <a href="https://ithelp.ithome.com.tw/articles/10242741" target="_blank" rel="noopener">[Day 8] 所以我說那個 multi 是？</a> ，如果想要更深入的了解其原理，他也寫了一篇 <a href="https://ithelp.ithome.com.tw/articles/10243986" target="_blank" rel="noopener">[Day 10] 深度看一下 Angular 建立 multi provider 的機制</a>（真的很深入）</p>
+</blockquote>
+<p>至此，我們就可以儲存檔案來看一下初始化完後會印出的 Log ：</p>
+<p><img src="https://i.imgur.com/z91QjIo.jpg" alt="Log"></p>
+<p>接著我們在使用 <code>DateRangeComponent</code> 的 Component 裡加上以下程式碼以觀察其運作結果：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">this</span>.formGroup = <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">    dateRange: <span class="hljs-string">''</span></span><br><span class="line">  &#125;);</span><br><span class="line">  setTimeout(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-built_in">console</span>.log(<span class="hljs-string">'---- 3秒後 ----'</span>);</span><br><span class="line">    <span class="hljs-keyword">this</span>.formGroup?.setValue(&#123; dateRange: <span class="hljs-string">'Leo'</span> &#125;);</span><br><span class="line">    <span class="hljs-keyword">this</span>.formGroup?.disable();</span><br><span class="line">  &#125;, <span class="hljs-number">3000</span>);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然後我們會發現：</p>
+<p><img src="https://i.imgur.com/62lMvt6.jpg" alt="Log"></p>
+<p>這樣大家有比較了解一開始關於 <code>ControlValueAccessor</code> 各函式的說明了嗎？</p>
+<p>如果用圖示的話，現在的結構大概像這樣：</p>
+<p><img src="https://i.imgur.com/tNv1FWH.jpg" alt="Image 1"></p>
+<p>如果我們設值給 <code>FormControl</code> 時，則會觸發 <code>ControlValueAccessor</code> 的函式 <code>writeValue</code> ：</p>
+<p><img src="https://i.imgur.com/8yIH9Xi.jpg" alt="Image 2"></p>
+<p>如果我們 <code>disable</code> 或 <code>enable</code> 了該 <code>FormControl</code> ，則會觸發 <code>ControlValueAccessor</code> 的函式 <code>setDisabledState</code> ： </p>
+<p><img src="https://i.imgur.com/qejX9Uo.jpg" alt="Image 3"></p>
+<p>而如果使用者改動了自訂的表單元件的值，則我們自訂的表單元件應該要呼叫透過初始化時所觸發的 <code>registerOnChange</code> 所傳入的 <code>fn</code> 去通知 <code>FormControl</code>：</p>
+<p><img src="https://i.imgur.com/7ngKw7A.jpg" alt="Image 4"></p>
+<p>讀萬卷書不如行萬里路。接下來，我們把剩下的實作做完就會更了解這其中的運作流程了！</p>
+<p>首先，先加工一下使用 <code>DateRangeComponent</code> 的 Component ：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsDateRangeComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  formGroup: FormGroup | <span class="hljs-literal">undefined</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> formBuilder: FormBuilder</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> date = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>();</span><br><span class="line">    <span class="hljs-keyword">this</span>.formGroup = <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">      dateRange: <span class="hljs-string">`<span class="hljs-subst">$&#123;date.getFullYear()&#125;</span>-<span class="hljs-subst">$&#123;date.getMonth() + <span class="hljs-number">1</span>&#125;</span>-<span class="hljs-subst">$&#123;date.getDate()&#125;</span>`</span></span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  enable(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.formGroup?.enable();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  disable(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.formGroup?.disable();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>Template 的部份也加工一下：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">form</span> *<span class="hljs-attr">ngIf</span>=<span class="hljs-string">"formGroup"</span> [<span class="hljs-attr">formGroup</span>]=<span class="hljs-string">"formGroup"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">app-date-range</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"dateRange"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">app-date-range</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"button"</span> [<span class="hljs-attr">disabled</span>]=<span class="hljs-string">"formGroup.disabled"</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"disable()"</span>&gt;</span>DISABLE<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">button</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"button"</span> [<span class="hljs-attr">disabled</span>]=<span class="hljs-string">"formGroup.enabled"</span> (<span class="hljs-attr">click</span>)=<span class="hljs-string">"enable()"</span>&gt;</span>ENABLE<span class="hljs-tag">&lt;/<span class="hljs-name">button</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">form</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">pre</span>&gt;</span>&#123;&#123; formGroup?.getRawValue() | json &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">pre</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然後把 <code>DateRangeComponent</code> 改成這樣：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> DateRangeComponent <span class="hljs-keyword">implements</span> OnInit, ControlValueAccessor &#123;</span><br><span class="line"></span><br><span class="line">  formGroup: FormGroup | <span class="hljs-literal">undefined</span>;</span><br><span class="line"></span><br><span class="line">  fnFormRegisterOnChange: <span class="hljs-function">(<span class="hljs-params">(<span class="hljs-params">dateString: <span class="hljs-built_in">string</span></span>) =&gt; <span class="hljs-built_in">void</span></span>) | <span class="hljs-params">undefined</span>;</span></span><br><span class="line"><span class="hljs-function">  <span class="hljs-params">fnFormRegisterOnTouched</span>: (<span class="hljs-params">(<span class="hljs-params"></span>) =&gt; <span class="hljs-built_in">void</span></span>) | <span class="hljs-params">undefined</span>;</span></span><br><span class="line"><span class="hljs-function"></span></span><br><span class="line"><span class="hljs-function">  <span class="hljs-params">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> formBuilder: FormBuilder</span>) &#123; &#125;</span></span><br><span class="line"><span class="hljs-function"></span></span><br><span class="line"><span class="hljs-function">  <span class="hljs-params">ngOnInit</span><span class="hljs-params">()</span>: <span class="hljs-params">void</span> &#123;</span></span><br><span class="line"><span class="hljs-function">    <span class="hljs-params">this</span>.<span class="hljs-params">formGroup</span> = <span class="hljs-params">this</span>.<span class="hljs-params">formBuilder</span>.<span class="hljs-params">group</span>(<span class="hljs-params">&#123;</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">      startDate: ['', [Validators.required, Validators.pattern(<span class="hljs-params">/^\d&#123;4&#125;-\d&#123;2&#125;-\d&#123;2&#125;$/</span>)]],</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">      endDate: ['', Validators.pattern(<span class="hljs-params">/^\d&#123;4&#125;-\d&#123;2&#125;-\d&#123;2&#125;$/</span>)]</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">    &#125;, &#123; validators: dateRangeValidator &#125;</span>);</span></span><br><span class="line"><span class="hljs-function"></span></span><br><span class="line"><span class="hljs-function">    <span class="hljs-params">this</span>.<span class="hljs-params">formGroup</span>.<span class="hljs-params">valueChanges</span>.<span class="hljs-params">subscribe</span>(<span class="hljs-params">(<span class="hljs-params">&#123; startDate, endDate &#125;</span>) =&gt; &#123;</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">      <span class="hljs-keyword">let</span> dateString = startDate;</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">      <span class="hljs-keyword">if</span> (<span class="hljs-params">endDate</span>) &#123;</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">        dateString += `, $&#123;endDate&#125;`;</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">      &#125;</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">      <span class="hljs-keyword">if</span> (<span class="hljs-params"><span class="hljs-keyword">this</span>.formGroup?.errors</span>) &#123;</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">        dateString = '';</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">      &#125;</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">      <span class="hljs-keyword">if</span> (<span class="hljs-params"><span class="hljs-keyword">this</span>.fnFormRegisterOnChange</span>) &#123;</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">        <span class="hljs-keyword">this</span>.fnFormRegisterOnChange(<span class="hljs-params">dateString</span>);</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">      &#125;</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">    &#125;</span>);</span></span><br><span class="line"><span class="hljs-function">  &#125;</span></span><br><span class="line"><span class="hljs-function"></span></span><br><span class="line"><span class="hljs-function">  <span class="hljs-params">writeValue</span>(<span class="hljs-params">dateRangeString: <span class="hljs-built_in">string</span></span>): <span class="hljs-params">void</span> &#123;</span></span><br><span class="line"><span class="hljs-function">    <span class="hljs-params">const</span> [<span class="hljs-params">startDate</span>, <span class="hljs-params">endDate</span>] = <span class="hljs-params">dateRangeString</span>.<span class="hljs-params">split</span>(<span class="hljs-params">', '</span>);</span></span><br><span class="line"><span class="hljs-function">    <span class="hljs-params">this</span>.<span class="hljs-params">formGroup</span>?.<span class="hljs-params">patchValue</span>(<span class="hljs-params">&#123; startDate, endDate &#125;, &#123;</span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">      emitEvent: <span class="hljs-literal">false</span></span></span></span><br><span class="line"><span class="hljs-function"><span class="hljs-params">    &#125;</span>);</span></span><br><span class="line"><span class="hljs-function">  &#125;</span></span><br><span class="line"><span class="hljs-function"></span></span><br><span class="line"><span class="hljs-function">  <span class="hljs-params">registerOnChange</span>(<span class="hljs-params">fn: (<span class="hljs-params">dateRangeString: <span class="hljs-built_in">string</span></span>) =&gt; <span class="hljs-built_in">void</span></span>): <span class="hljs-params">void</span> &#123;</span></span><br><span class="line"><span class="hljs-function">    <span class="hljs-params">this</span>.<span class="hljs-params">fnFormRegisterOnChange</span> = <span class="hljs-params">fn</span>;</span></span><br><span class="line"><span class="hljs-function">  &#125;</span></span><br><span class="line"><span class="hljs-function">  <span class="hljs-params">registerOnTouched</span>(<span class="hljs-params">fn: (<span class="hljs-params"></span>) =&gt; <span class="hljs-built_in">void</span></span>): <span class="hljs-params">void</span> &#123;</span></span><br><span class="line"><span class="hljs-function">    <span class="hljs-params">this</span>.<span class="hljs-params">fnFormRegisterOnTouched</span> = <span class="hljs-params">fn</span>;</span></span><br><span class="line"><span class="hljs-function">  &#125;</span></span><br><span class="line"><span class="hljs-function"></span></span><br><span class="line"><span class="hljs-function">  <span class="hljs-params">setDisabledState</span>(<span class="hljs-params">isDisabled: <span class="hljs-built_in">boolean</span></span>): <span class="hljs-params">void</span> &#123;</span></span><br><span class="line"><span class="hljs-function">    <span class="hljs-params">if</span> (<span class="hljs-params">isDisabled</span>) &#123;</span></span><br><span class="line"><span class="hljs-function">      <span class="hljs-params">this</span>.<span class="hljs-params">formGroup</span>?.<span class="hljs-params">disable</span><span class="hljs-params">()</span>;</span></span><br><span class="line"><span class="hljs-function">    &#125; <span class="hljs-params">else</span> &#123;</span></span><br><span class="line"><span class="hljs-function">      <span class="hljs-params">this</span>.<span class="hljs-params">formGroup</span>?.<span class="hljs-params">enable</span><span class="hljs-params">()</span>;</span></span><br><span class="line"><span class="hljs-function">    &#125;</span></span><br><span class="line"><span class="hljs-function">  &#125;</span></span><br><span class="line"><span class="hljs-function"></span></span><br><span class="line"><span class="hljs-function">&#125;</span></span><br></pre></td></tr></table></figure>
+
+<p>結果：</p>
+<p><img src="https://i.imgur.com/mC3qQlg.gif" alt="Result"></p>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天的實作練習應該滿好玩的吧？</p>
+<p>我能理解大家第一次碰到的時候都會比較難以理解，記得我第一次碰到的時候，也只是複製人家的程式碼然後貼上而已，根本就不是了解其運作原理。</p>
+<p>因此，希望我今天的文章能讓大家可以不僅僅只是複製貼上，而是對於其流程與原理有所掌握與理解。</p>
+<p>今天的程式碼會放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day28" target="_blank" rel="noopener">Github - Branch: day28</a> 上供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
+<p>如果有任何的問題或是回饋，還請麻煩留言給我讓我知道！</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2021-10-12T01:14:51.000Z">2021-10-12</time>
                 
                 <div class="level-item">
@@ -1550,175 +1677,6 @@
 
 
 
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2021-10-03T07:53:02.000Z">2021-10-03</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    20 分鐘 閱讀文 (大約 2929 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2021/10/03/angular-30days-form-and-test-18/">Angular 深入淺出三十天：表單與測試 Day18 - 與 Cypress 的初次見面（上）</a>
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://i.imgur.com/fAyuV3G.jpg" alt="Day18"></p>
-<p>昨天跟大家分享了 Cypress 有多厲害之後，大家有沒有很期待呢？</p>
-<p>這兩天就讓我來跟大家介紹 Cypress 到底有多厲害吧！</p>
-<blockquote>
-<p>由於 Cypress 的功能非常地豐富且強大，所以我打算分成兩篇來介紹它，希望可以讓大家感受到它的魅力。</p>
-</blockquote>
-<h2 id="安裝-Cypress"><a href="#安裝-Cypress" class="headerlink" title="安裝 Cypress"></a>安裝 Cypress</h2><p>要開始使用它之前，當然要先安裝它囉！</p>
-<p>首先，我們新增一個空的資料夾，然後在終端機中輸入以下指令以進入該資料夾：</p>
-<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ <span class="hljs-built_in">cd</span> /your/project/path</span><br></pre></td></tr></table></figure>
-
-<p>接著輸入以下指令以完成初始化：</p>
-<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm init</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>大家也可以選擇現有的專案，只要有 <code>package.json</code> 這個檔案即可。</p>
-</blockquote>
-<p>然後輸入以下指令以安裝</p>
-<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm install cypress --save-dev</span><br></pre></td></tr></table></figure>
-
-<p>安裝完成之後，你會發現你的專案除了 <code>package.json</code> 有變動之外，就沒有其他變動了。</p>
-<p>別擔心！這不是因為你做錯了什麼，純粹就是 Cypress 剛安裝完就是這樣，接著我們可以先打開 <code>package.json</code> ，並且在 <code>scripts</code> 的區段加上這個指令：</p>
-<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"cy:open"</span>: <span class="hljs-string">"cypress open"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>大家不一定要像我一樣叫 <code>cy:open</code> ，可以自己取自己想要的名字，只要後面的 <code>cypress open</code> 不變即可。</p>
-</blockquote>
-<p>修改好並儲存後，我們就可以在終端機裡以下指令以啟動 Cypress ：</p>
-<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ npm run cy:open</span><br></pre></td></tr></table></figure>
-
-<p>或者是</p>
-<figure class="highlight bash hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ yarn cy:open</span><br></pre></td></tr></table></figure>
-
-<p>初次執行時，Cypress 會知道你這個專案第一次執行它：</p>
-<p><img src="https://i.imgur.com/VDvirOW.jpg" alt="Terminal capture"></p>
-<p>然後幫你產生出 <code>cypress.json</code> 與名為 <code>cypress</code> 的資料夾，並幫你開啟一個長這樣的小視窗：</p>
-<p><img src="https://i.imgur.com/sJ2CNHx.jpg" alt="Cypress window"></p>
-<p>這就表示我們順利完成 Cypress 的安裝囉！是不是超簡單的呢？！</p>
-<h2 id="資料夾結構介紹"><a href="#資料夾結構介紹" class="headerlink" title="資料夾結構介紹"></a>資料夾結構介紹</h2><p>接下來我們先來看看 Cypress 到底幫我們產生了些什麼檔案。</p>
-<h3 id="cypress-json"><a href="#cypress-json" class="headerlink" title="cypress.json"></a>cypress.json</h3><p>當大家點開它的時候應該會嚇一跳，因為剛開始時，它裡面就只有這樣：</p>
-<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123;&#125;</span><br></pre></td></tr></table></figure>
-
-<p>第一次使用 Cypress 的朋友應該會多少覺得有點錯愕，不知道這個檔案到底要用來幹嘛。</p>
-<p>其實這個檔案是 Cypress 的設置檔，有關 Cypress 全局的配置都會在這裡設定。</p>
-<p>那到底有哪些設定可以配置呢？</p>
-<p>關於這點大家其實可以看官方的 <a href="https://docs.cypress.io/guides/references/configuration" target="_blank" rel="noopener">Configuration</a> 文件，裡面寫得非常清楚，我就不再贅述。</p>
-<p>而且裡面的設定非常地多，雖然不一定都會用到，但也由此可見 Cypress 的功能是多麼地強大。</p>
-<p>接下來，點開 <code>cypress</code> 資料夾後你會發現裡面還有四個名為 <code>fixtures</code> 、 <code>integration</code> 、 <code>plugins</code> 、 <code>supports</code> 的資料夾。</p>
-<h3 id="fixtures"><a href="#fixtures" class="headerlink" title="fixtures"></a>fixtures</h3><p>這個資料夾主要是用來放一些在撰寫測試案例時，可能會常用到或共用的資料。例如：固定會輸入的帳密、固定會驗證的使用者資訊等等，並以 <code>JSON</code> 的形式存在。</p>
-<p>後續使用時，大多會在 <code>.spec.js</code> 裡用像這樣子的方式直接引用：</p>
-<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> requiredExample = <span class="hljs-built_in">require</span>(<span class="hljs-string">'../../fixtures/example'</span>);</span><br></pre></td></tr></table></figure>
-
-<h3 id="integration"><a href="#integration" class="headerlink" title="integration"></a>integration</h3><p>這個資料夾是我們用來擺放 <code>.spec.js</code> 的地方。</p>
-<p>比較值得一提的是，由於 Cypress 可以<strong>平行地</strong>執行多個不同的 <code>.spec.js</code>，所以我們在寫測試案例時可以善加利用此點，將不同系統或不會有依賴的測試分成不同的 <code>.spec.js</code> 來撰寫。</p>
-<blockquote>
-<p>不過要反向思考的是，不同的測試檔之間就更不可以有依賴關係了。</p>
-</blockquote>
-<h3 id="plugins"><a href="#plugins" class="headerlink" title="plugins"></a>plugins</h3><p>這個資料夾裡有一個 <code>index.js</code> ，當我們需要用到一些外掛模組的時候，就會需要到這裡面來設定，例如我們可能會需要在驗證<strong>重設密碼</strong>這個功能時，要到信箱裡去確認是否有收到信、點開重設密碼的連結等等。</p>
-<blockquote>
-<p>這點如果真的要仔細介紹起來可能會需要花一到兩篇的篇幅，所以如果大家有興趣的話，可以直接看官網的 <a href="https://docs.cypress.io/api/plugins/writing-a-plugin" target="_blank" rel="noopener">Write a Plugin</a> 來學習怎麼樣撰寫與使用 Plugin。</p>
-<p>此外，官方也有列出<a href="https://docs.cypress.io/plugins/directory" target="_blank" rel="noopener">它們精選的 Plugin</a> 供大家參考與使用。</p>
-</blockquote>
-<h3 id="support"><a href="#support" class="headerlink" title="support"></a>support</h3><p>在 Cypress 裡，我們都是使用 <code>cy.xxx</code> 的方式來操作 Cypress 提供的 API ，而這些 API 在 Cypress 我們叫做 <strong>Command</strong> 。</p>
-<p>雖然 Cypress 有提供許多的 <strong>Command</strong> 讓我們使用，不過我們其實也可以自定我們想要的 <strong>Command</strong> ，令我們在寫測試時更加地方便與輕鬆。</p>
-<p>而這個資料夾就是用來擺放這些我們自定 <strong>Command</strong> 的地方。</p>
-<p>打開資料夾後我們會看到裡面有兩個檔案 ─ <code>index.js</code> 與 <code>commands.js</code> ，其中的 <code>commands.js</code> 裡就是我們自定 <strong>Command</strong> 的地方。</p>
-<p>而 <code>index.js</code> 則是用來 import 我們自定 <strong>Command</strong> 的檔案，執行時 Cypress 會自己從這裡去找到測試案例所需要用到的 <strong>Command</strong> ，不用特別在測試案例裡 import 。</p>
-<blockquote>
-<p>在檔案命名上，當然也不一定要叫 <code>commands.js</code> ，你可以自己取你想要的檔名，只要記得在 <code>index.js</code> 裡 import 即可。</p>
-<p>除了自定 <strong>Command</strong> 外，其實我們還可以<strong>覆寫</strong>既有的 <strong>Command</strong> ，語法大家可以參考官方的 <a href="https://docs.cypress.io/api/cypress-api/custom-commands" target="_blank" rel="noopener">Custom Commands</a> 文件，後續我也會再分享給大家。</p>
-</blockquote>
-<p>介紹完 Cypress 的資料夾結構後，我們回頭來看看 Cypress 打開的小視窗是什麼玩意兒吧！</p>
-<h2 id="Cypress-Test-Runner"><a href="#Cypress-Test-Runner" class="headerlink" title="Cypress Test Runner"></a>Cypress Test Runner</h2><p><img src="https://i.imgur.com/sJ2CNHx.jpg" alt="Cypress Test Runner Window"></p>
-<p>這個小視窗其實是 Cypress Test Runner 所開啟的一個小視窗，一般開發時我們會使用 <code>cypress open</code> 的指令來啟動這個 Test Runner 的小視窗以便開發。</p>
-<p>現在大家看到畫面中會有許多檔案，而這些檔案其實都是位於 <code>/cypress/integration</code> 之中， Test Runner 啟動時會幫我們把它們抓出來並顯示在上圖的列表中。</p>
-<p>當我們想要測試某一個檔案裡的測試案例時，就只要點擊該檔案的名稱即可。</p>
-<blockquote>
-<p>大家可以先點點看、玩玩看，點擊之後會做的事情我會在明天將它們更仔細地介紹給大家。</p>
-</blockquote>
-<p>而這個 Test Runner 的小視窗其實有滿多滿強大的功能，例如在小視窗的右上角有個下拉選單可以選擇想要測試的瀏覽器：</p>
-<p><img src="https://i.imgur.com/3atjwB8.jpg" alt="Cypress Test Runner Window"></p>
-<p>這些瀏覽器是 Cypress 自動從你的作業系統中抓取的，只要你的作業系統有安裝 Cypress 所支援的瀏覽器，它就會成為這個下拉選單的選項。</p>
-<blockquote>
-<p>想知道更多更詳細的資訊可以參考官方的 <a href="https://docs.cypress.io/guides/guides/launching-browsers" target="_blank" rel="noopener">Launching Browsers</a> 文件。</p>
-</blockquote>
-<p>此外， 小視窗的上方有三個頁籤： <strong>Tests</strong> 、 <strong>Runs</strong> 、 <strong>Settings</strong> ，當前的畫面所顯示的是 <strong>Tests</strong> 的頁籤，我們點擊 <strong>Settings</strong> 的頁籤之後會看到以下畫面：</p>
-<p><img src="https://i.imgur.com/eDhEae6.jpg" alt="Cypress Test Runner Window"></p>
-<p>這邊比較重要且常用的會是 <strong>Configuration</strong> 的區塊，我們一樣點開它之後會看到許多設定：</p>
-<p><img src="https://i.imgur.com/RIZas8a.jpg" alt="Cypress Test Runner Window"></p>
-<p>我覺得這個功能非常地方便，因為這邊所顯示的設定是我們可以在 <code>cypress.json</code> 或者是 <code>cypress.env.json</code> 裡配置的所有設定。</p>
-<p>有了這個之後，不用再為了找有哪些設定可以使用去看官網文件，甚至也透過不同顏色來得知當前的配置是來自於哪裡，非常地貼心！</p>
-<p>至於 <strong>Configuration</strong> 後面的區塊， <strong>Node.js Version</strong> 是可以顯示目前所執行的 node 的版本：</p>
-<p><img src="https://i.imgur.com/cpR7HZx.jpg" alt="Cypress Test Runner Window"></p>
-<blockquote>
-<p>細節可參考官方的 <a href="https://docs.cypress.io/guides/references/configuration#Node-version" target="_blank" rel="noopener">Configuration - Node Version</a> 文件。</p>
-</blockquote>
-<p><strong>Proxy Settings</strong> 則是顯示目前的 Proxy 相關設定：</p>
-<p><img src="https://i.imgur.com/Vx3KOPK.jpg" alt="Cypress Test Runner Window"></p>
-<blockquote>
-<p>想知道如何設定 Proxy 可參考官方的 <a href="https://docs.cypress.io/guides/references/proxy-configuration" target="_blank" rel="noopener">Proxy Configuration</a> 文件。</p>
-</blockquote>
-<p><strong>File Opener Preference</strong> 則是可以設定你想要用什麼軟體來開啟測試檔（因為在測試中可以透過點擊檔名來開啟該檔案）：</p>
-<p><img src="https://i.imgur.com/rK94yZc.jpg" alt="Cypress Test Runner Window"></p>
-<blockquote>
-<p>詳細請參考官方的 <a href="https://docs.cypress.io/guides/tooling/IDE-integration#File-Opener-Preference" target="_blank" rel="noopener">IDE Integration - File Opener Preference</a> 文件。</p>
-</blockquote>
-<p>最後 <strong>Experiments</strong> 則是顯示目前尚在實驗階段的設定：</p>
-<p><img src="https://i.imgur.com/dOGP12F.jpg" alt="Cypress Test Runner Window"></p>
-<blockquote>
-<p>詳細請參考官方的 <a href="https://docs.cypress.io/guides/references/experiments" target="_blank" rel="noopener">Experiments</a> 文件。</p>
-</blockquote>
-<p>那 <strong>Runs</strong> 是做什麼用的呢？</p>
-<p><img src="https://i.imgur.com/SvoAF1A.jpg" alt="Cypress Test Runner Window"></p>
-<p>這邊是如果你有使用它們家的 <strong>Dashboard</strong> 服務的話，可以直接在這邊看到歷史的執行結果。</p>
-<p><strong>Dashboard</strong> 服務？這又是什麼東西？</p>
-<h2 id="Cypress-Dashboard"><a href="#Cypress-Dashboard" class="headerlink" title="Cypress Dashboard"></a>Cypress Dashboard</h2><p>Cypress Dashboard 是 Cypress 它們家所提供的服務，主要是方便我們在使用 Cypress 來執行完自動化的 E2E 的測試後，把結果上傳到這裡來，已供後續觀測與整合第三方工具所用。</p>
-<p>這又是一個很強大的工具，如果要介紹它又得花一整篇的文章，不過由於官網其實有非常詳盡的說明與影片，而且大家其實可以自己登入進去玩玩看，連結在這裡：<a href="https://dashboard.cypress.io/login" target="_blank" rel="noopener">https://dashboard.cypress.io/login</a> 。</p>
-<p>至於這個服務的收費方式，大家可以看這邊：<a href="https://dashboard.cypress.io/organizations/48db8376-6414-489b-b988-92233f50e335/pricing" target="_blank" rel="noopener">https://dashboard.cypress.io/organizations/48db8376-6414-489b-b988-92233f50e335/pricing</a> 。</p>
-<blockquote>
-<p>想知道更詳細的資訊可以看官方的 <a href="https://docs.cypress.io/guides/dashboard/introduction" target="_blank" rel="noopener">Dashboard Introduction</a> 文件。</p>
-</blockquote>
-<p>不過值得一提的是，其實有個開源的工具叫做 <a href="https://github.com/sorry-cypress/sorry-cypress" target="_blank" rel="noopener">Sorry Cypress</a> ，它可以說是免費版的 Cypress Dashboard ，主要的核心功能如<strong>平行執行測試</strong>、<strong>儲存歷史執行結果</strong>等都有，不過在介面的設計上比較陽春一些些、最重要的是需要自己架設、自己設定。</p>
-<p>我覺得這就像我們自己架設 <strong>Jenkins</strong> 與使用別人所提供的 CI 工具如 <strong>Circle CI</strong> 的概念很像，就看我們的需求來決定要選擇哪一種工具囉！</p>
-<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天主要是跟大家介紹 Cypress 的基礎功能面，我想讓大家在對它有個基本的了解之後，接下來我們在使用時會比較知道它在幹嘛、有哪些功能，不會忽然講到一個功能之後要忽然中斷原本的進度來解釋它。</p>
-<p>而明天的文章會著重在 Cypress 的 Test Runner 上（今天只有介紹到一小部分的功能），敬請期待！！</p>
-<p>如果你有任何的問題或是回饋，還請麻煩留言給我讓我知道，感謝大家！</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -1785,7 +1743,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        32
+                        33
                     </p>
                 </div>
             </div>
@@ -1847,7 +1805,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -1871,7 +1829,7 @@
                 <span class="level-item">iThome2021鐵人賽</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">27</span>
+                <span class="level-item tag">28</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/新聞/">
@@ -1910,6 +1868,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-13T15:38:05.000Z">2021-10-13</time></div>
+                    <a href="/2021/10/13/angular-30days-form-and-test-28/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/12/angular-30days-form-and-test-27/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證">
@@ -1984,25 +1961,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/08/angular-30days-form-and-test-23/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-08T01:12:41.000Z">2021-10-08</time></div>
-                    <a href="/2021/10/08/angular-30days-form-and-test-23/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2021,7 +1979,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">12</span>
+                    <span class="level-item tag">13</span>
                 </span>
             </a>
         </li>
@@ -2097,21 +2055,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -2160,7 +2118,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -2174,7 +2132,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -2203,6 +2161,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-13T15:38:05.000Z">2021-10-13</time></div>
+                    <a href="/2021/10/13/angular-30days-form-and-test-28/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/12/angular-30days-form-and-test-27/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證">
@@ -2277,25 +2254,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/08/angular-30days-form-and-test-23/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-08T01:12:41.000Z">2021-10-08</time></div>
-                    <a href="/2021/10/08/angular-30days-form-and-test-23/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2314,7 +2272,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">12</span>
+                    <span class="level-item tag">13</span>
                 </span>
             </a>
         </li>
@@ -2390,21 +2348,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -2453,7 +2411,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -2467,7 +2425,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 

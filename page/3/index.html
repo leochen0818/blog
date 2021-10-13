@@ -149,6 +149,116 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-09-23T01:37:10.000Z">2021-09-23</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    13 分鐘 閱讀文 (大約 1989 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/09/23/angular-30days-form-and-test-08/">Angular 深入淺出三十天：表單與測試 Day08 - 單元測試實作 - 登入系統 by Reactive Forms</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/UjUobcD.jpg" alt="Day8"></p>
+<p>今天我們要來為我們用 <strong>Reactive Forms</strong> 所撰寫的登入系統寫單元測試，如果還沒有相關程式碼的朋友，趕快前往閱讀第三天的文章： <a href="https://ithelp.ithome.com.tw/articles/10266617" target="_blank" rel="noopener">Reactive Forms 實作 - 以登入為例</a>。</p>
+<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>前置作業基本上都跟第六天的文章：<a href="https://ithelp.ithome.com.tw/articles/10268883" target="_blank" rel="noopener">單元測試實作 - 登入系統 by Template Driven Forms</a> 相同，今天就不會再贅述，大家如果忘記怎麼做可以先回去複習一下。</p>
+<p>目前的程式碼：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent &#123;</span><br><span class="line">  formGroup: FormGroup | <span class="hljs-literal">undefined</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">get</span> accountControl(): FormControl &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formGroup!.get(<span class="hljs-string">'account'</span>) <span class="hljs-keyword">as</span> FormControl;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">get</span> passwordControl(): FormControl &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formGroup!.get(<span class="hljs-string">'password'</span>) <span class="hljs-keyword">as</span> FormControl;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> formBuilder: FormBuilder</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.formGroup = <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">      account: [</span><br><span class="line">        <span class="hljs-string">''</span>,</span><br><span class="line">        [</span><br><span class="line">          Validators.required,</span><br><span class="line">          Validators.pattern(<span class="hljs-regexp">/^\b[\w\.-]+@[\w\.-]+\.\w&#123;2,4&#125;\b$/gi</span>)</span><br><span class="line">        ]</span><br><span class="line">      ],</span><br><span class="line">      password: [</span><br><span class="line">        <span class="hljs-string">''</span>,</span><br><span class="line">        [Validators.required, Validators.minLength(<span class="hljs-number">8</span>), Validators.maxLength(<span class="hljs-number">16</span>)]</span><br><span class="line">      ]</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  getErrorMessage(formControl: FormControl): <span class="hljs-built_in">string</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> errorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!formControl.errors || formControl.pristine) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.required) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.pattern) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'格式有誤，請重新輸入'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.minlength) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'密碼長度最短不得低於8碼'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.maxlength) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'密碼長度最長不得超過16碼'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> errorMessage;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  login(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// do login...</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以目前的程式碼來看，基本上我們只要驗 <code>getErrorMessage</code> 這個<strong>函式</strong>，不過我們其實也能驗 <code>ngOnInit</code> 這個 <strong>Angular Component Lifecycle Hook</strong> 的執行結果，畢竟它也是個<strong>函式</strong>，我們一樣可以寫測試去驗證這個函式的執行結果是否符合我們的預期。</p>
+<blockquote>
+<p>關於 Angular Component Lifecycle Hook ，如果想知道更多可以閱讀官方文件： <a href="https://angular.io/guide/lifecycle-hooks" target="_blank" rel="noopener">Component Lifecycle hooks</a></p>
+</blockquote>
+<h3 id="測試單元-getErrorMessage"><a href="#測試單元-getErrorMessage" class="headerlink" title="測試單元 - getErrorMessage"></a>測試單元 - getErrorMessage</h3><p>我們一樣先加一個 <code>describe</code> ，表明在這裡面的測試案例都是在測 <code>getErrorMessage</code> 這個函式：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'AppComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  describe(<span class="hljs-string">'getErrorMessage'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 這裡面的測試案例都是要測這個函式</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>接著統整一下這個 <code>getErrorMessage</code> 的函式裡會遇到的情況：</p>
+<ol>
+<li>如果傳入的 <code>formControl</code> 裡沒有任何 <code>error</code> ，則會取得空字串。</li>
+<li>如果傳入的 <code>formControl</code> 的屬性 <code>pristine</code> 的值為 <code>true</code> ，則會取得空字串。</li>
+<li>如果傳入的 <code>formControl</code> 裡有必填的錯誤： <code>required</code> ，則會取得錯誤訊息 <code>此欄位必填</code>。</li>
+<li>如果傳入的 <code>formControl</code> 裡有格式的錯誤： <code>pattern</code> ，則會取得錯誤訊息 <code>格式有誤，請重新輸入</code>。</li>
+<li>如果傳入的 <code>formControl</code> 裡有最小長度的錯誤： <code>minlength</code> ，則會取得錯誤訊息 <code>密碼長度最短不得低於8碼</code>。</li>
+<li>如果傳入的 <code>formControl</code> 裡有最大長度的錯誤： <code>maxlength</code> ，則會取得錯誤訊息 <code>密碼長度最長不得超過16碼</code>。</li>
+</ol>
+<p>統整完之後，就可以將上述情況寫成測試案例：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'getErrorMessage'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should get empty string when the value is correct'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = <span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">''</span>);</span><br><span class="line">    <span class="hljs-keyword">const</span> expectedMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> message = component.getErrorMessage(formControl);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(message).toBe(expectedMessage);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should get empty string when the value is empty string but the form control is pristine'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = <span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">''</span>, [Validators.required]);</span><br><span class="line">    <span class="hljs-keyword">const</span> expectedMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> message = component.getErrorMessage(formControl);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(message).toBe(expectedMessage);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should get "此欄位必填" when the value is empty string but the form control'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = <span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">''</span>, [Validators.required]);</span><br><span class="line">    <span class="hljs-keyword">const</span> expectedMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    formControl.markAsDirty();</span><br><span class="line">    <span class="hljs-keyword">const</span> message = component.getErrorMessage(formControl);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(message).toBe(expectedMessage);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should get "格式有誤，請重新輸入" when the value is empty string but the form control'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = <span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">'whatever'</span>, [Validators.pattern(<span class="hljs-string">'/^\b[\w\.-]+@[\w\.-]+\.\w&#123;2,4&#125;\b$/gi'</span>)]);</span><br><span class="line">    <span class="hljs-keyword">const</span> expectedMessage = <span class="hljs-string">'格式有誤，請重新輸入'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    formControl.markAsDirty();</span><br><span class="line">    <span class="hljs-keyword">const</span> message = component.getErrorMessage(formControl);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(message).toBe(expectedMessage);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should get "密碼長度最短不得低於8碼" when the value is empty string but the form control'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = <span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">'abc'</span>, [Validators.minLength(<span class="hljs-number">8</span>)]);</span><br><span class="line">    <span class="hljs-keyword">const</span> expectedMessage = <span class="hljs-string">'密碼長度最短不得低於8碼'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    formControl.markAsDirty();</span><br><span class="line">    <span class="hljs-keyword">const</span> message = component.getErrorMessage(formControl);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(message).toBe(expectedMessage);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should get "密碼長度最長不得超過16碼" when the value is empty string but the form control'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = <span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">'12345678901234567'</span>, [Validators.maxLength(<span class="hljs-number">16</span>)]);</span><br><span class="line">    <span class="hljs-keyword">const</span> expectedMessage = <span class="hljs-string">'密碼長度最長不得超過16碼'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    formControl.markAsDirty();</span><br><span class="line">    <span class="hljs-keyword">const</span> message = component.getErrorMessage(formControl);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(message).toBe(expectedMessage);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>從上面的程式碼中可以看出，我這次寫單元測試的策略是：讓每個案例自己配置足以驗證該案例的 <code>formControl</code> 與其必須的 <code>Validators</code> 即可。</p>
+<p>也就是說，當我需要驗證 <code>此欄位必填</code> 的錯誤訊息時，我只需要配置 <code>Validators.required</code> 給 <code>formControl</code> ；當我需要驗證 <code>密碼長度最短不得低於8碼</code> 的錯誤訊息時，我只需要配置 <code>Validators.minlength(8)</code> 給 <code>formControl</code> ，依此類推。</p>
+<p>會這樣寫是因為我們只需要專注在什麼樣子的 <code>errors</code> 會得到什麼樣子的錯誤訊息上面，當然大家也可以每次都幫 <code>formControl</code> 配置最完整的 <code>Validators</code> ，這兩個方法我覺得都可以。</p>
+<p>此外，由於我們這次有判斷 <code>formControl</code> 的狀態： <code>pristine</code> ，因此在寫測試的時候要特別留意，記得要先 <code>markAsDirty</code> 之後才能測試噢！</p>
+<blockquote>
+<p>上一次寫單元測試的文章： <a href="https://ithelp.ithome.com.tw/articles/10268883" target="_blank" rel="noopener">單元測試實作 - 登入系統 by Template Driven Forms</a>。</p>
+</blockquote>
+<p>測試結果：</p>
+<p><img src="https://i.imgur.com/DyAXFB9.png" alt="testing result"></p>
+<h3 id="測試單元-ngOnInit"><a href="#測試單元-ngOnInit" class="headerlink" title="測試單元 - ngOnInit"></a>測試單元 - ngOnInit</h3><p>再來是 <code>ngOnInit</code> 的部份， <code>ngOnInit</code> 要驗證的項目跟 <code>formGroup</code> 滿相關，所以我打算用 <code>formGroup</code> 當測試集合的名稱，具體要驗證的項目有：</p>
+<ol>
+<li>在 <code>ngOnInit</code> 執行之前， <code>formGroup</code> 是  <code>undefined</code> 的狀況。</li>
+<li>在 <code>ngOnInit</code> 執行之後， <ol>
+<li><code>formGroup</code> 是類型為  <code>FormGroup</code> 的實體。</li>
+<li><code>formGroup</code> 裡要有兩個 <code>FormControl</code> 。<ol>
+<li><code>accountFormControl</code><ul>
+<li>要有必填的驗證</li>
+<li>要有 Email 格式的驗證</li>
+</ul>
+</li>
+<li><code>passwordFormControl</code><ul>
+<li>要有必填的驗證</li>
+<li>要有字串最小長度為 8 的驗證</li>
+<li>要有字串最大長度為 16 的驗證</li>
+</ul>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<p>程式碼如下：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'formGroup'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should be undefined before init'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.formGroup).toBeFalsy();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  describe(<span class="hljs-string">'after ngInit'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">    beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      fixture.detectChanges();</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    it(<span class="hljs-string">'should be instance of FormGroup'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-comment">// Assert</span></span><br><span class="line">      expect(component.formGroup).toBeInstanceOf(FormGroup);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    it(<span class="hljs-string">'should have 2 form controls'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-comment">// Arrange</span></span><br><span class="line">      <span class="hljs-keyword">const</span> formControls = component.formGroup!.controls;</span><br><span class="line">      <span class="hljs-keyword">const</span> controlLength = <span class="hljs-built_in">Object</span>.keys(formControls).length;</span><br><span class="line">      <span class="hljs-comment">// Assert</span></span><br><span class="line">      expect(controlLength).toBe(<span class="hljs-number">2</span>);</span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    describe(<span class="hljs-string">'accountFormControl'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">      it(<span class="hljs-string">'should have the required validator'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-comment">// Arrange</span></span><br><span class="line">        <span class="hljs-keyword">const</span> error = component.accountControl.errors!;</span><br><span class="line">        <span class="hljs-comment">// Assert</span></span><br><span class="line">        expect(error.required).toBe(<span class="hljs-literal">true</span>);</span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">      it(<span class="hljs-string">'should have the email pattern validator'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-comment">// Arrange</span></span><br><span class="line">        component.accountControl.setValue(<span class="hljs-string">'abc'</span>);</span><br><span class="line">        <span class="hljs-keyword">const</span> error = component.accountControl.errors!;</span><br><span class="line">        <span class="hljs-keyword">const</span> expectedPattern = <span class="hljs-string">'/^\\b[\\w\\.-]+@[\\w\\.-]+\\.\\w&#123;2,4&#125;\\b$/gi'</span>;</span><br><span class="line">        <span class="hljs-comment">// Assert</span></span><br><span class="line">        expect(error.pattern.requiredPattern).toBe(expectedPattern);</span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">    &#125;);</span><br><span class="line"></span><br><span class="line">    describe(<span class="hljs-string">'passwordFormControl'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">      it(<span class="hljs-string">'should have the required validator'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-comment">// Arrange</span></span><br><span class="line">        <span class="hljs-keyword">const</span> error = component.accountControl.errors!;</span><br><span class="line">        <span class="hljs-comment">// Assert</span></span><br><span class="line">        expect(error.required).toBe(<span class="hljs-literal">true</span>);</span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">      it(<span class="hljs-string">'should have the min-length validator'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-comment">// Arrange</span></span><br><span class="line">        component.passwordControl.setValue(<span class="hljs-string">'abc'</span>);</span><br><span class="line">        <span class="hljs-keyword">const</span> error = component.passwordControl.errors!;</span><br><span class="line">        <span class="hljs-comment">// Assert</span></span><br><span class="line">        expect(error.minlength.requiredLength).toBe(<span class="hljs-number">8</span>);</span><br><span class="line">      &#125;);</span><br><span class="line"></span><br><span class="line">      it(<span class="hljs-string">'should have the max-length validator'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">        <span class="hljs-comment">// Arrange</span></span><br><span class="line">        component.passwordControl.setValue(<span class="hljs-string">'12345678901234567'</span>);</span><br><span class="line">        <span class="hljs-keyword">const</span> error = component.passwordControl.errors!;</span><br><span class="line">        <span class="hljs-comment">// Assert</span></span><br><span class="line">        expect(error.maxlength.requiredLength).toBe(<span class="hljs-number">16</span>);</span><br><span class="line">      &#125;);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>此處比較特別的地方是，我在 <code>after ngInit</code> 的 <code>beforeEach</code> 裡是用 <code>fixture.detectChanges()</code> 來觸發 <code>ngOnInit()</code> ，而不是使用 <code>component.ngOnInit()</code> 的方式來觸發，這是因為我認為我們在寫的是 Angular ，而這個 Lifecycle Hook 又是 Angular 的東西，所以使用 Angular 的機制來觸發會比直接使用該函式觸發來的好。</p>
+<p>當然也是可以直接使用 <code>component.ngOnInit()</code> 來觸發，在測試的驗證結果上其實不會有什麼不同，所以用哪個方式其實都可以。</p>
+<p>測試結果：</p>
+<p><img src="https://i.imgur.com/y3wsH0r.png" alt="testing result"></p>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>已經寫了兩次的測試，相信大家對於測試的熟悉度已經有顯著地提昇，而今天的重點主要會是在使用 <code>FormControl</code> <code>markAsDirty</code> 來<strong>改變欄位的狀態</strong>，以及了解 <code>fixture.detectChanges</code> 與 <code>ngOnInit</code> 的關係，未來在寫測試的時候，這兩點也是非常需要多加留意的。</p>
+<p>今日的實作程式碼一樣會放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day8" target="_blank" rel="noopener">Github - Branch: day8</a> 上供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
+<p>如果有任何的問題或是回饋，也都非常歡迎留言給我讓我知道噢！</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2021-09-22T00:37:10.000Z">2021-09-22</time>
                 
                 <div class="level-item">
@@ -1305,83 +1415,6 @@
 
 
 
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2019-12-12T03:52:58.000Z">2019-12-12</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Git/">Git</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    4 分鐘 閱讀文 (大約 591 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2019/12/12/how-to-use-git-with-homebrew-in-macos/">如何在 macOS 裡使用 Homebrew 來安裝與升級 Git</a>
-            
-        </h1>
-        <div class="content">
-            <p>在 macOS 裡，因 Git 是內建在系統當中的關係，所以在 macOS 裡使用 Git 非常方便，打開終端機就能使用了。</p>
-<p>但可惜的是，隨著 Git 裡有著某些重大安全性問題被發現， Git 也隨之釋出新版本提供給大家更新， macOS 內建的 Git 版本就過於老舊了些。</p>
-<p>我們可以在終端機中輸入以下指令來查看當前所使用的 Git 的版本：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> git version</span><br><span class="line">git version 2.15.1 (Apple Git-101)</span><br></pre></td></tr></table></figure>
-
-<p>所以後來許多人就推薦改為使用 <code>Homebrew</code> 來安裝與更新 Git ，方式可以參考以下連結：</p>
-<ul>
-<li><a href="https://garynil.tw/2018/05/762/%E5%A6%82%E4%BD%95%E4%BB%A5-homebrew-%E5%8F%96%E4%BB%A3-macos-%E5%85%A7%E5%BB%BA-git-%E4%B8%A6%E6%9B%B4%E6%96%B0/" target="_blank" rel="noopener">如何以 Homebrew 取代 MacOS 內建 Git 並更新</a></li>
-</ul>
-<p>不過隨著 macOS 的更新，系統的安全性也逐漸被 Apple 增加，所以筆者在使用 <code>sudo mv /usr/bin/git /usr/bin/git-apple</code> 這個指令時（ macOS 版本為： Catalina 10.15.1 ），遇到了第一個問題： <code>operation not permitted</code> 。</p>
-<p>這時筆者 Google 到第一個解決方案：</p>
-<ul>
-<li><a href="https://www.azureunali.com/mac-iterm2%E6%88%96terminal%E5%9C%A8%E5%8D%87%E7%B4%9Amacos-mojave%E4%B9%8B%E5%BE%8C%E4%BD%BF%E7%94%A8%E6%8C%87%E4%BB%A4%E6%99%82%E6%9C%83%E5%87%BA%E7%8F%BEoperation-not-permitted/" target="_blank" rel="noopener">[Mac] iTerm2或Terminal在升級macOS Mojave之後使用指令時會出現”Operation not permitted”</a></li>
-</ul>
-<p>不過這個方式在筆者的系統中沒有作用，依舊會遇到 <code>operation not permitted</code> 的問題。</p>
-<p>而後筆者 Google 到第二個解決方案：</p>
-<ul>
-<li><a href="https://stackoverflow.com/questions/32659348/operation-not-permitted-when-on-root-el-capitan-rootless-disabled" target="_blank" rel="noopener">Operation Not Permitted when on root - El Capitan (rootless disabled)</a> 裡的綠勾勾回覆</li>
-</ul>
-<p>筆者照做之後，再次使用 <code>sudo mv /usr/bin/git /usr/bin/git-apple</code> ，遇到了第二個問題： <code>Read-only file system</code> 。因此筆者又 Google 了一下，找到了以下解決方案：</p>
-<ul>
-<li><a href="https://www.jianshu.com/p/a7e7bbcb913d" target="_blank" rel="noopener">macOS 无法sudo创建文件夹返回Read-only file system问题解决</a></li>
-</ul>
-<p>參照上述文章，筆者在終端機裡輸入以下指令：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> sudo mount -uw /</span><br></pre></td></tr></table></figure>
-
-<p>即可正常使用：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> sudo mv /usr/bin/git /usr/bin/git-apple</span><br></pre></td></tr></table></figure>
-
-<p>而後就能夠改為使用 <code>Homebrew</code> 安裝的 Git：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> git version</span><br><span class="line">git version 2.24.1</span><br></pre></td></tr></table></figure>
-
-<p>以上，希望有幫到大家。</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -1450,7 +1483,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        32
+                        33
                     </p>
                 </div>
             </div>
@@ -1512,7 +1545,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">31</span>
+                <span class="level-item tag">32</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -1536,7 +1569,7 @@
                 <span class="level-item">iThome2021鐵人賽</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">27</span>
+                <span class="level-item tag">28</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/新聞/">
@@ -1575,6 +1608,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-13T15:38:05.000Z">2021-10-13</time></div>
+                    <a href="/2021/10/13/angular-30days-form-and-test-28/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/12/angular-30days-form-and-test-27/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證">
@@ -1649,25 +1701,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/08/angular-30days-form-and-test-23/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-08T01:12:41.000Z">2021-10-08</time></div>
-                    <a href="/2021/10/08/angular-30days-form-and-test-23/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1686,7 +1719,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">12</span>
+                    <span class="level-item tag">13</span>
                 </span>
             </a>
         </li>
@@ -1762,21 +1795,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -1825,7 +1858,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -1839,7 +1872,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -1868,6 +1901,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-13T15:38:05.000Z">2021-10-13</time></div>
+                    <a href="/2021/10/13/angular-30days-form-and-test-28/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/12/angular-30days-form-and-test-27/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證">
@@ -1942,25 +1994,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/08/angular-30days-form-and-test-23/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-08T01:12:41.000Z">2021-10-08</time></div>
-                    <a href="/2021/10/08/angular-30days-form-and-test-23/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1979,7 +2012,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">12</span>
+                    <span class="level-item tag">13</span>
                 </span>
             </a>
         </li>
@@ -2055,21 +2088,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">31</span>
+                        <span class="tag is-grey">32</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -2118,7 +2151,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
@@ -2132,7 +2165,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">27</span>
+                        <span class="tag is-grey">28</span>
                     </a>
                 </div>
                 
