@@ -160,6 +160,106 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-10-14T14:45:12.000Z">2021-10-14</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    8 分鐘 閱讀文 (大約 1210 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/10/14/angular-30days-form-and-test-29/">Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/i2QD8xM.jpg" alt="Day29"></p>
+<p>昨天跟大家分享了自訂表單元件的作法，但昨天的作法只適用於一個欄位、一個 <code>FormControl</code> 。</p>
+<p>雖然 <code>FormControl</code> 裡是可以設 <code>{}</code> 的值，但如果我們真的想要的是一個可以直接用 <code>[formGroup]</code> 、 <code>[formArray]</code> 所使用的元件呢？</p>
+<blockquote>
+<p><del>沒問題，只要你想要， Angular 都給你</del></p>
+</blockquote>
+<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>大家還記得之前我們做了個「被保人表單」吧？</p>
+<p>一開始只有「姓名」、「性別」跟「年齡」這三個欄位，後來我們加了「聯絡資訊」的欄位，這次我們再幫它加個「聯絡地址」的欄位吧！</p>
+<p>一般來說，聯絡地址的欄位通常會分成「縣市」、「鄉鎮市區」、「郵遞區號」與「地址」，而「縣市」、「鄉鎮市區」與「郵遞區號」之間會有一些連動邏輯，縣市」與「鄉鎮市區」這兩個欄位也通常會是下拉選單，其他的則是一般的 <code>input</code> 欄位。</p>
+<p>首先一樣先把 HTML 準備好，像這樣：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>聯絡地址：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>&gt;</span>請選擇縣市<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>&gt;</span>請選擇鄉鎮市區<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"width: 4rem"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"郵遞區號"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">place</span>=<span class="hljs-string">"請輸入地址"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>畫面：</p>
+<p><img src="https://i.imgur.com/PvbkpwX.jpg" alt="Template View"></p>
+<blockquote>
+<p>樣式用 <code>inline</code> 的方式設定是方便教學，小朋友們要盡量少用噢！</p>
+</blockquote>
+<p>接著，在 <code>.ts</code> 裡加入地址的相關欄位的 <code>FormGroup</code> 與 <code>FormControl</code> ：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> addressInfoFormGroup = <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">  city: <span class="hljs-string">''</span>,</span><br><span class="line">  district: <span class="hljs-string">''</span>,</span><br><span class="line">  zip: <span class="hljs-string">''</span>,</span><br><span class="line">  address: <span class="hljs-string">''</span></span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">  name: [</span><br><span class="line">    <span class="hljs-string">''</span>,</span><br><span class="line">    [Validators.required, Validators.minLength(<span class="hljs-number">2</span>), Validators.maxLength(<span class="hljs-number">10</span>)]</span><br><span class="line">  ],</span><br><span class="line">  gender: [<span class="hljs-string">''</span>, Validators.required],</span><br><span class="line">  age: [<span class="hljs-string">''</span>, Validators.required],</span><br><span class="line">  contactInfoType: contactInfoTypeControl,</span><br><span class="line">  contactInfo: contactInfoControl,</span><br><span class="line">  addressInfo: addressInfoFormGroup</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>然後再將其綁與畫面上元素綁定，像這樣：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">ng-container</span> <span class="hljs-attr">formGroupName</span>=<span class="hljs-string">"addressInfo"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>聯絡地址：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"city"</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>&gt;</span>請選擇縣市<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"district"</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>&gt;</span>請選擇鄉鎮市區<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"width: 4rem"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"郵遞區號"</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"zip"</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"請輸入地址"</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"address"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">ng-container</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>連動邏輯的實作就交給大家練習囉，我們今天沒有要著重於此部分的處理。</p>
+</blockquote>
+<p>至此，我們就完成了第一步的準備工作。</p>
+<h2 id="ControlContainer"><a href="#ControlContainer" class="headerlink" title="ControlContainer"></a>ControlContainer</h2><p>接下來，我們就要將聯絡地址這塊拆成一個獨立的 Component ─ <code>AddressInfoComponent</code> 。</p>
+<p>首先，先將 HTML 搬過去並稍微調整一下：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">ng-container</span> [<span class="hljs-attr">formGroup</span>]=<span class="hljs-string">"formGroup"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"city"</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>&gt;</span>請選擇縣市<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"district"</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>&gt;</span>請選擇鄉鎮市區<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"width: 4rem"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"郵遞區號"</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"zip"</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"請輸入地址"</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"address"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">ng-container</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>接著在 <code>AddressInfoComponent</code> 裡注入 <code>ControlContainer</code>：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AddressInfoComponent &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> controlContainer: ControlContainer</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然後加上：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">get</span> formGroup(): FormGroup &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.controlContainer.control <span class="hljs-keyword">as</span> FormGroup;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>再回到被保人表單裡，把原本的聯絡地址區塊改成：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>聯絡地址：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">app-address-info</span> <span class="hljs-attr">formGroupName</span>=<span class="hljs-string">"addressInfo"</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">app-address-info</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>至此就大功告成了！是不是超簡單的？！</p>
+<p>不過之所以這麼簡單是因為這是 <strong>Reactive Forms</strong> 的方式，今天的 <code>ControlContainer</code> 不像昨天的 <code>ControlValueAccessor</code> 可以做一次之後，兩種方式都可以使用。</p>
+<p>如果今天這個元件是要讓 <strong>Template Driven Forms</strong> 使用的話，首先要先將 Template 原本用 <strong>Reactive Forms</strong> 的綁定方式改成使用 <strong>Template Driven Forms</strong> 的綁定方式，像是這樣：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">ng-container</span> <span class="hljs-attr">ngModelGroup</span>=<span class="hljs-string">"addressInfo"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"zip"</span> <span class="hljs-attr">ngModel</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>&gt;</span>請選擇縣市<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"district"</span> &gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>&gt;</span>請選擇鄉鎮市區<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"width: 4rem"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"郵遞區號"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"zip"</span> <span class="hljs-attr">ngModel</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"請輸入地址"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"address"</span> <span class="hljs-attr">ngModel</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">ng-container</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>然後也不用在 <code>AddressInfoComponent</code> 裡注入 <code>ControlContainer</code> ，而是改在 <code>AddressInfoComponent</code> 的 <strong>MetaData</strong> 的 <code>viewProviders</code> 裡新增以下設定：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'app-address-info'</span>,</span><br><span class="line">  templateUrl: <span class="hljs-string">'./address-info.component.html'</span>,</span><br><span class="line">  styleUrls: [<span class="hljs-string">'./address-info.component.scss'</span>],</span><br><span class="line">  viewProviders:[</span><br><span class="line">    &#123;</span><br><span class="line">      provide: ControlContainer, </span><br><span class="line">      useExisting: NgForm</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AddressInfoComponent &#123;</span><br></pre></td></tr></table></figure>
+
+<p>這樣就能直接用 <code>&lt;app-address-info&gt;&lt;/app-address-info&gt;</code> 的方式使用這個元件了。</p>
+<p>大家覺得，是 <code>Reactive Forms</code> 的方式好用，還是 <code>Template Driven Forms</code> 的方式好用呢？</p>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天的重點主要是讓大家知道要怎麼使用 <code>ControlContainer</code> 這個類別來<strong>包裝</strong>我們的元件，以達到提昇<strong>重用性</strong>與<strong>維護性</strong>的目的。</p>
+<p>雖然麻煩的是，它沒辦法像昨天分享的 <code>ControlValueAccessor</code> 一樣，做好了之後可以適用於 <strong>Template Driven Forms</strong> 與 <strong>Reactive Forms</strong> ，但好在它的用法其實頗為簡單，主要的差異就只有在 <strong>Template Driven Forms</strong> 需要靠 <code>viewProvider</code> ，而 <strong>Reactive Froms</strong> 只要注入就行。</p>
+<p>關於 viewProvider 與 provider 的差異，我推薦大家可以去看 Kevin （台灣 Angular GDE）的 <a href="https://blog.kevinyang.net/2018/01/19/angular-viewproviders-providers/" target="_blank" rel="noopener">[Angular] viewProviders V.S. providers</a> ，我覺得寫得非常的清楚。</p>
+<p>此外，如果覺得我分享不好，也可以參考 Kevin 的 <a href="https://blog.kevinyang.net/2019/01/04/angular-controlContainer/" target="_blank" rel="noopener">[Angular] ControlContainer 的應用</a></p>
+<p>今天的程式碼會放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day29" target="_blank" rel="noopener">Github - Branch: day29</a> 上供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
+<p>如果有任何的問題或是回饋，還請麻煩留言給我讓我知道！</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2021-10-13T15:38:05.000Z">2021-10-13</time>
                 
                 <div class="level-item">
@@ -1494,193 +1594,6 @@
 
 
 
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2021-10-04T01:04:05.000Z">2021-10-04</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    22 分鐘 閱讀文 (大約 3288 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2021/10/04/angular-30days-form-and-test-19/">Angular 深入淺出三十天：表單與測試 Day19 - 與 Cypress 的初次見面（下）</a>
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://i.imgur.com/MczVWEQ.jpg" alt="Day19"></p>
-<p>昨天跟大家初步地分享了 Cypress 怎麼安裝、 Cypress 的資料夾結構 、 Cypress Test Runner 有哪些功能、和 Cypress 提供的強大 Dashboard 的服務之後，大家有試著自己玩玩看嗎？</p>
-<p>今天我想要分享給大家的是 Cypress 在執行測試時提供的功能。</p>
-<p>可能有人會覺得，執行測試就執行測試，哪有什麼功能好分享的？</p>
-<p>別急，且聽我娓娓道來。</p>
-<h2 id="The-Test-Runner"><a href="#The-Test-Runner" class="headerlink" title="The Test Runner"></a>The Test Runner</h2><p><img src="https://i.imgur.com/sJ2CNHx.jpg" alt="Cypress Test Runner Window"></p>
-<p>昨天介紹到這個 Test Runner 開啟的小視窗，我們可以直接點擊列表中的某個檔案來執行該檔案的測試。</p>
-<p>今天我們就來先點擊第一個 <code>todo.spec.js</code> 以執行這個檔案的測試，點擊該檔案之後你會發現， Cypress 用你所指定的瀏覽器打開了一個視窗，接著大家會看到這個畫面：</p>
-<p><img src="https://i.imgur.com/uXGTcnr.gif" alt="Cypress Test Runner"></p>
-<blockquote>
-<p>Cypress 咻咻咻地就把事情做完了，是不是超快的？！</p>
-</blockquote>
-<p>沒錯，Cypress Test Runner 後來開的這個瀏覽器裡面其實是有玄機的，他不僅僅只是把結果顯示出來而已。</p>
-<h3 id="Application-Under-Test"><a href="#Application-Under-Test" class="headerlink" title="Application Under Test"></a>Application Under Test</h3><p><img src="https://i.imgur.com/buAfNVX.jpg" alt="AUT"></p>
-<p>Cypress Test Runner 後來開的這個瀏覽器裡其實是一個互動介面，右邊這個區塊是實際受測的頁面，官方將其稱作為 AUT。</p>
-<p>這個畫面不僅僅只是顯示而已，它是真實的頁面，所以我們一樣可以打開控制台、檢查元素與查看 CSS 設定。</p>
-<blockquote>
-<p>不過 Cypress 其實是使用 iframe 的方式將其嵌在這個互動介面裡，也因此可能會遇到一些問題，官方有將可能的問題統整在<a href="https://docs.cypress.io/api/commands/window#Cypress-uses-2-different-windows" target="_blank" rel="noopener">這個文件</a>裡，大家如果有遇到類似的問題可以到<a href="https://docs.cypress.io/api/commands/window#Cypress-uses-2-different-windows" target="_blank" rel="noopener">這個文件</a>裡查詢。</p>
-</blockquote>
-<p>而如果測試的語法有誤，它也會直接將錯誤訊息顯示在同一個地方：</p>
-<p><img src="https://i.imgur.com/9mEhEPu.jpg" alt="AUT"></p>
-<h4 id="網址列"><a href="#網址列" class="headerlink" title="網址列"></a>網址列</h4><p><img src="https://i.imgur.com/DEi2703.jpg" alt="AUT"></p>
-<p>在 AUT 的上方的網址列顯示的是當然是 AUT 的網址，不過該網址列是不能輸入的，點擊只會直接開新頁面以瀏覽該網頁而已。</p>
-<h4 id="Viewport"><a href="#Viewport" class="headerlink" title="Viewport"></a>Viewport</h4><p><img src="https://i.imgur.com/s3lAzFW.jpg" alt="AUT Viewport"></p>
-<p>右上方所顯示的則是當前這個 AUT 所使用的視窗大小，單位是 px 。</p>
-<p>而大小旁邊的 % 數指的是當前我們所看到的大小是實際受測大小的縮放比例。</p>
-<p>如果想知道更多細節的話可以直接點它，它會跟你說要怎麼設置：</p>
-<p><img src="https://i.imgur.com/vtsaWer.jpg" alt="AUT Viewport"></p>
-<h3 id="The-Selector-Playground"><a href="#The-Selector-Playground" class="headerlink" title="The Selector Playground"></a>The Selector Playground</h3><p>再來要介紹的是一個非常好用的功能，在網址列左方有一顆 icon 是準心的按鈕：</p>
-<p><img src="https://i.imgur.com/U2YLztE.jpg" alt="Selector Playground"></p>
-<p>點下去之後會出現這一列工具列：</p>
-<p><img src="https://i.imgur.com/3zoF0EQ.jpg" alt="Selector Playground"></p>
-<p>並且整個 AUT 會進入一個像是平常我們滑鼠右鍵檢查元素的模式，只要我們鼠標指到 AUT 任一元素上面，該元素就會變成藍色，並且會有個小小的 tooltip 跟你說這個元素的 CSS Selector 是什麼：</p>
-<p><img src="https://i.imgur.com/xIfrnxG.jpg" alt="Selector Playground"></p>
-<p>點擊下去之後你會發現，上面的輸入框會變成你剛剛點擊的元素的 CSS Selector ：</p>
-<p><img src="https://i.imgur.com/kLDvr2g.jpg" alt="Selector Playground"></p>
-<p>這時我們可以點選右邊的複製按鈕以直接複製 <code>cy.get(&#39;[data-test=new-todo]&#39;)</code> 這一串文字：</p>
-<p><img src="https://i.imgur.com/tOyMkrv.jpg" alt="Selector Playground"></p>
-<p>而複製按鈕旁邊的按鈕叫做 <code>Print to console</code> ：</p>
-<p><img src="https://i.imgur.com/d9Sru07.jpg" alt="Selector Playground"></p>
-<p>點擊這顆按鈕可以將被選取元素的資訊印到控制台裡面，印出來的資料長得會像是這樣：</p>
-<p><img src="https://i.imgur.com/oRAgfDq.jpg" alt="Selector Playground"></p>
-<p>輸入框左邊的 <code>cy.get</code> 其實是可以切換的，點擊它會出現另外一個選項 <code>cy.contains</code> ：</p>
-<p><img src="https://i.imgur.com/Jv0VAIq.jpg" alt="Selector Playground"></p>
-<p><code>cy.contains</code> 的功用是透過直接比對元素內是否有該<strong>字串</strong>來找尋元素，我們如果直接在輸入框輸入 <code>Walk</code> ，就會看到 Cypress 直接幫我們選取了 <code>Walk the dog</code> 這個代辦事項的元素：</p>
-<p><img src="https://i.imgur.com/tqHdYi9.jpg" alt="Selector Playground"></p>
-<p>而輸入框右邊的數字也會讓我們知道該選擇器一共選取到了多少個元素：</p>
-<p><img src="https://i.imgur.com/joBcxoW.jpg" alt="Selector Playground"></p>
-<p>是不是非常地方便？我覺得這個工具會讓我們在撰寫測試案例的時候輕鬆許多，尤其如果你是需要撰寫 E2E 測試的 QA ，這個工具對你的幫助真的非常巨大，再也不用纏著前端工程師問該元素要怎麼選取，直接用這個工具就能輕鬆搞定！</p>
-<p>而且這個工具所提供的 CSS Selector 可是有玄機在裡頭的！</p>
-<p>Cypress 預設會照著以下順序的<strong>優先權</strong>來提供 CSS Selector 給我們：</p>
-<ol>
-<li>是否擁有屬性 ─ <code>data-cy</code></li>
-<li>是否擁有屬性 ─  <code>data-test</code></li>
-<li>是否擁有屬性 ─  <code>data-testid</code> （ <code>i</code> 真的是小寫！，不是我打錯噢！）</li>
-<li>是否擁有屬性 ─  <code>id</code></li>
-<li>是否擁有屬性 ─ <code>class</code></li>
-<li><code>tag</code> 名稱（該元素的名稱，如 <code>input</code> 、 <code>div</code> ）</li>
-<li>其他屬性名稱</li>
-<li>偽元素選擇器 ─ <code>nth-child</code></li>
-</ol>
-<p>因此，只要該元素有優先權比較高的選擇器，不用擔心你會得到像是 <code>div &gt; div &gt; div &gt; div &gt; p</code> 之類的 CSS Selector ，只要前端工程師在開發時有加上高優先權選取器，都會有著事半功倍的效果。</p>
-<p>講到這裡其實一定會有人擔心：這樣不就要每個元素都加？這樣不就會需要加很多？</p>
-<p>其實:</p>
-<ol>
-<li>只要關鍵元素有加，讓寫 E2E 測試的人方便選取並與頁面互動即可。</li>
-<li>如果寫 E2E 測試是必然，那增加方便選取的屬性名稱也是必然的。</li>
-</ol>
-<blockquote>
-<p><del>謎之聲：不然你來寫 E2E 測試阿？！</del></p>
-</blockquote>
-<p>不過這個優先權，官方其實是有提供 API 以供我們在有需要的時候加以調整，雖然我覺得並不是很必要，但有需要的人可以參考官方的 <a href="https://docs.cypress.io/api/cypress-api/selector-playground-api" target="_blank" rel="noopener">Selector Playground API</a> 文件。</p>
-<p>而基於這個優先權，官方也提供 <a href="https://docs.cypress.io/guides/references/best-practices#Selecting-Elements" target="_blank" rel="noopener">Best Practice Guide - Selecting Elements</a> 給大家，希望大家未來在實作時能盡量照這個方式實作。</p>
-<h3 id="Command-Log"><a href="#Command-Log" class="headerlink" title="Command Log"></a>Command Log</h3><p>接下來是左半邊的重點 ─ Command Log ：</p>
-<p><img src="https://i.imgur.com/JVm8A79.jpg" alt="Command Log"></p>
-<p>同樣地，這邊所顯示的東西也不僅僅只是單純的顯示結果，它一樣是個可以互動的介面。</p>
-<p><img src="https://i.imgur.com/WI1E9e9.jpg" alt="Command Log"></p>
-<p>上方藍色的連結是受測檔案的位置，我們可以直接點擊它， Cypress 會幫我們用我們設定的 File Opener 來打開它。</p>
-<blockquote>
-<p>如果想知道怎麼設定 File Opener 的話，我昨天其實有介紹過，大家可以回頭看一下昨天的文章。</p>
-</blockquote>
-<p><img src="https://i.imgur.com/Wv6sWXl.jpg" alt="Command Log"></p>
-<p>圖中列表裡，黑字且可點擊收合的項目，是我們在 <code>.spec.js</code> 裡所寫的 <code>describe</code> 或是 <code>context</code> 。</p>
-<blockquote>
-<p><code>context</code> 在 cypress 裡的功用與 <code>describe</code> 等同，唯一不同的大概就是在語意上，官方範例中的 <code>context</code> 會在 <code>describe</code> ，但 <code>describe</code> 不會在 <code>context</code> 裡。</p>
-</blockquote>
-<p>而每個前面有勾勾 icon 的項目，則是我們在 <code>.spec.js</code> 裡所寫的每一個 <code>it</code> ，也就是每一個測試案例。</p>
-<p>點擊任一個測試案例後，我們可以在它展開的區塊中看到該測試案例的所執行的 Command ：</p>
-<p><img src="https://i.imgur.com/qz4Tll0.jpg" alt="Command Log"></p>
-<p>而且你會發現，Cypress 還會告訴你這些 Command 是在 <code>before</code> 、 <code>beforeEach</code> 、 <code>afterEach</code> 和 <code>after</code> 這些 Hooks 中執行的，還是在 <code>it</code> 中執行的（ TEST BODY 指的就是在 <code>it</code> 中執行的 Command ）：</p>
-<p><img src="https://i.imgur.com/CnoSWkO.jpg" alt="Command Log"></p>
-<p>此外，當我們的滑鼠游標滑到任一 Command 上，或是點擊任一 Command 時， Cypress 會直接幫我們還原在執行該 Command 時，頁面當前的狀況（ DOM Snapshot ）：</p>
-<p><img src="https://i.imgur.com/pa6XpbL.gif" alt="Command Log"></p>
-<blockquote>
-<p>就像坐上了時光機一樣！</p>
-</blockquote>
-<p>Cypress 預設會幫我們每個測試案例都保留 50 筆的 DOM Snapshot 以供我們進行<strong>時空旅行</strong>。</p>
-<p>不過一旦測試案例一多，這其實是件很吃記憶體的事情。</p>
-<p>因此， Cypress 也有提供設定讓我們可以調整保留的筆數，透過在 <code>cypress.json</code> 或者是 <code>cypress.env.json</code> 將 <code>numTestsKeptInMemory</code> 調小即可。</p>
-<blockquote>
-<p>想調大當然也是沒有問題的！（笑）</p>
-</blockquote>
-<p>還有，大家有沒有發現在滑鼠游標滑過每一個 Command 的時候，每一行 Command 開頭的數字會變成一顆圖釘？</p>
-<p>這是因為 Cypress 有提供<strong>釘選</strong>的功能。</p>
-<p>當我們想透過<strong>時空旅行</strong>去觀看某一個 Command 執行時的狀況，除了將滑鼠游標滑到該 Command 上之外，點擊該 Command 會將當前 AUT 的內容釘選在當下的那個狀況：</p>
-<p><img src="https://i.imgur.com/pXJI7fF.jpg" alt="Command Log"></p>
-<p>同時， Cypress 也會幫我們資訊印出來，以供我們使用：</p>
-<p><img src="https://i.imgur.com/OTSPnxW.jpg" alt="Command Log"></p>
-<p>如果覺得藍藍的很礙事，我們可以點擊這顆按鈕把它關掉：</p>
-<p><img src="https://i.imgur.com/9B5F3Ru.jpg" alt="Command Log"></p>
-<blockquote>
-<p>如果要恢復則再點擊一次即可。</p>
-</blockquote>
-<p>而如果要<strong>解除釘選</strong>，則可以按旁邊這顆按鈕：</p>
-<p><img src="https://i.imgur.com/x3uOUdY.jpg" alt="Command Log"></p>
-<blockquote>
-<p>也可以透過再次點擊當前釘選的 Command 或者是釘選其他的 Command 來解除對當前 Command 的釘選。</p>
-</blockquote>
-<p>此外，如果釘選到的 Command 是有狀態切換效果的，像是 Checkbox 、 Radio button ，還會有 Before / After 的 Toggle Button ：</p>
-<p><img src="https://i.imgur.com/pENBTSC.jpg" alt="Command Log"></p>
-<p>如此一來我們就可以知道在該行 Command 執行完之後，狀態有沒有如我們所預期的改變：</p>
-<p><img src="https://i.imgur.com/CTJ6HV2.jpg" alt="Command Log"></p>
-<h3 id="Test-Status-Menu"><a href="#Test-Status-Menu" class="headerlink" title="Test Status Menu"></a>Test Status Menu</h3><p><img src="https://i.imgur.com/rbN1Vln.jpg" alt="Test Status Menu"></p>
-<p>最後，則是左上方的這個 Status Menu。</p>
-<p><img src="https://i.imgur.com/EJXgiHN.jpg" alt="Test Status Menu"></p>
-<p>最左邊 <code>&lt; Test</code> 的部分按下去之後，會把一開始的那個小視窗叫出來，這時我們可以再選擇其他的測試檔案來執行。</p>
-<blockquote>
-<p>不過 Cypress 在這個模式下，一次只能執行一個檔案噢！</p>
-</blockquote>
-<p><img src="https://i.imgur.com/4qqKD86.jpg" alt="Test Status Menu"></p>
-<p>而旁邊這個勾勾跟叉叉應該不用我說大家應該都知道，是指通過測試跟沒通過測試的數量，右邊那個灰色圈圈則是指略過的測試數量。</p>
-<p><img src="https://i.imgur.com/4qqKD86.jpg" alt="Test Status Menu"></p>
-<p>再旁邊的數字則是執行完這個檔案的所有測試所耗費的時間，相信大家也都知道。</p>
-<p><img src="https://i.imgur.com/vpsaS4r.jpg" alt="Test Status Menu"></p>
-<p>右邊這個橘色有上下箭頭的 icon ，可以用來切換在執行測試時，如果測試案例已經長到超過螢幕高度，是否要自動 Scroll 的功能：</p>
-<p><img src="https://i.imgur.com/89NKl7R.jpg" alt="Test Status Menu"></p>
-<p>最右邊的則是是重新執行所有測試案例的按鈕，沒什麼特別的：</p>
-<p><img src="https://i.imgur.com/oI1dAx0.jpg" alt="Test Status Menu"></p>
-<p>不過，其實還有一個小秘密不知道大家有沒有發現，其實 <code>View All Test</code> 跟 <code>Disabled Auto-scrolling</code> 和 <code>Run All Tests</code> 這三個按鈕是有快捷鍵的！</p>
-<p>雖然不是什麼大不了的事情，但我覺得 Cypress 在很多小細節都很細心、很貼心，所以 Cypress 這個 E2E 自動化測試工具才會這麼好用！</p>
-<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天的重點主要是想讓大家清楚地知道和了解這個 Cypress Test Runner 提供了些什麼功能，相信之後在後續使用 Cypress 寫 E2E 測試的時候，大家會比較知道怎麼 debug 、或者是比較知道我在做什麼，而且使用上也一定會比較熟悉且順手。</p>
-<p>明天我們就要開始正式用 Cypress 寫 E2E 測試囉，敬請期待！</p>
-<p>如果有任何的問題或是回饋，還請麻煩留言給我讓我知道，感謝大家！</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -1749,7 +1662,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        33
+                        34
                     </p>
                 </div>
             </div>
@@ -1811,7 +1724,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">32</span>
+                <span class="level-item tag">33</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -1835,7 +1748,7 @@
                 <span class="level-item">iThome2021鐵人賽</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">28</span>
+                <span class="level-item tag">29</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/新聞/">
@@ -1874,6 +1787,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-14T14:45:12.000Z">2021-10-14</time></div>
+                    <a href="/2021/10/14/angular-30days-form-and-test-29/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
@@ -1948,25 +1880,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/09/angular-30days-form-and-test-24/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-09T08:04:36.000Z">2021-10-09</time></div>
-                    <a href="/2021/10/09/angular-30days-form-and-test-24/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1985,7 +1898,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">13</span>
+                    <span class="level-item tag">14</span>
                 </span>
             </a>
         </li>
@@ -2061,21 +1974,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">32</span>
+                        <span class="tag is-grey">33</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">28</span>
+                        <span class="tag is-grey">29</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">28</span>
+                        <span class="tag is-grey">29</span>
                     </a>
                 </div>
                 
@@ -2124,7 +2037,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">28</span>
+                        <span class="tag is-grey">29</span>
                     </a>
                 </div>
                 
@@ -2138,7 +2051,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">28</span>
+                        <span class="tag is-grey">29</span>
                     </a>
                 </div>
                 
@@ -2167,6 +2080,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-14T14:45:12.000Z">2021-10-14</time></div>
+                    <a href="/2021/10/14/angular-30days-form-and-test-29/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
@@ -2241,25 +2173,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/09/angular-30days-form-and-test-24/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-09T08:04:36.000Z">2021-10-09</time></div>
-                    <a href="/2021/10/09/angular-30days-form-and-test-24/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2278,7 +2191,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">13</span>
+                    <span class="level-item tag">14</span>
                 </span>
             </a>
         </li>
@@ -2354,21 +2267,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">32</span>
+                        <span class="tag is-grey">33</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">28</span>
+                        <span class="tag is-grey">29</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">28</span>
+                        <span class="tag is-grey">29</span>
                     </a>
                 </div>
                 
@@ -2417,7 +2330,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">28</span>
+                        <span class="tag is-grey">29</span>
                     </a>
                 </div>
                 
@@ -2431,7 +2344,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">28</span>
+                        <span class="tag is-grey">29</span>
                     </a>
                 </div>
                 
