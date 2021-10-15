@@ -160,6 +160,159 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-10-15T15:30:20.000Z">2021-10-15</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    16 分鐘 閱讀文 (大約 2345 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/10/15/angular-30days-form-and-test-30/">Angular 深入淺出三十天：表單與測試 Day30 - 表單原理</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/J1xtemM.jpg" alt="Day30"></p>
+<p>經過前面二十九天的的練習與學習，相信大家應該在表單的實作上都熟悉了不少，只要不是太複雜、太特別的表單應該也都難不倒你們。</p>
+<p>今天是本系列文的最後一天，就讓我們來好好地深入了解一下 Angular 表單會這麼強大的原因吧！</p>
+<p>首先，我想趁大家記憶猶新時，先帶大家來看為什麼我們昨天可以用 <code>ControlContainer</code> 來自訂一個可以被 <strong>Template Driven Forms</strong> 或是 <strong>Reactive Forms</strong> 所使用的 Component 。</p>
+<h2 id="ControlContainer"><a href="#ControlContainer" class="headerlink" title="ControlContainer"></a>ControlContainer</h2><p><img src="https://i.imgur.com/WDY226J.jpg" alt="Diagram"></p>
+<p>上圖是我根據 Angular 的 Source Code 找出 <code>ControlContainer</code> 的關係所畫的（斜體表抽象類別）。</p>
+<p>從圖中我們會發現， <code>ControlContainer</code> 其實只是一個<strong>抽象類別</strong>，並繼承了另一個<strong>抽象類別</strong> <code>AbstractControlDirective</code> ，而 <code>AbstractControlDirective</code> 這個抽象類別其實也被另一個抽象類別 <code>NgControl</code> 所繼承。</p>
+<blockquote>
+<p><code>NgControl</code> 晚點會提到，此處暫不多做說明。</p>
+</blockquote>
+<p>至於 <code>ControlContainer</code> ，它其實也被 <code>AbstractFormGroupDirect</code> 、 <code>NgForm</code> 、 <code>FormGroupDirective</code> 與 <code>FormArrayName</code> 這四個 Directive 所繼承；甚至 <code>AbstractFormGroupDirect</code> 還被 <code>FormGroupName</code> 與 <code>NgModelGroup</code> 這兩個 Directive 所繼承。</p>
+<p>換句話說， Angular 根據 <code>ControlContainer</code> 為基底，做出了以下五個 Directive ：</p>
+<ul>
+<li><code>FormGroupDirective</code></li>
+<li><code>FormGroupName</code></li>
+<li><code>FormArrayName</code></li>
+<li><code>NgForm</code></li>
+<li><code>NgModelGroup</code></li>
+</ul>
+<p>在這五個 Directive 裡，前面三個是為什麼我們在用 <strong>Reactive Forms</strong> 的方式來開發表單時，可以在 Template 裡用 <code>[formGroup]</code> 、 <code>[formGroupName]</code> 、 <code>[formArrayName]</code> 的方式將元素與 <code>FormGroup</code> 、 <code>FormArray</code> 綁定的原因。</p>
+<blockquote>
+<p>大家應該都還記得我們是怎麼將 <code>FormGroup</code> 與 <code>FormArray</code> 綁定到元素上的吧？！</p>
+</blockquote>
+<p>而後面兩個則是為什麼我們在用 <strong>Template Driven Forms</strong> 的方式來開發表單時，可以在 Template 裡在元素上使用 <code>#XXX=&quot;ngForm&#39;</code> 、 <code>#XXX=&quot;ngModelGroup&quot;</code> 之後，可以拿到 <code>NgForm</code> 與 <code>NgModelGroup</code> 的實體的原因。</p>
+<blockquote>
+<p>雖然本系列文沒有特別提到 <code>ngModelGroup</code> 的用法，想知道的朋友可以參考官方的 <a href="https://angular.io/api/forms/NgModelGroup" target="_blank" rel="noopener">NgModelGroup API</a> 文件</p>
+</blockquote>
+<p>那為什麼我們可以使用 <code>ControlContainer</code> 來自訂元件呢？</p>
+<p>其實這正是因為上述五個 Directive 都透過 <code>ControlContainer</code> 這個令牌，把自己註冊到 Angular 的 DI 系統裡，讓想使用它們的類別，可以很方便地透過 Angular 的 DI 系統來找到它們的實體。</p>
+<p>像是在<a href="https://ithelp.ithome.com.tw/articles/10281652" target="_blank" rel="noopener">昨天的文章</a>裡所分享的那樣（Reactive Forms 的方式）：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AddressInfoComponent &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> controlContainer: ControlContainer</span>) &#123; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Template Driven Forms 則是透過 <code>viewProvider</code> 的方式，忘記的話請看<a href="https://ithelp.ithome.com.tw/articles/10281652" target="_blank" rel="noopener">昨天的文章</a>。</p>
+</blockquote>
+<h2 id="NgControl"><a href="#NgControl" class="headerlink" title="NgControl"></a>NgControl</h2><p><img src="https://i.imgur.com/Oa5GgVA.jpg" alt="Diagram"></p>
+<p>同樣地， Angular 也根據 <code>NgControl</code> 為基底，做出了以下三個 Directive ：</p>
+<ul>
+<li><code>FormControlName</code></li>
+<li><code>FormControlDirective</code></li>
+<li><code>NgModel</code></li>
+</ul>
+<p>在這三個 Directive 裡，前面兩個是為什麼我們在用 <strong>Reactive Forms</strong> 的方式來開發表單時，可以在 Template 裡用 <code>[formControl]</code> 、 <code>[formControlName]</code> 的方式將元素與 <code>FormControl</code> 綁定的原因。</p>
+<blockquote>
+<p>大家應該都還記得我們是怎麼將 <code>FormControl</code> 綁定到元素上的吧？！</p>
+</blockquote>
+<p>而最後一個則是為什麼我們在用 <strong>Template Driven Forms</strong> 的方式來開發表單時，會在 Template 裡在元素上使用 <code>#XXX=&quot;ngModel&#39;</code> 之後，可以拿到 <code>NgForm</code> 與 <code>NgModelGroup</code> 的實體的原因。</p>
+<p>不過，大家還記不記得我們在<a href="https://ithelp.ithome.com.tw/articles/10281361" target="_blank" rel="noopener">第二十八天</a>的時候，是怎麼自訂表單元件的嗎？</p>
+<p>沒錯！就是 <code>ControlValueAccessor</code> 。</p>
+<p>上述三個 Directive 實作時，也是透過 DI 拿到實作了 <code>ControlValueAccessor</code> 介面的實體，並在初始化的時候透過 <code>ControlValueAccessor</code> 這個介面，搭建 <code>FormControl</code> 與實作了它的實體之間的溝通管道。</p>
+<blockquote>
+<p>想看原始碼的朋友可以<a href="https://github.com/angular/angular/blob/master/packages/forms/src/directives/reactive_directives/form_control_directive.ts#L53-L178" target="_blank" rel="noopener">點我</a>看原始碼。</p>
+<p>如果想知道 <code>@Self</code> 與 <code>@Optional</code> 裝飾器是幹嘛用的，可以參考這篇很前顯易懂的文章： <a href="https://medium.com/frontend-coach/self-or-optional-host-the-visual-guide-to-angular-di-decorators-73fbbb5c8658" target="_blank" rel="noopener">@Self or @Optional @Host? The visual guide to Angular DI decorators.</a></p>
+</blockquote>
+<p>但除了 <code>ControlValueAccessor</code> 之外，其實 Angular 還有其他內建的 ValueAccessor：</p>
+<p><img src="https://i.imgur.com/JdzzegU.jpg" alt="Diagram"></p>
+<p>從上圖中我們可以發現，內建的 ValueAccessor 基本上都是繼承於 <code>BaseControlValueAccessor</code> 這個類別，然後分別被 <code>DefaultValueAccessor</code> 與 <code>BuiltInControlValueAccessor</code> 繼承，而只有 <code>DefaultValueAccessor</code> 有實作 <code>ControlValueAccessor</code> 這個介面。</p>
+<p>然後 Angular 再基於 <code>BuiltInControlValueAccessor</code> 之上去建立了以下六個 ValueAccessor：</p>
+<ul>
+<li><code>NumberValueAccessor</code></li>
+<li><code>RangeValueAccessor</code></li>
+<li><code>RadioControlValueAccessor</code></li>
+<li><code>CheckboxControlValueAccessor</code></li>
+<li><code>SelectControlValueAccessor</code></li>
+<li><code>SelectMultipleControlValueAccessor</code></li>
+</ul>
+<p>而這六個 ValueAccessor 對於我們的表單開發來說是至關重要的存在，沒有了它們，我們就沒辦法在這些元素上綁定我們的表單控制項。</p>
+<p>但其實 <code>BaseControlValueAccessor</code> 與 <code>BuiltInControlValueAccessor</code> 本身並沒有什麼比較特別的實作或定義，之所以會有 <code>DefaultValueAccessor</code> 與 <code>BuiltInControlValueAccessor</code> 的區別，是為了在機制上，能夠做到一個優先權判斷的機制。</p>
+<p>當我們在使用自訂的 <code>ValueAccessor</code> 時候， <code>DefaultValueAccessor</code> 或是上述六個 ValueAccessor 其實都有可能與我們自訂的 <code>ValueAccessor</code> 同時存在。</p>
+<p>因此，在將我們的表單控制項與元素綁定的時候， Angular 會根據以下的優先權來抓取對應的 ValueAccessor ：</p>
+<ol>
+<li>CustomValueAccessor</li>
+<li>BuiltInValueAccessor</li>
+<li>DefaultValueAccessor</li>
+</ol>
+<p>如此一來，只要我們沒有自訂 ValueAccessor ，預設就是會使用內建的 ValueAccessor 來搭建表單控制項與元素之間的溝通橋樑。</p>
+<blockquote>
+<p>我覺得 Angular 的開發團隊真的很聰明！</p>
+</blockquote>
+<h2 id="同步與非同步"><a href="#同步與非同步" class="headerlink" title="同步與非同步"></a>同步與非同步</h2><p>除了上述的東西之外，其實還有一個比較特別的點，就是關於同步更新與非同步更新的問題。</p>
+<p>在 <a href="https://ithelp.ithome.com.tw/articles/10275677" target="_blank" rel="noopener">Day16 - Template Driven Forms vs Reactive Forms</a> 的小結裡，我分享了一個表格，表格裡提到了 Template Driven Forms 的可預測性是<strong>非同步</strong>的。</p>
+<p>而這件事情其實可以在 <code>NgModel</code> 的<a href="https://github.com/angular/angular/blob/master/packages/forms/src/directives/ng_model.ts#L222" target="_blank" rel="noopener">原始碼第 222 行</a> 看出一點端倪。</p>
+<p><a href="https://github.com/angular/angular/blob/master/packages/forms/src/directives/ng_model.ts#L222" target="_blank" rel="noopener">原始碼第 222 行</a>這行是指 <code>NgModel</code> 在初始化的時候，會去設置表單控制項。</p>
+<p>而在<a href="https://github.com/angular/angular/blob/bd0d7c15c195c990b59cad3361f22caa10a9b1aa/packages/forms/src/directives/ng_model.ts#L268" target="_blank" rel="noopener">原始碼第 268 行</a>中可以看到，它會判斷該 NgModel 是不是 <code>_isStandalone</code> ，也就是它是不是單獨存在，還是有被 <code>&lt;form&gt;&lt;/form&gt;</code> 包住。</p>
+<p>如果是單獨存在， <code>NgModel</code> 的行為其實會跟 <code>FormControlDirective</code> 與 <code>FormControlName</code> 一樣，因為他們會用<a href="https://github.com/angular/angular/blob/master/packages/forms/src/directives/shared.ts#L34-#L50" target="_blank" rel="noopener">一樣的方法</a>設置表單控制項。</p>
+<p>但如果不是單獨存在，它會用 <code>NgForm</code> 的 <code>addControl</code> 來設置表單控制項，這時，它就會是非同步的，因為他必須等到 <code>resolvedPromise</code> 發出 <code>resolver</code> 事件的時候，才會進行設置。</p>
+<blockquote>
+<p><code>addControl</code> 的實作在<a href="https://github.com/angular/angular/blob/master/packages/forms/src/directives/ng_form.ts#L187-#L196" target="_blank" rel="noopener">原始碼的第 187 行到 196 行</a></p>
+<p><code>resolvedPromise</code> 的定義則是在<a href="https://github.com/angular/angular/blob/master/packages/forms/src/directives/ng_form.ts#L27" target="_blank" rel="noopener">原始碼的第 27 行</a></p>
+</blockquote>
+<p>我其實不太懂 Angular 為什麼要在 <code>NgModel</code> 被 <code>&lt;form&gt;&lt;/form&gt;</code> 包起來的時候這樣子做，因為 <code>resolvedPromise</code> 其實也沒什麼特別的地方，但它們就讓 <code>NgForm</code> 在 <code>addControl</code> 、 <code>removeControl</code> 、 <code>addFormGroup</code> 與 <code>removeFormGroup</code> 這四個方法要變成非同步的方式處理。</p>
+<p>如果大家有興趣，或許找個時間研究一下，說不定，你就幫官方解決了一個問題呢！</p>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天主要是幫本系列文做個結尾，希望能讓大家透過我的分享，更熟悉、更了解 Angular 一點。</p>
+<p>也因為分享的關係，其實在撰寫本系列文的同時，我也得到了許多。</p>
+<p>以前尚不熟悉的更熟悉了；以前不知道的知道了。</p>
+<p>這或許就是所謂的「施比受更有福」吧？！</p>
+<p>未來，還會不會再寫鐵人賽還不曉得（目前是不想再寫了，哈哈！）。</p>
+<p>但是，寫鐵人賽真的是一個非常好的學習機會。</p>
+<p>透過撰寫文章，來疏理自己所學，仔細咀嚼後再回饋給社群、回饋給社會。</p>
+<p>如果你還沒寫過鐵人賽，我衷心推薦你這一輩子一定至少要寫一次鐵人賽。</p>
+<p>最後，我想感謝訂閱我的文章、閱讀我的文章、喜歡我的文章的你們，謝謝你們不嫌棄，也謝謝你們願意讓我能夠幫到你們。</p>
+<p>我也想感謝我的家人們，寫鐵人賽的這段期間，真的是非常地疏於陪伴，謝謝他們的支持（雖然他們看不到）。</p>
+<p>感謝大家的收看，我們有緣再見！ ：）</p>
+<h2 id="其他資源"><a href="#其他資源" class="headerlink" title="其他資源"></a>其他資源</h2><ul>
+<li><a href="https://www.facebook.com/groups/augularjs.tw/" target="_blank" rel="noopener">Angular Taiwan 臉書社團</a></li>
+<li><a href="https://forum.angular.tw/" target="_blank" rel="noopener">Angular Taiwan 討論區</a></li>
+<li><a href="https://www.facebook.com/groups/angularstudygroup/" target="_blank" rel="noopener">Angular Taiwan 線上讀書會社團</a></li>
+<li><a href="https://www.youtube.com/channel/UCIawWId4sXgkVZ_mCF25qGw/videos" target="_blank" rel="noopener">Angular Taiwan Youtube 頻道</a></li>
+</ul>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2021-10-14T14:45:12.000Z">2021-10-14</time>
                 
                 <div class="level-item">
@@ -1452,148 +1605,6 @@
 
 
 
-    <div class="card">
-    
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2021-10-05T01:26:51.000Z">2021-10-05</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    14 分鐘 閱讀文 (大約 2154 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2021/10/05/angular-30days-form-and-test-20/">Angular 深入淺出三十天：表單與測試 Day20 - E2E 測試實作 - 登入系統</a>
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://i.imgur.com/Lap2sfN.jpg" alt="Day20"></p>
-<p>經過這兩天的介紹，相信大家對於 Cypress 應該已經有了一定程度的理解，有沒有人已經開始用它來寫測試了呢？</p>
-<p>今天就讓我帶著大家用 Cypress 來為我們的表單撰寫 E2E 測試吧！</p>
-<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>首先先輸入以下命令以啟動 Cypress 的 Test Runner ：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> npm run cy:open</span><br></pre></td></tr></table></figure>
-
-<p>或者是</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> yarn cy:open</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>如果你還不知道怎麼安裝 Cypress 或者是為什麼要輸入這個指令的話，請參考第 18 天的文章：<a href>與 Cypress 的初次見面（上）</a>。</p>
-</blockquote>
-<p>接著就會看到熟悉的小視窗：</p>
-<p><img src="https://i.imgur.com/sJ2CNHx.jpg" alt="Cypress Test Runner Window"></p>
-<h3 id="準備測試檔"><a href="#準備測試檔" class="headerlink" title="準備測試檔"></a>準備測試檔</h3><p>之前在第 18 天的文章有介紹到，這些測試檔是官方產出的範例，如果大家嫌自己刪很麻煩的話，其實這個小視窗有提供一個方法可以一鍵刪除：</p>
-<p><img src="https://i.imgur.com/KUmKmz8.jpg" alt="Cypress Test Runner Window"></p>
-<p>按下這個連結之後，它會顯示：</p>
-<p><img src="https://i.imgur.com/8gdsGP0.jpg" alt="Cypress Test Runner Window"></p>
-<p>按確定之後，它就會幫你刪光光，非常的方便：</p>
-<p><img src="https://i.imgur.com/9humSdc.jpg" alt="Cypress Test Runner Window"></p>
-<blockquote>
-<p>當然如果想留著也無所謂，只是順帶一提這個貼心的小功能。</p>
-</blockquote>
-<p>然後我們就可以按下 <code>+ New Spec File</code> 來建立我們的第一個 E2E 測試檔：</p>
-<p><img src="https://i.imgur.com/BEI598P.jpg" alt="Cypress Test Runner Window"></p>
-<blockquote>
-<p>由於 E2E 測試是要模擬<strong>使用者的行為</strong>來操作<strong>真實</strong>的系統，所以在撰寫測試前，我們先確定要測的系統可以被訪問，待會才能夠使用 Cypress 來訪問它。</p>
-<p>當然如果要測的系統有放在網路空間裡最好，沒有的話就在本地端啟動它即可。</p>
-</blockquote>
-<h3 id="第一個-E2E-測試的測試案例"><a href="#第一個-E2E-測試的測試案例" class="headerlink" title="第一個 E2E 測試的測試案例"></a>第一個 E2E 測試的測試案例</h3><p>接著我們打開剛建立的測試檔，來寫我們的第一個 E2E 測試的測試案例。</p>
-<p>程式碼如下：</p>
-<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'Login Form'</span>, () =&gt; &#123;</span><br><span class="line">  it(<span class="hljs-string">'have title "Template Driven Forms 實作 ─ 登入"'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> title = <span class="hljs-string">'Template Driven Forms 實作 ─ 登入'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    cy.visit(<span class="hljs-string">'http://localhost:4200'</span>);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    cy.get(<span class="hljs-string">'h1'</span>).should(<span class="hljs-string">'have.text'</span>, title);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>執行結果：</p>
-<p><img src="https://i.imgur.com/vgCQmoy.jpg" alt="Testing Result"></p>
-<p>雖然大家看我寫得好像很簡單，不過大家在實作時應該會有個疑問：怎麼都沒有 intellisense ？</p>
-<blockquote>
-<p>intellisense 指的是當我們 Coding 時，編輯器會跟我們說有什麼方法可以使用的那個選單，有的人也會叫他 auto-complete 。</p>
-</blockquote>
-<p>其實這是因為少了一句關鍵的語法： </p>
-<p><img src="https://i.imgur.com/SzaDgK7.jpg" alt="Code Sample"></p>
-<p>只要大家將這個語法 <code>/// &lt;reference types=&quot;cypress&quot; /&gt;</code> 放在檔案開頭，就可以在撰寫測試時有 intellisense 囉！</p>
-<blockquote>
-<p>一開始我也沒注意到它，因為我平常是寫 TypeScript 的版本，所以我去查了一下這是什麼原理，原來這是早期 TypeScript 用來宣告依賴關係的方式，詳細大家可以參考我找到的網路文章：<a href="https://willh.gitbook.io/typescript-tutorial/basics/declaration-files#san-xie-xian-zhi-ling" target="_blank" rel="noopener">https://willh.gitbook.io/typescript-tutorial/basics/declaration-files#san-xie-xian-zhi-ling</a></p>
-</blockquote>
-<h3 id="撰寫測試案例"><a href="#撰寫測試案例" class="headerlink" title="撰寫測試案例"></a>撰寫測試案例</h3><p>藉由第一個測試案例來驗證環境沒問題後，我們就可以正式來寫需求的測試案例了。</p>
-<p>複習並整理一下要驗的案例：</p>
-<ul>
-<li>輸入正確格式的帳號與密碼，登入按鈕為 enabled 的狀態</li>
-<li>輸入不正確格式的帳號但正確格式的密碼，登入按鈕為 disabled 的狀態</li>
-<li>輸入正確格式的帳號但不正確格式的密碼，登入按鈕為 disabled 的狀態</li>
-</ul>
-<p>程式碼如下：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'Login Form'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    cy.visit(<span class="hljs-string">'http://localhost:4200'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'have title "Template Driven Forms 實作 ─ 登入"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> title = <span class="hljs-string">'Template Driven Forms 實作 ─ 登入'</span>;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    cy.get(<span class="hljs-string">'h1'</span>).should(<span class="hljs-string">'have.text'</span>, title);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  context(<span class="hljs-string">'When typing the correct account and password'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    it(<span class="hljs-string">'should can login'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-comment">// Act</span></span><br><span class="line">      cy.get(<span class="hljs-string">'#account'</span>).type(<span class="hljs-string">'abc@email.com'</span>);</span><br><span class="line">      cy.get(<span class="hljs-string">'#password'</span>).type(<span class="hljs-string">'12345678'</span>);</span><br><span class="line">      <span class="hljs-comment">// Assert</span></span><br><span class="line">      cy.get(<span class="hljs-string">'button'</span>).should(<span class="hljs-string">'be.enabled'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  context(<span class="hljs-string">'When typing the incorrect account and the correct password'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    it(<span class="hljs-string">'should can not login'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-comment">// Act</span></span><br><span class="line">      cy.get(<span class="hljs-string">'#account'</span>).type(<span class="hljs-string">'abcdef'</span>);</span><br><span class="line">      cy.get(<span class="hljs-string">'#password'</span>).type(<span class="hljs-string">'12345678'</span>);</span><br><span class="line">      <span class="hljs-comment">// Assert</span></span><br><span class="line">      cy.get(<span class="hljs-string">'button'</span>).should(<span class="hljs-string">'be.disabled'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  context(<span class="hljs-string">'When typing the correct account and the incorrect password'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    it(<span class="hljs-string">'should can not login'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-comment">// Act</span></span><br><span class="line">      cy.get(<span class="hljs-string">'#account'</span>).type(<span class="hljs-string">'abc@email.com'</span>);</span><br><span class="line">      cy.get(<span class="hljs-string">'#password'</span>).type(<span class="hljs-string">'12345'</span>);</span><br><span class="line">      <span class="hljs-comment">// Assert</span></span><br><span class="line">      cy.get(<span class="hljs-string">'button'</span>).should(<span class="hljs-string">'be.disabled'</span>);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>執行結果：</p>
-<p><img src="https://i.imgur.com/ozDgYeR.jpg" alt="Testing Result"></p>
-<p>大家有沒有覺得寫起來其實跟之前的單元測試與整合測試並沒有什麼太大的差別？</p>
-<p>這是因為在撰寫測試的時候，大體上的觀念都是共通且雷同的，只有所使用的語法與 API 不同罷了。</p>
-<p>雖然上述測試程式碼只驗了三個情境，但這是因為我覺得其實大多的情境都已經有被整合測試覆蓋到的緣故。</p>
-<p>不過在現實情況裡，寫整合測試的人不一定跟寫 E2E 測試的人是同一個，所以就算驗比較完整一點也是很正常的。</p>
-<h3 id="E2E-測試小技巧-─-自訂-Command"><a href="#E2E-測試小技巧-─-自訂-Command" class="headerlink" title="E2E 測試小技巧 ─ 自訂 Command"></a>E2E 測試小技巧 ─ 自訂 Command</h3><p>雖說已經寫完測試了，但既然每個測試案例都需要輸入帳號密碼，那我們可以使用<strong>自訂 Command</strong> 的技巧來重構一下這段程式碼。</p>
-<p>首先我們打開在 <code>/support</code> 資料夾底下的 <code>commands.js</code> ，大家應該會看到像這樣被註解起來的程式碼：</p>
-<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// -- This is a parent command --</span></span><br><span class="line"><span class="hljs-comment">// Cypress.Commands.add('login', (email, password) =&gt; &#123; ... &#125;)</span></span><br><span class="line"><span class="hljs-comment">//</span></span><br><span class="line"><span class="hljs-comment">//</span></span><br><span class="line"><span class="hljs-comment">// -- This is a child command --</span></span><br><span class="line"><span class="hljs-comment">// Cypress.Commands.add('drag', &#123; prevSubject: 'element'&#125;, (subject, options) =&gt; &#123; ... &#125;)</span></span><br><span class="line"><span class="hljs-comment">//</span></span><br><span class="line"><span class="hljs-comment">//</span></span><br><span class="line"><span class="hljs-comment">// -- This is a dual command --</span></span><br><span class="line"><span class="hljs-comment">// Cypress.Commands.add('dismiss', &#123; prevSubject: 'optional'&#125;, (subject, options) =&gt; &#123; ... &#125;)</span></span><br><span class="line"><span class="hljs-comment">//</span></span><br><span class="line"><span class="hljs-comment">//</span></span><br><span class="line"><span class="hljs-comment">// -- This will overwrite an existing command --</span></span><br><span class="line"><span class="hljs-comment">// Cypress.Commands.overwrite('visit', (originalFn, url, options) =&gt; &#123; ... &#125;)</span></span><br></pre></td></tr></table></figure>
-
-<p>這些程式碼一樣也是 Cypress 幫我們產生的範例，主要是讓我們知道怎麼做才能<strong>自訂 Command</strong> 。</p>
-<p>我們可以從中看到，其實有四種方式可以<strong>自訂 Command</strong> ，不過今天我們只會用到第一種。</p>
-<blockquote>
-<p>想知道其他方式如何使用？請參考官方的 <a href="https://docs.cypress.io/api/cypress-api/custom-commands#Examples" target="_blank" rel="noopener">Custom Commands - Examples</a> 文件。</p>
-</blockquote>
-<p>首先取消 <code>login</code> 那一行的註解，並將程式碼改成這樣：</p>
-<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">Cypress.Commands.add(<span class="hljs-string">'fillWith'</span>, (account, password) =&gt; &#123;</span><br><span class="line">  cy.get(<span class="hljs-string">'#account'</span>).type(account);</span><br><span class="line">  cy.get(<span class="hljs-string">'#password'</span>).type(password);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>然後我們就能到 <code>login-form.spec.js</code> 裡將測試案例改成這樣：</p>
-<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br></pre></td><td class="code"><pre><span class="line">context(<span class="hljs-string">'When typing the correct account and password'</span>, () =&gt; &#123;</span><br><span class="line">  it(<span class="hljs-string">'should can login'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> account = <span class="hljs-string">'abc@email.com'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> password = <span class="hljs-string">'12345678'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    cy.fillWith(account, password);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    cy.get(<span class="hljs-string">'button'</span>).should(<span class="hljs-string">'be.enabled'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">context(<span class="hljs-string">'When typing the incorrect account and the correct password'</span>, () =&gt; &#123;</span><br><span class="line">  it(<span class="hljs-string">'should can not login'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> account = <span class="hljs-string">'abcdef'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> password = <span class="hljs-string">'12345678'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    cy.fillWith(account, password);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    cy.get(<span class="hljs-string">'button'</span>).should(<span class="hljs-string">'be.disabled'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">context(<span class="hljs-string">'When typing the correct account and the incorrect password'</span>, () =&gt; &#123;</span><br><span class="line">  it(<span class="hljs-string">'should can not login'</span>, () =&gt; &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> account = <span class="hljs-string">'abc@email.com'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> password = <span class="hljs-string">'12345'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    cy.fillWith(account, password);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    cy.get(<span class="hljs-string">'button'</span>).should(<span class="hljs-string">'be.disabled'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>這樣看起來是不是更清爽、更好閱讀了呢？</p>
-<p>此外，撰寫完測試之後，未來再執行測試時，就不會用同個模式跑，這個模式主要是用來開發測試程式碼用的，未來要再重複執行測試的話，我們一樣可以先在 <code>package.json</code> 裡的 <code>script</code> 區段加上：</p>
-<figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"cy:run"</span>: <span class="hljs-string">"cypress run"</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<blockquote>
-<p>你也可以取自己喜歡的指令如 <code>&quot;e2e&quot;: &quot;cypress run&quot;</code> ，不一定要跟我一樣。</p>
-</blockquote>
-<p>之後就能直接用以下的指令執行 E2E 測試了：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> npm run cy:run</span><br></pre></td></tr></table></figure>
-
-<p>或者是</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> yarn cy:run</span><br></pre></td></tr></table></figure>
-
-<p>執行結果：</p>
-<p><img src="https://i.imgur.com/QtGtG8I.gif" alt="Testing Result"></p>
-<blockquote>
-<p>而且你會發現 Cypress 幫你錄了執行測試時的影片，不妨點開來看看吧！</p>
-</blockquote>
-<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天的重點主要是在撰寫 E2E 測試的測試案例上與自訂 Command 的部份，不過經歷之前的練習後，大家應該只要稍微熟悉一下就能輕易上手了。</p>
-<p>明天我們再來練習用 Cypress 為我們之前寫的動態表單撰寫測試，敬請期待！</p>
-<p>今天的實作程式碼會放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day20" target="_blank" rel="noopener">Github - Branch: day20</a> 上供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
-<p>如果你有任何的問題或是回饋，還請麻煩留言給我讓我知道！</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -1662,7 +1673,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        34
+                        35
                     </p>
                 </div>
             </div>
@@ -1724,7 +1735,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">33</span>
+                <span class="level-item tag">34</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -1748,7 +1759,7 @@
                 <span class="level-item">iThome2021鐵人賽</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">29</span>
+                <span class="level-item tag">30</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/新聞/">
@@ -1787,6 +1798,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-15T15:30:20.000Z">2021-10-15</time></div>
+                    <a href="/2021/10/15/angular-30days-form-and-test-30/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day30 - 表單原理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
@@ -1861,25 +1891,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/10/angular-30days-form-and-test-25/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day25 - 測試進階技巧 - DI 抽換">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-10T05:15:47.000Z">2021-10-10</time></div>
-                    <a href="/2021/10/10/angular-30days-form-and-test-25/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day25 - 測試進階技巧 - DI 抽換</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1898,7 +1909,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">14</span>
+                    <span class="level-item tag">15</span>
                 </span>
             </a>
         </li>
@@ -1974,21 +1985,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">33</span>
+                        <span class="tag is-grey">34</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">29</span>
+                        <span class="tag is-grey">30</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">29</span>
+                        <span class="tag is-grey">30</span>
                     </a>
                 </div>
                 
@@ -2037,7 +2048,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">29</span>
+                        <span class="tag is-grey">30</span>
                     </a>
                 </div>
                 
@@ -2051,7 +2062,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">29</span>
+                        <span class="tag is-grey">30</span>
                     </a>
                 </div>
                 
@@ -2080,6 +2091,25 @@
         
         <article class="media">
             
+            <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-15T15:30:20.000Z">2021-10-15</time></div>
+                    <a href="/2021/10/15/angular-30days-form-and-test-30/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day30 - 表單原理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
@@ -2154,25 +2184,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/10/angular-30days-form-and-test-25/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day25 - 測試進階技巧 - DI 抽換">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-10T05:15:47.000Z">2021-10-10</time></div>
-                    <a href="/2021/10/10/angular-30days-form-and-test-25/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day25 - 測試進階技巧 - DI 抽換</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2191,7 +2202,7 @@
                     <span class="level-item">十月 2021</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">14</span>
+                    <span class="level-item tag">15</span>
                 </span>
             </a>
         </li>
@@ -2267,21 +2278,21 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/angular/">
                         <span class="tag">angular</span>
-                        <span class="tag is-grey">33</span>
+                        <span class="tag is-grey">34</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
-                        <span class="tag is-grey">29</span>
+                        <span class="tag is-grey">30</span>
                     </a>
                 </div>
                 
                 <div class="control">
                     <a class="tags has-addons" href="/tags/frontend/">
                         <span class="tag">frontend</span>
-                        <span class="tag is-grey">29</span>
+                        <span class="tag is-grey">30</span>
                     </a>
                 </div>
                 
@@ -2330,7 +2341,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/testing/">
                         <span class="tag">testing</span>
-                        <span class="tag is-grey">29</span>
+                        <span class="tag is-grey">30</span>
                     </a>
                 </div>
                 
@@ -2344,7 +2355,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
-                        <span class="tag is-grey">29</span>
+                        <span class="tag is-grey">30</span>
                     </a>
                 </div>
                 
