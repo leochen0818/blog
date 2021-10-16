@@ -172,7 +172,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    16 分鐘 閱讀文 (大約 2345 個字)
+                    16 分鐘 閱讀文 (大約 2344 個字)
                 </span>
                 
                 
@@ -189,7 +189,7 @@
 <p>經過前面二十九天的的練習與學習，相信大家應該在表單的實作上都熟悉了不少，只要不是太複雜、太特別的表單應該也都難不倒你們。</p>
 <p>今天是本系列文的最後一天，就讓我們來好好地深入了解一下 Angular 表單會這麼強大的原因吧！</p>
 <p>首先，我想趁大家記憶猶新時，先帶大家來看為什麼我們昨天可以用 <code>ControlContainer</code> 來自訂一個可以被 <strong>Template Driven Forms</strong> 或是 <strong>Reactive Forms</strong> 所使用的 Component 。</p>
-<h2 id="ControlContainer"><a href="#ControlContainer" class="headerlink" title="ControlContainer"></a>ControlContainer</h2><p><img src="https://i.imgur.com/WDY226J.jpg" alt="Diagram"></p>
+<h2 id="ControlContainer"><a href="#ControlContainer" class="headerlink" title="ControlContainer"></a>ControlContainer</h2><p><img src="https://i.imgur.com/0qezReO.jpg" alt="Diagram"></p>
 <p>上圖是我根據 Angular 的 Source Code 找出 <code>ControlContainer</code> 的關係所畫的（斜體表抽象類別）。</p>
 <p>從圖中我們會發現， <code>ControlContainer</code> 其實只是一個<strong>抽象類別</strong>，並繼承了另一個<strong>抽象類別</strong> <code>AbstractControlDirective</code> ，而 <code>AbstractControlDirective</code> 這個抽象類別其實也被另一個抽象類別 <code>NgControl</code> 所繼承。</p>
 <blockquote>
