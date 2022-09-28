@@ -1,0 +1,1285 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>Angular 深入淺出三十天：表單與測試 Day06 - 單元測試實作 - 登入系統 by Template Driven Forms - Leo&#39;s Coding Life</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<base href="/">
+
+
+
+    <meta name="description" content="今天我們要來為我們用 Template Driven Forms 所撰寫的登入系統寫單元測試，如果還沒有相關程式碼的朋友，趕快前往閱讀第二天的文章： Template Driven Forms 實作 - 以登入為例。 此外，由於使用 Stackblitz 來寫測試比較麻煩一點，所以我建議大家都使用 ng new 建立新的專案，因為 Angular 都幫開發者處理好了，使用 Angular 的開發">
+<meta name="keywords" content="angular,form,testing,frontend,web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Angular 深入淺出三十天：表單與測試 Day06 - 單元測試實作 - 登入系統 by Template Driven Forms">
+<meta property="og:url" content="https://blog.leochen.dev/2021/09/21/angular-30days-form-and-test-06/index.html">
+<meta property="og:site_name" content="Leo&#39;s Coding Life">
+<meta property="og:description" content="今天我們要來為我們用 Template Driven Forms 所撰寫的登入系統寫單元測試，如果還沒有相關程式碼的朋友，趕快前往閱讀第二天的文章： Template Driven Forms 實作 - 以登入為例。 此外，由於使用 Stackblitz 來寫測試比較麻煩一點，所以我建議大家都使用 ng new 建立新的專案，因為 Angular 都幫開發者處理好了，使用 Angular 的開發">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
+<meta property="og:updated_time" content="2021-09-21T01:14:23.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Angular 深入淺出三十天：表單與測試 Day06 - 單元測試實作 - 登入系統 by Template Driven Forms">
+<meta name="twitter:description" content="今天我們要來為我們用 Template Driven Forms 所撰寫的登入系統寫單元測試，如果還沒有相關程式碼的朋友，趕快前往閱讀第二天的文章： Template Driven Forms 實作 - 以登入為例。 此外，由於使用 Stackblitz 來寫測試比較麻煩一點，所以我建議大家都使用 ng new 建立新的專案，因為 Angular 都幫開發者處理好了，使用 Angular 的開發">
+<meta name="twitter:image" content="https://blog.leochen.dev/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145121750-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', "UA-145121750-1");
+</script>
+
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="Angular 深入淺出三十天：表單與測試 Day06 - 單元測試實作 - 登入系統 by Template Driven Forms" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜尋" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-09-21T01:15:10.000Z">2021-09-21</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    17 分鐘 閱讀文 (大約 2506 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Angular 深入淺出三十天：表單與測試 Day06 - 單元測試實作 - 登入系統 by Template Driven Forms
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/rlIl9AE.jpg" alt="Day6"></p>
+<p>今天我們要來為我們用 <strong>Template Driven Forms</strong> 所撰寫的登入系統寫單元測試，如果還沒有相關程式碼的朋友，趕快前往閱讀第二天的文章： <a href="https://ithelp.ithome.com.tw/articles/10265809" target="_blank" rel="noopener">Template Driven Forms 實作 - 以登入為例</a>。</p>
+<p>此外，由於使用 Stackblitz 來寫測試比較麻煩一點，所以我建議大家都使用 <code>ng new</code> 建立新的專案，因為 Angular 都幫開發者處理好了，使用 Angular 的開發者就是這麼幸福。</p>
+<p>所以在開始之前，如果當初是用 Stackblitz 練習的話，要先將程式碼複製到專案裡，詳細步驟我就不再贅述囉！</p>
+<blockquote>
+<p>小提醒，將程式碼複製到專案裡之後，記得先使用 <code>ng serve</code> 的指令將其啟動起來看看是不是可以正常運作噢！</p>
+<p>此外，如果是用 Angular v12 以上的同學，預設的 typescript 會是 strict mode 的狀態，也就是說型別檢查會比較嚴格一點，所以如果看到很多紅色毛毛蟲不用太擔心。</p>
+<p>如果有任何問題，我預言會有 80% 的朋友是忘記在 module 裡 import <code>FormsModule</code> ，哈哈！</p>
+</blockquote>
+<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>上述前置作業做完之後，我們就可以先打開 <code>app.component.spec.ts</code>，你應該會看到 Angular CLI 幫我們產生的程式碼：</p>
+<p><img src="https://i.imgur.com/BpUndsd.png" alt="Testing Sample"></p>
+<p>我們先把除了 <code>should create the app</code> 之外的測試案例刪掉，刪完應該要長這樣：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; TestBed &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core/testing'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> &#123; AppComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.component'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="hljs-string">'AppComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  beforeEach(<span class="hljs-keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">await</span> TestBed.configureTestingModule(&#123;</span><br><span class="line">      declarations: [</span><br><span class="line">        AppComponent</span><br><span class="line">      ],</span><br><span class="line">    &#125;).compileComponents();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should create the app'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> fixture = TestBed.createComponent(AppComponent);</span><br><span class="line">    <span class="hljs-keyword">const</span> app = fixture.componentInstance;</span><br><span class="line">    expect(app).toBeTruthy();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>至此我稍微說明一下，在 <code>beforeEach</code> 裡我們可以看到有段滿特別的程式碼：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">TestBed.configureTestingModule(&#123;</span><br><span class="line">  declarations: [</span><br><span class="line">    AppComponent</span><br><span class="line">  ],</span><br><span class="line">&#125;).compileComponents();</span><br></pre></td></tr></table></figure>
+
+<p>這段程式碼是在配置我們測試集合的環境，就像我們在寫 Angular 的時候一樣， Component 會需要一個模組，而 <code>TestBed</code> 是 Angular 幫我們預先寫好給測試用的一個類型，透過 <code>configureTestingModule</code> 來模擬真實使用情境，最後用 <code>compileComponents</code> 將其實際執行。</p>
+<p>這段配置在 Angular 基本上會是必備的，並且我們還會需要依據 Component 其實際情況來調整該配置，例如我們現在就因為我們的表單需要的關係，要在這裡引入 <code>FormsModule</code> ：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; TestBed &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core/testing'</span>;</span><br><span class="line"><span class="hljs-keyword">import</span> &#123; FormsModule &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/forms'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; AppComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.component'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="hljs-string">'AppComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  beforeEach(<span class="hljs-keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">await</span> TestBed.configureTestingModule(&#123;</span><br><span class="line">      declarations: [AppComponent],</span><br><span class="line">      imports: [FormsModule]</span><br><span class="line">    &#125;).compileComponents();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should create the app'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// ...</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>接著使用 <code>ng test</code> 的指令將測試程式啟動起來，應該會可以通過我們的第一個測試案例 <code>should create the app</code>：</p>
+<p><img src="https://i.imgur.com/7zjQj5U.png" alt="pass first case"></p>
+<p>通過這個測試基本上意謂著我們要測試的 Component 的配置沒有什麼太大的問題，因為他要可以被正常建立實體才能通過，至此我們就可以開始來撰寫單元測試了。</p>
+<h3 id="欲測試的單元選擇"><a href="#欲測試的單元選擇" class="headerlink" title="欲測試的單元選擇"></a>欲測試的單元選擇</h3><p>在第一天時我有提到，單元測試主要是要用來驗證<strong>單個類別</strong>的<strong>函式</strong>其實際執行結果是否符合我們預期的執行結果。</p>
+<p>所以我們先打開 <code>app.component.ts</code> 來看一下目前的程式碼：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent &#123;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// 綁定在帳號欄位上</span></span><br><span class="line">  account = <span class="hljs-string">''</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 綁定在密碼欄位上</span></span><br><span class="line">  password = <span class="hljs-string">''</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// 帳號欄位的錯誤訊息</span></span><br><span class="line">  accountErrorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// 密碼欄位的錯誤訊息</span></span><br><span class="line">  passwordErrorMessage = <span class="hljs-string">''</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在帳號欄位上，當使用者改變帳號時會觸發此函式</span></span><br><span class="line"><span class="hljs-comment">   * </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; account </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;ValidationErrors&#125; errors </span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  accountValueChange(account: <span class="hljs-built_in">string</span>, errors: ValidationErrors | <span class="hljs-literal">null</span>): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.account = account;</span><br><span class="line">    <span class="hljs-keyword">this</span>.validationCheck(errors, <span class="hljs-string">'account'</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在密碼欄位上，當使用者改變密碼時會觸發此函式</span></span><br><span class="line"><span class="hljs-comment">   * </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; password </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;ValidationErrors&#125; errors </span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  passwordValueChange(password: <span class="hljs-built_in">string</span>, errors: ValidationErrors | <span class="hljs-literal">null</span>): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.password = password;</span><br><span class="line">    <span class="hljs-keyword">this</span>.validationCheck(errors, <span class="hljs-string">'password'</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 綁定在表單上，當使用者按下登入按鈕時會觸發此函式</span></span><br><span class="line">  login(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// do login...</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 透過欄位裡的 ValidationErrors 來設定該欄位的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   * </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;ValidationErrors | null&#125; errors 欲驗證的欄位的錯誤 (by Angular)</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;'account' | 'password'&#125; fieldName 欄位名稱</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">private</span> validationCheck(</span><br><span class="line">    errors: ValidationErrors | <span class="hljs-literal">null</span>,</span><br><span class="line">    fieldName: <span class="hljs-string">'account'</span> | <span class="hljs-string">'password'</span></span><br><span class="line">  ): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> errorMessage: <span class="hljs-built_in">string</span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!errors) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (errors.required) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (errors.pattern) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'格式有誤，請重新輸入'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (errors.minlength) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'密碼長度最短不得低於8碼'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">this</span>.setErrorMessage(fieldName, errorMessage);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 設定指定欄位的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   * </span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;'account' | 'password'&#125; fieldName 欲設定錯誤訊息的欄位名稱</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; errorMessage 欲設定的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">private</span> setErrorMessage(</span><br><span class="line">    fieldName: <span class="hljs-string">'account'</span> | <span class="hljs-string">'password'</span>,</span><br><span class="line">    errorMessage: <span class="hljs-built_in">string</span></span><br><span class="line">  ): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (fieldName === <span class="hljs-string">'account'</span>) &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.accountErrorMessage = errorMessage;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.passwordErrorMessage = errorMessage;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>以目前的程式碼來看，這個 Component 的<strong>函式</strong>有以下這些： </p>
+<ol>
+<li><code>accountValueChange</code></li>
+<li><code>passwordValueChange</code></li>
+<li><code>login</code></li>
+<li><code>validationCheck</code></li>
+<li><code>setErrorMessage</code> </li>
+</ol>
+<p>這五個函式裡，其中 <code>login</code> 沒寫什麼先不測， <code>validationCheck</code> 與 <code>setErrorMessage</code> 是 <code>private</code> 的也不用測，所以我們主要要測試 <code>accountValueChange</code> 與 <code>passwordValueChange</code> 這兩個函式。</p>
+<h3 id="測試單元-accountValueChange"><a href="#測試單元-accountValueChange" class="headerlink" title="測試單元 - accountValueChange"></a>測試單元 - accountValueChange</h3><p>既然如此，我們先加一個 <code>describe</code> ，表明在這裡面的測試案例都是在測 <code>accountValueChange</code> 這個函式：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'AppComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  describe(<span class="hljs-string">'accountValueChange'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 這裡面的測試案例都是要測這個函式</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>然後我們來統整一下這個 <code>accountValueChange</code> 的函式裡會遇到的情況：</p>
+<ol>
+<li>會將傳入的 <code>account</code> 的值賦值給 AppComponent 的屬性 <code>account</code> 。</li>
+<li>如果傳入的 <code>errors</code> 有 <code>required</code> 欄位，則會將錯誤訊息 <code>此欄位必填</code> 賦值給 AppComponent 的屬性 <code>accountErrorMessage</code> 。</li>
+<li>如果傳入的 <code>errors</code> 有 <code>pattern</code> 欄位，則會將錯誤訊息 <code>格式有誤，請重新輸入</code> 賦值給 AppComponent 的屬性 <code>accountErrorMessage</code> 。</li>
+<li>如果傳入的 <code>errors</code> 是 <code>null</code> ，則會將 AppComponent 的屬性 <code>accountErrorMessage</code> 設為空字串。</li>
+</ol>
+<p>統整完之後，就可以將上述情況寫成測試案例：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'accountValueChange'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should set value into property "account"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> account = <span class="hljs-string">'abc123@mail.com'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = <span class="hljs-literal">null</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.accountValueChange(account, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.account).toBe(account);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should set the required error message into property "accountErrorMessage" when the value is empty string'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> account = <span class="hljs-string">''</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = &#123; required: <span class="hljs-literal">true</span> &#125;;</span><br><span class="line">    <span class="hljs-keyword">const</span> accountErrorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.accountValueChange(account, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.accountErrorMessage).toBe(accountErrorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should set the pattern error message into property "accountErrorMessage" when the value is not the correct pattern'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> account = <span class="hljs-string">'abc123'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = &#123;</span><br><span class="line">      pattern: &#123;</span><br><span class="line">        actualValue: <span class="hljs-string">'abc123'</span>,</span><br><span class="line">        requiredPattern: <span class="hljs-string">'^\\b[\\w\\.-]+@[\\w\\.-]+\\.\\w&#123;2,4&#125;\\b$'</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="hljs-keyword">const</span> accountErrorMessage = <span class="hljs-string">'格式有誤，請重新輸入'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.accountValueChange(account, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.accountErrorMessage).toBe(accountErrorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should set empty string into property "accountErrorMessage" when the value is the correct pattern'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> account = <span class="hljs-string">'abc123@mail.com'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = <span class="hljs-literal">null</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> accountErrorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.accountValueChange(account, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.accountErrorMessage).toBe(accountErrorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>測試結果：</p>
+<p><img src="https://i.imgur.com/ugm8Sp0.png" alt="testing result"></p>
+<h3 id="測試單元-passwordValueChange"><a href="#測試單元-passwordValueChange" class="headerlink" title="測試單元 - passwordValueChange"></a>測試單元 - passwordValueChange</h3><p>接下來，我們繼續來撰寫測試案例來測試 <code>passwordValueChange</code> 函式，一樣先加一個 <code>describe</code> ，表明在這裡面的測試案例都是在測 <code>passwordValueChange</code> 函式：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'AppComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line"></span><br><span class="line">  describe(<span class="hljs-string">'passwordValueChange'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 這裡面的測試案例都是要測這個函式</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>然後我們來統整一下這個 <code>passwordValueChange</code> 的函式裡會遇到的情況：</p>
+<ol>
+<li>會將傳入的 <code>password</code> 的值賦值給 AppComponent 的屬性 <code>password</code> 。</li>
+<li>如果傳入的 <code>errors</code> 有 <code>required</code> 欄位，則會將錯誤訊息 <code>此欄位必填</code> 賦值給 AppComponent 的屬性 <code>passwordErrorMessage</code> 。</li>
+<li>如果傳入的 <code>errors</code> 有 <code>minlength</code> 欄位，則會將錯誤訊息 <code>密碼長度最短不得低於8碼</code> 賦值給 AppComponent 的屬性 <code>passwordErrorMessage</code> 。</li>
+<li>如果傳入的 <code>errors</code> 是 <code>null</code> ，則會將 AppComponent 的屬性 <code>passwordErrorMessage</code> 設為空字串。</li>
+</ol>
+<p>統整完之後其實可以發現，這跟剛剛我們測 <code>accountValueChange</code> 的時候很像，所以我們只要複製一下 <code>accountValueChange</code> 的測試案例再稍微改一下就可以用了：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'passwordValueChange'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should set value into property "password"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> password = <span class="hljs-string">'abc123'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = <span class="hljs-literal">null</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.passwordValueChange(password, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.password).toBe(password);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should set the required error message into property "passwordErrorMessage" when the value is empty string'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> password = <span class="hljs-string">''</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = &#123; required: <span class="hljs-literal">true</span> &#125;;</span><br><span class="line">    <span class="hljs-keyword">const</span> passwordErrorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.passwordValueChange(password, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.passwordErrorMessage).toBe(passwordErrorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should set the pattern error message into property "passwordErrorMessage" when the value is not the correct pattern'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> password = <span class="hljs-string">'abc123'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = &#123;</span><br><span class="line">      minlength: &#123;</span><br><span class="line">        actualLength: <span class="hljs-number">7</span>,</span><br><span class="line">        requiredLength: <span class="hljs-number">8</span></span><br><span class="line">      &#125;</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="hljs-keyword">const</span> passwordErrorMessage = <span class="hljs-string">'密碼長度最短不得低於8碼'</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.passwordValueChange(password, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.passwordErrorMessage).toBe(passwordErrorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should set empty string into property "passwordErrorMessage" when the value is the correct pattern'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> password = <span class="hljs-string">'abcd1234'</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> errors = <span class="hljs-literal">null</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> passwordErrorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.passwordValueChange(password, errors);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.passwordErrorMessage).toBe(passwordErrorMessage);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+
+<p>測試結果：</p>
+<p><img src="https://i.imgur.com/6K8ih2P.png" alt="testing result"></p>
+<p>至此，我們就完成了單元測試的部份囉！是不是感覺其實很簡單，並沒有想像中的難呢？！俗話說：「萬事起頭難」，只要我們已經跨出第一步，後面就會越來越簡單噢！</p>
+<p>今天的文章就到這邊，大家稍微沉澱、吸收一下，明天我們接著撰寫整合測試的部份。</p>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>再次提醒大家，<strong>單元測試</strong>要驗證的是<strong>某一函式</strong>在<strong>不同情況下的執行結果</strong>是否符合預期，並且記得要盡量做到我在<a href="https://ithelp.ithome.com.tw/articles/10268160" target="_blank" rel="noopener">如何寫出優秀的測試？</a>文中所提到的部份。</p>
+<p>今天的程式碼比較多，且應該會有很多朋友初次接觸到測試所以可能腦筋會比較轉不過來，這時可以先回頭看看我第四天與第五天的文章，複習一下核心概念與測試語法，相信一定會有所幫助。</p>
+<p>我會將今日的實作程式碼放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day6" target="_blank" rel="noopener">Github - Branch: day6</a> 供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
+<p>如果有任何的問題或是回饋，也都非常歡迎留言給我讓我知道噢！</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/angular/">angular</a>, <a class="has-link-grey -link" href="/tags/form/">form</a>, <a class="has-link-grey -link" href="/tags/frontend/">frontend</a>, <a class="has-link-grey -link" href="/tags/testing/">testing</a>, <a class="has-link-grey -link" href="/tags/web/">web</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2021/09/22/angular-30days-form-and-test-07/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Angular 深入淺出三十天：表單與測試 Day07 - 整合測試實作 - 登入系統 by Template Driven Forms</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2021/09/20/angular-30days-form-and-test-05/">
+                <span class="level-item">Angular 深入淺出三十天：表單與測試 Day05 - 如何寫出優秀的測試？</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">評論</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://blog.leochen.dev/2021/09/21/angular-30days-form-and-test-06/';
+        this.page.identifier = '2021/09/21/angular-30days-form-and-test-06/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + "leochen0818" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                        <figure class="image is-128x128 margin-center has-mb-6">
+                            <img class="is-rounded" src="/images/avatar.JPG" alt="Leo">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block has-mb-6">
+                        Leo
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block has-mb-6">
+                        Lilee Systems Sr. Front-end Engineer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Taiwan</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        36
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分類
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        7
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        標籤
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        13
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <!-- <div class="level">
+            <a class="level-item button is-link is-rounded" href="/" target="_blank">
+                追蹤</a>
+        </div> -->
+        
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分類
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Git/">
+            <span class="level-start">
+                <span class="level-item">Git</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/">
+            <span class="level-start">
+                <span class="level-item">Web 前端</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">35</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
+            <span class="level-start">
+                <span class="level-item">Angular 之深入解析</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/JavaScript/">
+            <span class="level-start">
+                <span class="level-item">JavaScript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/Nx/">
+            <span class="level-start">
+                <span class="level-item">Nx</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/iThome2021鐵人賽/">
+            <span class="level-start">
+                <span class="level-item">iThome2021鐵人賽</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">30</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/新聞/">
+            <span class="level-start">
+                <span class="level-item">新聞</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            標籤雲
+        </h3>
+        <a href="/tags/angular/" style="font-size: 20px;">angular</a> <a href="/tags/form/" style="font-size: 16.67px;">form</a> <a href="/tags/frontend/" style="font-size: 16.67px;">frontend</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/homebrew/" style="font-size: 10px;">homebrew</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/library/" style="font-size: 13.33px;">library</a> <a href="/tags/macos/" style="font-size: 10px;">macos</a> <a href="/tags/nx/" style="font-size: 13.33px;">nx</a> <a href="/tags/scss/" style="font-size: 10px;">scss</a> <a href="/tags/testing/" style="font-size: 16.67px;">testing</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2022-09-28T01:48:53.000Z">2022-09-28</time></div>
+                    <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="title has-link-black-ter is-size-6 has-text-weight-normal">JavaScript 之那些年我們都腦補錯的事</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-15T15:30:20.000Z">2021-10-15</time></div>
+                    <a href="/2021/10/15/angular-30days-form-and-test-30/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day30 - 表單原理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-14T14:45:12.000Z">2021-10-14</time></div>
+                    <a href="/2021/10/14/angular-30days-form-and-test-29/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-13T15:38:05.000Z">2021-10-13</time></div>
+                    <a href="/2021/10/13/angular-30days-form-and-test-28/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/12/angular-30days-form-and-test-27/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-12T01:14:51.000Z">2021-10-12</time></div>
+                    <a href="/2021/10/12/angular-30days-form-and-test-27/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            彙整
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2022/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2022</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">15</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">15</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                標籤
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/angular/">
+                        <span class="tag">angular</span>
+                        <span class="tag is-grey">34</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/form/">
+                        <span class="tag">form</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/frontend/">
+                        <span class="tag">frontend</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/homebrew/">
+                        <span class="tag">homebrew</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/javascript/">
+                        <span class="tag">javascript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/library/">
+                        <span class="tag">library</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/macos/">
+                        <span class="tag">macos</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/nx/">
+                        <span class="tag">nx</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/scss/">
+                        <span class="tag">scss</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/testing/">
+                        <span class="tag">testing</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/typescript/">
+                        <span class="tag">typescript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/web/">
+                        <span class="tag">web</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2022-09-28T01:48:53.000Z">2022-09-28</time></div>
+                    <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="title has-link-black-ter is-size-6 has-text-weight-normal">JavaScript 之那些年我們都腦補錯的事</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-15T15:30:20.000Z">2021-10-15</time></div>
+                    <a href="/2021/10/15/angular-30days-form-and-test-30/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day30 - 表單原理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-14T14:45:12.000Z">2021-10-14</time></div>
+                    <a href="/2021/10/14/angular-30days-form-and-test-29/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-13T15:38:05.000Z">2021-10-13</time></div>
+                    <a href="/2021/10/13/angular-30days-form-and-test-28/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/12/angular-30days-form-and-test-27/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-12T01:14:51.000Z">2021-10-12</time></div>
+                    <a href="/2021/10/12/angular-30days-form-and-test-27/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            彙整
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2022/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2022</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">15</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">15</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                標籤
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/angular/">
+                        <span class="tag">angular</span>
+                        <span class="tag is-grey">34</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/form/">
+                        <span class="tag">form</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/frontend/">
+                        <span class="tag">frontend</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/homebrew/">
+                        <span class="tag">homebrew</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/javascript/">
+                        <span class="tag">javascript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/library/">
+                        <span class="tag">library</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/macos/">
+                        <span class="tag">macos</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/nx/">
+                        <span class="tag">nx</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/scss/">
+                        <span class="tag">scss</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/testing/">
+                        <span class="tag">testing</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/typescript/">
+                        <span class="tag">typescript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/web/">
+                        <span class="tag">web</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="Angular 深入淺出三十天：表單與測試 Day06 - 單元測試實作 - 登入系統 by Template Driven Forms" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2022 Leo Chen&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-TW");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到頁首" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="請輸入關鍵字...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '頁面',
+                CATEGORIES: '分類',
+                TAGS: '標籤',
+                UNTITLED: '(無標題)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>

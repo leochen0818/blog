@@ -1,0 +1,1303 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>Angular 深入淺出三十天：表單與測試 Day17 - E2E 自動化測試工具簡介 - Leo&#39;s Coding Life</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<base href="/">
+
+
+
+    <meta name="description" content="在這個各種前端框架、開發工具層出不窮、百花齊放、百鳥齊鳴的美好時代， E2E 自動化測試工具的選擇自然也很多。 今天我們會先來初步了解一下目前有哪些 E2E 自動化測試工具，讓大家在未來需要時，能夠以最短的時間找到最貼近自己需求的工具。 Selenium Selenium 是老牌的測試工具，出道已久且頗富盛名的它擁有豐富的 API 與衍生的工具軟體，可使用許多種語言撰寫，如：C#、JavaScr">
+<meta name="keywords" content="angular,form,testing,frontend,web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Angular 深入淺出三十天：表單與測試 Day17 - E2E 自動化測試工具簡介">
+<meta property="og:url" content="https://blog.leochen.dev/2021/10/02/angular-30days-form-and-test-17/index.html">
+<meta property="og:site_name" content="Leo&#39;s Coding Life">
+<meta property="og:description" content="在這個各種前端框架、開發工具層出不窮、百花齊放、百鳥齊鳴的美好時代， E2E 自動化測試工具的選擇自然也很多。 今天我們會先來初步了解一下目前有哪些 E2E 自動化測試工具，讓大家在未來需要時，能夠以最短的時間找到最貼近自己需求的工具。 Selenium Selenium 是老牌的測試工具，出道已久且頗富盛名的它擁有豐富的 API 與衍生的工具軟體，可使用許多種語言撰寫，如：C#、JavaScr">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
+<meta property="og:updated_time" content="2021-10-02T09:41:41.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Angular 深入淺出三十天：表單與測試 Day17 - E2E 自動化測試工具簡介">
+<meta name="twitter:description" content="在這個各種前端框架、開發工具層出不窮、百花齊放、百鳥齊鳴的美好時代， E2E 自動化測試工具的選擇自然也很多。 今天我們會先來初步了解一下目前有哪些 E2E 自動化測試工具，讓大家在未來需要時，能夠以最短的時間找到最貼近自己需求的工具。 Selenium Selenium 是老牌的測試工具，出道已久且頗富盛名的它擁有豐富的 API 與衍生的工具軟體，可使用許多種語言撰寫，如：C#、JavaScr">
+<meta name="twitter:image" content="https://blog.leochen.dev/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145121750-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', "UA-145121750-1");
+</script>
+
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="Angular 深入淺出三十天：表單與測試 Day17 - E2E 自動化測試工具簡介" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜尋" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-10-02T09:02:02.000Z">2021-10-02</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    14 分鐘 閱讀文 (大約 2087 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Angular 深入淺出三十天：表單與測試 Day17 - E2E 自動化測試工具簡介
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/m1DNF72.jpg" alt="Day17"></p>
+<p>在這個各種前端框架、開發工具層出不窮、百花齊放、百鳥齊鳴的美好時代， E2E 自動化測試工具的選擇自然也很多。</p>
+<p>今天我們會先來初步了解一下目前有哪些 E2E 自動化測試工具，讓大家在未來需要時，能夠以最短的時間找到最貼近自己需求的工具。</p>
+<h2 id="Selenium"><a href="#Selenium" class="headerlink" title="Selenium"></a>Selenium</h2><p><img src="https://i.imgur.com/MdFMJ5h.png" alt="Selenium 的 logo"></p>
+<p><a href="https://www.selenium.dev/" target="_blank" rel="noopener">Selenium</a> 是老牌的測試工具，出道已久且頗富盛名的它擁有豐富的 API 與衍生的工具軟體，可使用許多種語言撰寫，如：C#、JavaScript、Java、 Python 、 Ruby 。</p>
+<p>主要是藉由 <a href="https://www.w3.org/TR/webdriver1/" target="_blank" rel="noopener">W3C WebDriver</a> 所提供的 API (以前叫 Selenium WebDriver)。</p>
+<h2 id="TestCafe"><a href="#TestCafe" class="headerlink" title="TestCafe"></a>TestCafe</h2><p><img src="https://i.imgur.com/nVzirbU.png" alt="TestCafe 的 logo"></p>
+<p><a href="https://testcafe.io/" target="_blank" rel="noopener">TestCafe</a> 的主打是安裝與設置快速，且可以使用相對於 Selenium 來說，較少、較簡潔的程式碼來做到相同的操作。</p>
+<p>主要原因是因為他們並不是以 W3C WebDriver 為基底，而是基於 Node.js 之上所開發的。</p>
+<p>最強大的地方在於他們支援幾乎是目前市面上所有的瀏覽器， Chrome 跟 Firefox 我就不提了，其他還有 IE 、 Edge 、 Safari 、 Opera ，是至是跨瀏覽器的測試工具平台 <a href="https://www.browserstack.com/" target="_blank" rel="noopener">BrowserStack</a> 與 <a href="https://www.lambdatest.com/" target="_blank" rel="noopener">LambdaTest</a> 。</p>
+<h2 id="NightWatch"><a href="#NightWatch" class="headerlink" title="NightWatch"></a>NightWatch</h2><p><img src="https://i.imgur.com/E5fkWJu.png" alt="NightWatch 的 logo"></p>
+<p><a href="https://nightwatchjs.org/" target="_blank" rel="noopener">NightWatch</a> 也是用 Node.js 所寫的，不過跟 TestCafe 不一樣的是，雖然是用 Node.js 所寫，但其底層還是使用 W3C WebDriver API 來驅動瀏覽器執行操作。</p>
+<p>不過它們家也是說它們可以在一分鐘內快速完成設定並啟動服務，有興趣的朋友可以試試看。</p>
+<blockquote>
+<p>不過它們家的貓頭鷹 Logo 很可愛！</p>
+</blockquote>
+<h2 id="Puppeteer"><a href="#Puppeteer" class="headerlink" title="Puppeteer"></a>Puppeteer</h2><p><img src="https://i.imgur.com/hhgl7fP.png" alt="Puppeteer 的 logo"></p>
+<p><a href="https://pptr.dev/" target="_blank" rel="noopener">Puppeteer</a> 也是一個基於 Node.js 所開發的 E2E 測試工具，不過他是直接透過 Chrome 的 <a href="https://chromedevtools.github.io/devtools-protocol/" target="_blank" rel="noopener">DevTools Protocol</a> 來操控 Chrome 或 Chromium ，而且它預設會跑在 Headless 的模式下，非常方便。</p>
+<p>除此之外，它所主打的功能有：</p>
+<ul>
+<li>可以產生出所測試頁面的螢幕擷圖和 PDF</li>
+<li>可以抓取 SPA <em>（Single Page Application）</em> 並將其元素都渲染出來 </li>
+</ul>
+<blockquote>
+<p>Angular 有個 SSG <em>（Static Site Generation）</em> 的框架 <a href="https://scully.io/" target="_blank" rel="noopener">Scully</a> 就是基於這件事情上所做出來的。</p>
+</blockquote>
+<ul>
+<li>自動化表單送出、UI測試、鍵盤輸入等事件</li>
+<li>使用最新版本的自動化測試環境、 JavaScript 並直接在最新版本的 Chrome 裡執行測試</li>
+<li>提供 <a href="https://developer.chrome.com/docs/devtools/evaluate-performance/reference/" target="_blank" rel="noopener">Timeline trace</a> 的功能以幫助診斷效能問題</li>
+<li>可以用來測試 Chrome 的 Extension</li>
+</ul>
+<blockquote>
+<p>它們還有提供一個<a href="https://try-puppeteer.appspot.com/" target="_blank" rel="noopener">線上的 Playground</a> ，大家有興趣可以玩玩看。</p>
+</blockquote>
+<h2 id="WebDriverIO"><a href="#WebDriverIO" class="headerlink" title="WebDriverIO"></a>WebDriverIO</h2><p><img src="https://i.imgur.com/LAZxfZj.png" alt="WebDriverIO 的 logo"></p>
+<p><a href="https://webdriver.io/" target="_blank" rel="noopener">WebDriverIO</a> 號稱是下一個世代的 E2E 測試工具，它既可以使用 WebDriver 來達到跨瀏覽器測試的功能，也能像 Puppeteer 那樣使用 Chrome DevTools Protocol ，非常厲害。</p>
+<h2 id="Protractor"><a href="#Protractor" class="headerlink" title="Protractor"></a>Protractor</h2><p><img src="https://i.imgur.com/j6eF4lz.png" alt="Protractor 的 logo"></p>
+<p><a href="https://www.protractortest.org/" target="_blank" rel="noopener">Protractor</a> 是為 Angular 量身打造的 E2E 測試工具，而其根本也是使用 WebDriver 來驅動瀏覽器。</p>
+<p>身為 Angular 御用的 E2E 測試工具以及 Angular 生態圈的一員，它的方便之處在於新增 Angular 專案時，一定也會連帶地將 Protractor 也給配置妥當。</p>
+<p>不過隨著 Angular 征戰多年，Angular 在今年五月於 Angular v12 版本推出時宣布， 在 Angular v12 之後，Protractor 將不會再內建在新專案中，而預計將會在 Angular v15 時（大概是 2022 年尾）， Angular 團隊會正式終結 Protractor 。</p>
+<p>而目前 Angular 的官方團隊正在積極尋找其他的 E2E 測試框架夥伴，像上面有介紹到的 TestCafe 、 WebDriverIO 與稍後會介紹的 Cypress 都名列其中。</p>
+<blockquote>
+<p>關於 Angular E2E 與 Protractor 的計畫，想要知道詳細情況的朋友可以閱讀<a href="https://github.com/angular/protractor/issues/5502" target="_blank" rel="noopener">官方的 RFC（請求意見稿）</a></p>
+<p>想要知道 Angular v12 更新了什麼，可以參考<a href="https://blog.leochen.dev/2021/05/13/angular-v12-is-available-now/">我的部落格文章</a></p>
+</blockquote>
+<h2 id="Cypress"><a href="#Cypress" class="headerlink" title="Cypress"></a>Cypress</h2><p><img src="https://i.imgur.com/WgCYDcM.png" alt="Cypress 的 logo"></p>
+<p><a href="https://www.cypress.io/" target="_blank" rel="noopener">Cypress</a> 有一句非常有趣的標語，叫做：</p>
+<blockquote>
+<p>Test your code, not your patience.</p>
+</blockquote>
+<p>大概是知道大家寫 E2E 測試時都寫的滿痛苦嗎？</p>
+<p>此外，它還有一句標語叫做：</p>
+<blockquote>
+<p>A test runner built for humans.</p>
+</blockquote>
+<p>這是因為它們的主張 ─ 開發者友善，不管你是 QA 還是一般工程師都是一樣。</p>
+<p>而且它還覺得它有七個地方跟別的 E2E 自動化測試工具不一樣：</p>
+<ol>
+<li><p><strong>它不使用 Selenium 框架</strong></p>
+<p> 因為它認為大多數的 E2E 測試工具都是基於 Selenium 的框架下所運作，這就是為什麼它們都會有相同的問題。</p>
+</li>
+<li><p><strong>它專注於非常出色地進行 E2E 測試</strong></p>
+<p> 因為它們只想專注地在為 Web Application 撰寫 E2E 測試時，提供做出色的開發者體驗。</p>
+</li>
+<li><p><strong>它適用於任何前端框架或是網站</strong></p>
+<p> 只要是可以在瀏覽器上跑的網頁它都可以測試。（不過我想應該是要它有支援的瀏覽器才行）。</p>
+</li>
+<li><p><strong>它只用 JavaScript 來撰寫</strong></p>
+<p> 官方的原意是，因其測試程式碼是在瀏覽器上所執行，所以除了使用 JS 外，不需和任何的語言或是驅動程式綁定。</p>
+<p> 不過我覺得這邊有一個隱含的意思，就是只要是可以編譯成 JavaScript 的，它都可以接受，就像是我個人目前是使用 TypeScript 來撰寫它，但其他的語言我就沒試過了。</p>
+</li>
+<li><p><strong>它是一個 All-in-one 的框架</strong></p>
+<p> 就像 Angular 一樣不需自己去整合各個工具或函式庫，只要安裝 Cypress ，其他的它會幫我們搞定。</p>
+</li>
+<li><p><strong>它適用於開發者和 QA</strong></p>
+<p> 它們想讓<strong>測試驅動開發</strong>這件事情變得更加容易，也意即它們的測試將會又好寫、寫得又快。</p>
+</li>
+<li><p><strong>它執行地比其他框架要快的多</strong></p>
+<p> 官網的原意我覺得跟執行速度比較有關的地方是它可以併行運作並自動負載平衡這件事情。</p>
+</li>
+</ol>
+<p>至於瀏覽器支援度的部份，除了 Chrome 跟 FireFox 之外，也支援 Edge 、 Brave 甚至是 <a href="https://www.electronjs.org/" target="_blank" rel="noopener">Electron</a> 。</p>
+<blockquote>
+<p>這麼多 E2E 自動化測試工具，你有比較喜歡哪一個嗎？</p>
+<p>除了上述介紹的這七種 E2E 自動化測試工具之外，我相信一定還有其他的 E2E 自動化測試工具是我沒有介紹到的，不過族繁不及備載，如有遺珠之憾還請多加見諒。</p>
+</blockquote>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>大家有沒有發現，其實大多數的測試框架都是透過 <a href="https://www.w3.org/TR/webdriver1/" target="_blank" rel="noopener">W3C WebDriver</a> 來進行操作或者是驗證，比較特別一點的則是使用 Chrome 的  <a href="https://chromedevtools.github.io/devtools-protocol/" target="_blank" rel="noopener">DevTools Protocol</a> ，甚至是兩個都可以用。 </p>
+<p>但在這些 E2E 自動化測試工具裡，最特別的就是 <strong>Cypress</strong> ，而它其實也是我這次系列文要分享給大家的 E2E 自動化測試工具，後續的 E2E 測試也都將會分享如何使用 Cypress 來撰寫。</p>
+<p>明天我更進一步地分享如何使用 Cypress，除了讓大家更進一步地了解這個框架之外，也讓大家如果在閱讀後續文章有任何不懂的地方可以回來複習。</p>
+<p>如果你有任何的問題或是回饋，還請麻煩留言給我讓我知道，感謝大家！</p>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/angular/">angular</a>, <a class="has-link-grey -link" href="/tags/form/">form</a>, <a class="has-link-grey -link" href="/tags/frontend/">frontend</a>, <a class="has-link-grey -link" href="/tags/testing/">testing</a>, <a class="has-link-grey -link" href="/tags/web/">web</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2021/10/03/angular-30days-form-and-test-18/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">Angular 深入淺出三十天：表單與測試 Day18 - 與 Cypress 的初次見面（上）</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2021/10/01/angular-30days-form-and-test-16/">
+                <span class="level-item">Angular 深入淺出三十天：表單與測試 Day16 - Template Driven Forms vs Reactive Forms</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">評論</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://blog.leochen.dev/2021/10/02/angular-30days-form-and-test-17/';
+        this.page.identifier = '2021/10/02/angular-30days-form-and-test-17/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + "leochen0818" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                        <figure class="image is-128x128 margin-center has-mb-6">
+                            <img class="is-rounded" src="/images/avatar.JPG" alt="Leo">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block has-mb-6">
+                        Leo
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block has-mb-6">
+                        Lilee Systems Sr. Front-end Engineer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Taiwan</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        36
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分類
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        7
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        標籤
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        13
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <!-- <div class="level">
+            <a class="level-item button is-link is-rounded" href="/" target="_blank">
+                追蹤</a>
+        </div> -->
+        
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分類
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Git/">
+            <span class="level-start">
+                <span class="level-item">Git</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/">
+            <span class="level-start">
+                <span class="level-item">Web 前端</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">35</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
+            <span class="level-start">
+                <span class="level-item">Angular 之深入解析</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/JavaScript/">
+            <span class="level-start">
+                <span class="level-item">JavaScript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/Nx/">
+            <span class="level-start">
+                <span class="level-item">Nx</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/iThome2021鐵人賽/">
+            <span class="level-start">
+                <span class="level-item">iThome2021鐵人賽</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">30</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/新聞/">
+            <span class="level-start">
+                <span class="level-item">新聞</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            標籤雲
+        </h3>
+        <a href="/tags/angular/" style="font-size: 20px;">angular</a> <a href="/tags/form/" style="font-size: 16.67px;">form</a> <a href="/tags/frontend/" style="font-size: 16.67px;">frontend</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/homebrew/" style="font-size: 10px;">homebrew</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/library/" style="font-size: 13.33px;">library</a> <a href="/tags/macos/" style="font-size: 10px;">macos</a> <a href="/tags/nx/" style="font-size: 13.33px;">nx</a> <a href="/tags/scss/" style="font-size: 10px;">scss</a> <a href="/tags/testing/" style="font-size: 16.67px;">testing</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2022-09-28T01:48:53.000Z">2022-09-28</time></div>
+                    <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="title has-link-black-ter is-size-6 has-text-weight-normal">JavaScript 之那些年我們都腦補錯的事</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-15T15:30:20.000Z">2021-10-15</time></div>
+                    <a href="/2021/10/15/angular-30days-form-and-test-30/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day30 - 表單原理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-14T14:45:12.000Z">2021-10-14</time></div>
+                    <a href="/2021/10/14/angular-30days-form-and-test-29/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-13T15:38:05.000Z">2021-10-13</time></div>
+                    <a href="/2021/10/13/angular-30days-form-and-test-28/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/12/angular-30days-form-and-test-27/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-12T01:14:51.000Z">2021-10-12</time></div>
+                    <a href="/2021/10/12/angular-30days-form-and-test-27/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            彙整
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2022/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2022</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">15</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">15</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                標籤
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/angular/">
+                        <span class="tag">angular</span>
+                        <span class="tag is-grey">34</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/form/">
+                        <span class="tag">form</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/frontend/">
+                        <span class="tag">frontend</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/homebrew/">
+                        <span class="tag">homebrew</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/javascript/">
+                        <span class="tag">javascript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/library/">
+                        <span class="tag">library</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/macos/">
+                        <span class="tag">macos</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/nx/">
+                        <span class="tag">nx</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/scss/">
+                        <span class="tag">scss</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/testing/">
+                        <span class="tag">testing</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/typescript/">
+                        <span class="tag">typescript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/web/">
+                        <span class="tag">web</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2022-09-28T01:48:53.000Z">2022-09-28</time></div>
+                    <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="title has-link-black-ter is-size-6 has-text-weight-normal">JavaScript 之那些年我們都腦補錯的事</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-15T15:30:20.000Z">2021-10-15</time></div>
+                    <a href="/2021/10/15/angular-30days-form-and-test-30/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day30 - 表單原理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-14T14:45:12.000Z">2021-10-14</time></div>
+                    <a href="/2021/10/14/angular-30days-form-and-test-29/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-13T15:38:05.000Z">2021-10-13</time></div>
+                    <a href="/2021/10/13/angular-30days-form-and-test-28/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/12/angular-30days-form-and-test-27/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-12T01:14:51.000Z">2021-10-12</time></div>
+                    <a href="/2021/10/12/angular-30days-form-and-test-27/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            彙整
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2022/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2022</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">15</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">15</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                標籤
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/angular/">
+                        <span class="tag">angular</span>
+                        <span class="tag is-grey">34</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/form/">
+                        <span class="tag">form</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/frontend/">
+                        <span class="tag">frontend</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/homebrew/">
+                        <span class="tag">homebrew</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/javascript/">
+                        <span class="tag">javascript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/library/">
+                        <span class="tag">library</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/macos/">
+                        <span class="tag">macos</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/nx/">
+                        <span class="tag">nx</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/scss/">
+                        <span class="tag">scss</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/testing/">
+                        <span class="tag">testing</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/typescript/">
+                        <span class="tag">typescript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/web/">
+                        <span class="tag">web</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="Angular 深入淺出三十天：表單與測試 Day17 - E2E 自動化測試工具簡介" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2022 Leo Chen&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-TW");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到頁首" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="請輸入關鍵字...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '頁面',
+                CATEGORIES: '分類',
+                TAGS: '標籤',
+                UNTITLED: '(無標題)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
