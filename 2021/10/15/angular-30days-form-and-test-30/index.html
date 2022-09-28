@@ -1,0 +1,1321 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head><meta name="generator" content="Hexo 3.9.0">
+    <meta charset="utf-8">
+<title>Angular 深入淺出三十天：表單與測試 Day30 - 表單原理 - Leo&#39;s Coding Life</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<base href="/">
+
+
+
+    <meta name="description" content="經過前面二十九天的的練習與學習，相信大家應該在表單的實作上都熟悉了不少，只要不是太複雜、太特別的表單應該也都難不倒你們。 今天是本系列文的最後一天，就讓我們來好好地深入了解一下 Angular 表單會這麼強大的原因吧！ 首先，我想趁大家記憶猶新時，先帶大家來看為什麼我們昨天可以用 ControlContainer 來自訂一個可以被 Template Driven Forms 或是 Reactiv">
+<meta name="keywords" content="angular,form,testing,frontend,web">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+<meta property="og:url" content="https://blog.leochen.dev/2021/10/15/angular-30days-form-and-test-30/index.html">
+<meta property="og:site_name" content="Leo&#39;s Coding Life">
+<meta property="og:description" content="經過前面二十九天的的練習與學習，相信大家應該在表單的實作上都熟悉了不少，只要不是太複雜、太特別的表單應該也都難不倒你們。 今天是本系列文的最後一天，就讓我們來好好地深入了解一下 Angular 表單會這麼強大的原因吧！ 首先，我想趁大家記憶猶新時，先帶大家來看為什麼我們昨天可以用 ControlContainer 來自訂一個可以被 Template Driven Forms 或是 Reactiv">
+<meta property="og:locale" content="zh-TW">
+<meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
+<meta property="og:updated_time" content="2021-10-16T14:00:52.000Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+<meta name="twitter:description" content="經過前面二十九天的的練習與學習，相信大家應該在表單的實作上都熟悉了不少，只要不是太複雜、太特別的表單應該也都難不倒你們。 今天是本系列文的最後一天，就讓我們來好好地深入了解一下 Angular 表單會這麼強大的原因吧！ 首先，我想趁大家記憶猶新時，先帶大家來看為什麼我們昨天可以用 ControlContainer 來自訂一個可以被 Template Driven Forms 或是 Reactiv">
+<meta name="twitter:image" content="https://blog.leochen.dev/images/og_image.png">
+
+
+
+
+
+
+
+<link rel="icon" href="/images/favicon.ico">
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bulma@0.7.2/css/bulma.css">
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Ubuntu:400,600|Source+Code+Pro">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/highlight.js@9.12.0/styles/atom-one-light.css">
+
+
+    
+    
+    
+    <style>body>.footer,body>.navbar,body>.section{opacity:0}</style>
+    
+
+    
+    
+    
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/css/lightgallery.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/css/justifiedGallery.min.css">
+    
+
+    
+    
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.css">
+
+
+    
+    
+    
+    
+
+<link rel="stylesheet" href="/css/back-to-top.css">
+
+
+    
+    
+<script async src="https://www.googletagmanager.com/gtag/js?id=UA-145121750-1"></script>
+<script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', "UA-145121750-1");
+</script>
+
+
+    
+    
+    
+    
+
+    
+    
+<link rel="stylesheet" href="/css/progressbar.css">
+<script src="https://cdn.jsdelivr.net/npm/pace-js@1.0.2/pace.min.js"></script>
+
+    
+    
+    
+
+    
+    
+    
+
+
+<link rel="stylesheet" href="/css/style.css">
+</head>
+<body class="is-3-column">
+    <nav class="navbar navbar-main">
+    <div class="container">
+        <div class="navbar-brand is-flex-center">
+            <a class="navbar-item navbar-logo" href="/">
+            
+                <img src="/images/logo.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理" height="28">
+            
+            </a>
+        </div>
+        <div class="navbar-menu">
+            
+            <div class="navbar-start">
+                
+                <a class="navbar-item" href="/">Home</a>
+                
+                <a class="navbar-item" href="/archives">Archives</a>
+                
+                <a class="navbar-item" href="/categories">Categories</a>
+                
+                <a class="navbar-item" href="/tags">Tags</a>
+                
+            </div>
+            
+            <div class="navbar-end">
+                
+                    
+                    
+                    <a class="navbar-item" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                    
+                
+                
+                
+                <a class="navbar-item search" title="搜尋" href="javascript:;">
+                    <i class="fas fa-search"></i>
+                </a>
+                
+            </div>
+        </div>
+    </div>
+</nav>
+    
+    <section class="section">
+        <div class="container">
+            <div class="columns">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-10-15T15:30:20.000Z">2021-10-15</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    16 分鐘 閱讀文 (大約 2344 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                Angular 深入淺出三十天：表單與測試 Day30 - 表單原理
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/J1xtemM.jpg" alt="Day30"></p>
+<p>經過前面二十九天的的練習與學習，相信大家應該在表單的實作上都熟悉了不少，只要不是太複雜、太特別的表單應該也都難不倒你們。</p>
+<p>今天是本系列文的最後一天，就讓我們來好好地深入了解一下 Angular 表單會這麼強大的原因吧！</p>
+<p>首先，我想趁大家記憶猶新時，先帶大家來看為什麼我們昨天可以用 <code>ControlContainer</code> 來自訂一個可以被 <strong>Template Driven Forms</strong> 或是 <strong>Reactive Forms</strong> 所使用的 Component 。</p>
+<h2 id="ControlContainer"><a href="#ControlContainer" class="headerlink" title="ControlContainer"></a>ControlContainer</h2><p><img src="https://i.imgur.com/0qezReO.jpg" alt="Diagram"></p>
+<p>上圖是我根據 Angular 的 Source Code 找出 <code>ControlContainer</code> 的關係所畫的（斜體表抽象類別）。</p>
+<p>從圖中我們會發現， <code>ControlContainer</code> 其實只是一個<strong>抽象類別</strong>，並繼承了另一個<strong>抽象類別</strong> <code>AbstractControlDirective</code> ，而 <code>AbstractControlDirective</code> 這個抽象類別其實也被另一個抽象類別 <code>NgControl</code> 所繼承。</p>
+<blockquote>
+<p><code>NgControl</code> 晚點會提到，此處暫不多做說明。</p>
+</blockquote>
+<p>至於 <code>ControlContainer</code> ，它其實也被 <code>AbstractFormGroupDirect</code> 、 <code>NgForm</code> 、 <code>FormGroupDirective</code> 與 <code>FormArrayName</code> 這四個 Directive 所繼承；甚至 <code>AbstractFormGroupDirect</code> 還被 <code>FormGroupName</code> 與 <code>NgModelGroup</code> 這兩個 Directive 所繼承。</p>
+<p>換句話說， Angular 根據 <code>ControlContainer</code> 為基底，做出了以下五個 Directive ：</p>
+<ul>
+<li><code>FormGroupDirective</code></li>
+<li><code>FormGroupName</code></li>
+<li><code>FormArrayName</code></li>
+<li><code>NgForm</code></li>
+<li><code>NgModelGroup</code></li>
+</ul>
+<p>在這五個 Directive 裡，前面三個是為什麼我們在用 <strong>Reactive Forms</strong> 的方式來開發表單時，可以在 Template 裡用 <code>[formGroup]</code> 、 <code>[formGroupName]</code> 、 <code>[formArrayName]</code> 的方式將元素與 <code>FormGroup</code> 、 <code>FormArray</code> 綁定的原因。</p>
+<blockquote>
+<p>大家應該都還記得我們是怎麼將 <code>FormGroup</code> 與 <code>FormArray</code> 綁定到元素上的吧？！</p>
+</blockquote>
+<p>而後面兩個則是為什麼我們在用 <strong>Template Driven Forms</strong> 的方式來開發表單時，可以在 Template 裡在元素上使用 <code>#XXX=&quot;ngForm&#39;</code> 、 <code>#XXX=&quot;ngModelGroup&quot;</code> 之後，可以拿到 <code>NgForm</code> 與 <code>NgModelGroup</code> 的實體的原因。</p>
+<blockquote>
+<p>雖然本系列文沒有特別提到 <code>ngModelGroup</code> 的用法，想知道的朋友可以參考官方的 <a href="https://angular.io/api/forms/NgModelGroup" target="_blank" rel="noopener">NgModelGroup API</a> 文件</p>
+</blockquote>
+<p>那為什麼我們可以使用 <code>ControlContainer</code> 來自訂元件呢？</p>
+<p>其實這正是因為上述五個 Directive 都透過 <code>ControlContainer</code> 這個令牌，把自己註冊到 Angular 的 DI 系統裡，讓想使用它們的類別，可以很方便地透過 Angular 的 DI 系統來找到它們的實體。</p>
+<p>像是在<a href="https://ithelp.ithome.com.tw/articles/10281652" target="_blank" rel="noopener">昨天的文章</a>裡所分享的那樣（Reactive Forms 的方式）：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AddressInfoComponent &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> controlContainer: ControlContainer</span>) &#123; &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>Template Driven Forms 則是透過 <code>viewProvider</code> 的方式，忘記的話請看<a href="https://ithelp.ithome.com.tw/articles/10281652" target="_blank" rel="noopener">昨天的文章</a>。</p>
+</blockquote>
+<h2 id="NgControl"><a href="#NgControl" class="headerlink" title="NgControl"></a>NgControl</h2><p><img src="https://i.imgur.com/Oa5GgVA.jpg" alt="Diagram"></p>
+<p>同樣地， Angular 也根據 <code>NgControl</code> 為基底，做出了以下三個 Directive ：</p>
+<ul>
+<li><code>FormControlName</code></li>
+<li><code>FormControlDirective</code></li>
+<li><code>NgModel</code></li>
+</ul>
+<p>在這三個 Directive 裡，前面兩個是為什麼我們在用 <strong>Reactive Forms</strong> 的方式來開發表單時，可以在 Template 裡用 <code>[formControl]</code> 、 <code>[formControlName]</code> 的方式將元素與 <code>FormControl</code> 綁定的原因。</p>
+<blockquote>
+<p>大家應該都還記得我們是怎麼將 <code>FormControl</code> 綁定到元素上的吧？！</p>
+</blockquote>
+<p>而最後一個則是為什麼我們在用 <strong>Template Driven Forms</strong> 的方式來開發表單時，會在 Template 裡在元素上使用 <code>#XXX=&quot;ngModel&#39;</code> 之後，可以拿到 <code>NgForm</code> 與 <code>NgModelGroup</code> 的實體的原因。</p>
+<p>不過，大家還記不記得我們在<a href="https://ithelp.ithome.com.tw/articles/10281361" target="_blank" rel="noopener">第二十八天</a>的時候，是怎麼自訂表單元件的嗎？</p>
+<p>沒錯！就是 <code>ControlValueAccessor</code> 。</p>
+<p>上述三個 Directive 實作時，也是透過 DI 拿到實作了 <code>ControlValueAccessor</code> 介面的實體，並在初始化的時候透過 <code>ControlValueAccessor</code> 這個介面，搭建 <code>FormControl</code> 與實作了它的實體之間的溝通管道。</p>
+<blockquote>
+<p>想看原始碼的朋友可以<a href="https://github.com/angular/angular/blob/master/packages/forms/src/directives/reactive_directives/form_control_directive.ts#L53-L178" target="_blank" rel="noopener">點我</a>看原始碼。</p>
+<p>如果想知道 <code>@Self</code> 與 <code>@Optional</code> 裝飾器是幹嘛用的，可以參考這篇很前顯易懂的文章： <a href="https://medium.com/frontend-coach/self-or-optional-host-the-visual-guide-to-angular-di-decorators-73fbbb5c8658" target="_blank" rel="noopener">@Self or @Optional @Host? The visual guide to Angular DI decorators.</a></p>
+</blockquote>
+<p>但除了 <code>ControlValueAccessor</code> 之外，其實 Angular 還有其他內建的 ValueAccessor：</p>
+<p><img src="https://i.imgur.com/JdzzegU.jpg" alt="Diagram"></p>
+<p>從上圖中我們可以發現，內建的 ValueAccessor 基本上都是繼承於 <code>BaseControlValueAccessor</code> 這個類別，然後分別被 <code>DefaultValueAccessor</code> 與 <code>BuiltInControlValueAccessor</code> 繼承，而只有 <code>DefaultValueAccessor</code> 有實作 <code>ControlValueAccessor</code> 這個介面。</p>
+<p>然後 Angular 再基於 <code>BuiltInControlValueAccessor</code> 之上去建立了以下六個 ValueAccessor：</p>
+<ul>
+<li><code>NumberValueAccessor</code></li>
+<li><code>RangeValueAccessor</code></li>
+<li><code>RadioControlValueAccessor</code></li>
+<li><code>CheckboxControlValueAccessor</code></li>
+<li><code>SelectControlValueAccessor</code></li>
+<li><code>SelectMultipleControlValueAccessor</code></li>
+</ul>
+<p>而這六個 ValueAccessor 對於我們的表單開發來說是至關重要的存在，沒有了它們，我們就沒辦法在這些元素上綁定我們的表單控制項。</p>
+<p>但其實 <code>BaseControlValueAccessor</code> 與 <code>BuiltInControlValueAccessor</code> 本身並沒有什麼比較特別的實作或定義，之所以會有 <code>DefaultValueAccessor</code> 與 <code>BuiltInControlValueAccessor</code> 的區別，是為了在機制上，能夠做到一個優先權判斷的機制。</p>
+<p>當我們在使用自訂的 <code>ValueAccessor</code> 時候， <code>DefaultValueAccessor</code> 或是上述六個 ValueAccessor 其實都有可能與我們自訂的 <code>ValueAccessor</code> 同時存在。</p>
+<p>因此，在將我們的表單控制項與元素綁定的時候， Angular 會根據以下的優先權來抓取對應的 ValueAccessor ：</p>
+<ol>
+<li>CustomValueAccessor</li>
+<li>BuiltInValueAccessor</li>
+<li>DefaultValueAccessor</li>
+</ol>
+<p>如此一來，只要我們沒有自訂 ValueAccessor ，預設就是會使用內建的 ValueAccessor 來搭建表單控制項與元素之間的溝通橋樑。</p>
+<blockquote>
+<p>我覺得 Angular 的開發團隊真的很聰明！</p>
+</blockquote>
+<h2 id="同步與非同步"><a href="#同步與非同步" class="headerlink" title="同步與非同步"></a>同步與非同步</h2><p>除了上述的東西之外，其實還有一個比較特別的點，就是關於同步更新與非同步更新的問題。</p>
+<p>在 <a href="https://ithelp.ithome.com.tw/articles/10275677" target="_blank" rel="noopener">Day16 - Template Driven Forms vs Reactive Forms</a> 的小結裡，我分享了一個表格，表格裡提到了 Template Driven Forms 的可預測性是<strong>非同步</strong>的。</p>
+<p>而這件事情其實可以在 <code>NgModel</code> 的<a href="https://github.com/angular/angular/blob/master/packages/forms/src/directives/ng_model.ts#L222" target="_blank" rel="noopener">原始碼第 222 行</a> 看出一點端倪。</p>
+<p><a href="https://github.com/angular/angular/blob/master/packages/forms/src/directives/ng_model.ts#L222" target="_blank" rel="noopener">原始碼第 222 行</a>這行是指 <code>NgModel</code> 在初始化的時候，會去設置表單控制項。</p>
+<p>而在<a href="https://github.com/angular/angular/blob/bd0d7c15c195c990b59cad3361f22caa10a9b1aa/packages/forms/src/directives/ng_model.ts#L268" target="_blank" rel="noopener">原始碼第 268 行</a>中可以看到，它會判斷該 NgModel 是不是 <code>_isStandalone</code> ，也就是它是不是單獨存在，還是有被 <code>&lt;form&gt;&lt;/form&gt;</code> 包住。</p>
+<p>如果是單獨存在， <code>NgModel</code> 的行為其實會跟 <code>FormControlDirective</code> 與 <code>FormControlName</code> 一樣，因為他們會用<a href="https://github.com/angular/angular/blob/master/packages/forms/src/directives/shared.ts#L34-#L50" target="_blank" rel="noopener">一樣的方法</a>設置表單控制項。</p>
+<p>但如果不是單獨存在，它會用 <code>NgForm</code> 的 <code>addControl</code> 來設置表單控制項，這時，它就會是非同步的，因為他必須等到 <code>resolvedPromise</code> 發出 <code>resolver</code> 事件的時候，才會進行設置。</p>
+<blockquote>
+<p><code>addControl</code> 的實作在<a href="https://github.com/angular/angular/blob/master/packages/forms/src/directives/ng_form.ts#L187-#L196" target="_blank" rel="noopener">原始碼的第 187 行到 196 行</a></p>
+<p><code>resolvedPromise</code> 的定義則是在<a href="https://github.com/angular/angular/blob/master/packages/forms/src/directives/ng_form.ts#L27" target="_blank" rel="noopener">原始碼的第 27 行</a></p>
+</blockquote>
+<p>我其實不太懂 Angular 為什麼要在 <code>NgModel</code> 被 <code>&lt;form&gt;&lt;/form&gt;</code> 包起來的時候這樣子做，因為 <code>resolvedPromise</code> 其實也沒什麼特別的地方，但它們就讓 <code>NgForm</code> 在 <code>addControl</code> 、 <code>removeControl</code> 、 <code>addFormGroup</code> 與 <code>removeFormGroup</code> 這四個方法要變成非同步的方式處理。</p>
+<p>如果大家有興趣，或許找個時間研究一下，說不定，你就幫官方解決了一個問題呢！</p>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天主要是幫本系列文做個結尾，希望能讓大家透過我的分享，更熟悉、更了解 Angular 一點。</p>
+<p>也因為分享的關係，其實在撰寫本系列文的同時，我也得到了許多。</p>
+<p>以前尚不熟悉的更熟悉了；以前不知道的知道了。</p>
+<p>這或許就是所謂的「施比受更有福」吧？！</p>
+<p>未來，還會不會再寫鐵人賽還不曉得（目前是不想再寫了，哈哈！）。</p>
+<p>但是，寫鐵人賽真的是一個非常好的學習機會。</p>
+<p>透過撰寫文章，來疏理自己所學，仔細咀嚼後再回饋給社群、回饋給社會。</p>
+<p>如果你還沒寫過鐵人賽，我衷心推薦你這一輩子一定至少要寫一次鐵人賽。</p>
+<p>最後，我想感謝訂閱我的文章、閱讀我的文章、喜歡我的文章的你們，謝謝你們不嫌棄，也謝謝你們願意讓我能夠幫到你們。</p>
+<p>我也想感謝我的家人們，寫鐵人賽的這段期間，真的是非常地疏於陪伴，謝謝他們的支持（雖然他們看不到）。</p>
+<p>感謝大家的收看，我們有緣再見！ ：）</p>
+<h2 id="其他資源"><a href="#其他資源" class="headerlink" title="其他資源"></a>其他資源</h2><ul>
+<li><a href="https://www.facebook.com/groups/augularjs.tw/" target="_blank" rel="noopener">Angular Taiwan 臉書社團</a></li>
+<li><a href="https://forum.angular.tw/" target="_blank" rel="noopener">Angular Taiwan 討論區</a></li>
+<li><a href="https://www.facebook.com/groups/angularstudygroup/" target="_blank" rel="noopener">Angular Taiwan 線上讀書會社團</a></li>
+<li><a href="https://www.youtube.com/channel/UCIawWId4sXgkVZ_mCF25qGw/videos" target="_blank" rel="noopener">Angular Taiwan Youtube 頻道</a></li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/angular/">angular</a>, <a class="has-link-grey -link" href="/tags/form/">form</a>, <a class="has-link-grey -link" href="/tags/frontend/">frontend</a>, <a class="has-link-grey -link" href="/tags/testing/">testing</a>, <a class="has-link-grey -link" href="/tags/web/">web</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+<div class="card card-transparent">
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        <div class="level-start">
+            <a class="level level-item has-link-grey  article-nav-prev" href="/2022/09/28/javascript-runtime-mechanism-notice/">
+                <i class="level-item fas fa-chevron-left"></i>
+                <span class="level-item">JavaScript 之那些年我們都腦補錯的事</span>
+            </a>
+        </div>
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2021/10/14/angular-30days-form-and-test-29/">
+                <span class="level-item">Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">評論</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://blog.leochen.dev/2021/10/15/angular-30days-form-and-test-30/';
+        this.page.identifier = '2021/10/15/angular-30days-form-and-test-30/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + "leochen0818" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
+</div>
+</div>
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen  has-order-1 column-left ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <nav class="level">
+            <div class="level-item has-text-centered" style="flex-shrink: 1">
+                <div>
+                    
+                        <figure class="image is-128x128 margin-center has-mb-6">
+                            <img class="is-rounded" src="/images/avatar.JPG" alt="Leo">
+                        </figure>
+                    
+                    
+                    <p class="is-size-4 is-block has-mb-6">
+                        Leo
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-block has-mb-6">
+                        Lilee Systems Sr. Front-end Engineer
+                    </p>
+                    
+                    
+                    <p class="is-size-6 is-flex is-flex-center has-text-grey">
+                        <i class="fas fa-map-marker-alt has-mr-7"></i>
+                        <span>Taiwan</span>
+                    </p>
+                    
+                </div>
+            </div>
+        </nav>
+        <nav class="level is-mobile">
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        文章
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        36
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        分類
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        7
+                    </p>
+                </div>
+            </div>
+            <div class="level-item has-text-centered is-marginless">
+                <div>
+                    <p class="heading">
+                        標籤
+                    </p>
+                    <p class="title has-text-weight-normal">
+                        13
+                    </p>
+                </div>
+            </div>
+        </nav>
+        <!-- <div class="level">
+            <a class="level-item button is-link is-rounded" href="/" target="_blank">
+                追蹤</a>
+        </div> -->
+        
+        
+    </div>
+</div>
+    
+        
+    
+        
+
+
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                分類
+            </h3>
+            <ul class="menu-list">
+            <li>
+        <a class="level is-marginless" href="/categories/Git/">
+            <span class="level-start">
+                <span class="level-item">Git</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/">
+            <span class="level-start">
+                <span class="level-item">Web 前端</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">35</span>
+            </span>
+        </a><ul><li>
+        <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
+            <span class="level-start">
+                <span class="level-item">Angular 之深入解析</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/JavaScript/">
+            <span class="level-start">
+                <span class="level-item">JavaScript</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/Nx/">
+            <span class="level-start">
+                <span class="level-item">Nx</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">2</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/iThome2021鐵人賽/">
+            <span class="level-start">
+                <span class="level-item">iThome2021鐵人賽</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">30</span>
+            </span>
+        </a></li><li>
+        <a class="level is-marginless" href="/categories/Web-前端/新聞/">
+            <span class="level-start">
+                <span class="level-item">新聞</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li></ul></li>
+            </ul>
+        </div>
+    </div>
+</div>
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            標籤雲
+        </h3>
+        <a href="/tags/angular/" style="font-size: 20px;">angular</a> <a href="/tags/form/" style="font-size: 16.67px;">form</a> <a href="/tags/frontend/" style="font-size: 16.67px;">frontend</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/homebrew/" style="font-size: 10px;">homebrew</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/library/" style="font-size: 13.33px;">library</a> <a href="/tags/macos/" style="font-size: 10px;">macos</a> <a href="/tags/nx/" style="font-size: 13.33px;">nx</a> <a href="/tags/scss/" style="font-size: 10px;">scss</a> <a href="/tags/testing/" style="font-size: 16.67px;">testing</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a>
+    </div>
+</div>
+
+    
+    
+        <div class="column-right-shadow is-hidden-widescreen ">
+        
+            
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2022-09-28T02:04:30.000Z">2022-09-28</time></div>
+                    <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="title has-link-black-ter is-size-6 has-text-weight-normal">JavaScript 之那些年我們都腦補錯的事</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-15T15:30:20.000Z">2021-10-15</time></div>
+                    <a href="/2021/10/15/angular-30days-form-and-test-30/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day30 - 表單原理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-14T14:45:12.000Z">2021-10-14</time></div>
+                    <a href="/2021/10/14/angular-30days-form-and-test-29/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-13T15:38:05.000Z">2021-10-13</time></div>
+                    <a href="/2021/10/13/angular-30days-form-and-test-28/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/12/angular-30days-form-and-test-27/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-12T01:14:51.000Z">2021-10-12</time></div>
+                    <a href="/2021/10/12/angular-30days-form-and-test-27/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            彙整
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2022/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2022</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">15</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">15</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+        
+            <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                標籤
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/angular/">
+                        <span class="tag">angular</span>
+                        <span class="tag is-grey">34</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/form/">
+                        <span class="tag">form</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/frontend/">
+                        <span class="tag">frontend</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/homebrew/">
+                        <span class="tag">homebrew</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/javascript/">
+                        <span class="tag">javascript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/library/">
+                        <span class="tag">library</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/macos/">
+                        <span class="tag">macos</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/nx/">
+                        <span class="tag">nx</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/scss/">
+                        <span class="tag">scss</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/testing/">
+                        <span class="tag">testing</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/typescript/">
+                        <span class="tag">typescript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/web/">
+                        <span class="tag">web</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+        
+        </div>
+    
+</div>
+
+                
+
+
+
+
+<div class="column is-4-tablet is-4-desktop is-3-widescreen is-hidden-touch is-hidden-desktop-only has-order-3 column-right ">
+    
+        
+<div class="card widget">
+    <div class="card-content">
+        <h3 class="menu-label">
+            最新文章
+        </h3>
+        
+        <article class="media">
+            
+            <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2022-09-28T02:04:30.000Z">2022-09-28</time></div>
+                    <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="title has-link-black-ter is-size-6 has-text-weight-normal">JavaScript 之那些年我們都腦補錯的事</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-15T15:30:20.000Z">2021-10-15</time></div>
+                    <a href="/2021/10/15/angular-30days-form-and-test-30/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day30 - 表單原理</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-14T14:45:12.000Z">2021-10-14</time></div>
+                    <a href="/2021/10/14/angular-30days-form-and-test-29/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-13T15:38:05.000Z">2021-10-13</time></div>
+                    <a href="/2021/10/13/angular-30days-form-and-test-28/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
+            <a href="/2021/10/12/angular-30days-form-and-test-27/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-12T01:14:51.000Z">2021-10-12</time></div>
+                    <a href="/2021/10/12/angular-30days-form-and-test-27/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+    </div>
+</div>
+
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+        <h3 class="menu-label">
+            彙整
+        </h3>
+        <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2022/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2022</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">15</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/09/">
+                <span class="level-start">
+                    <span class="level-item">九月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">15</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/05/">
+                <span class="level-start">
+                    <span class="level-item">五月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2021/03/">
+                <span class="level-start">
+                    <span class="level-item">三月 2021</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2019/10/">
+                <span class="level-start">
+                    <span class="level-item">十月 2019</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">2</span>
+                </span>
+            </a>
+        </li>
+        
+        </ul>
+        </div>
+    </div>
+</div>
+    
+        <div class="card widget">
+    <div class="card-content">
+        <div class="menu">
+            <h3 class="menu-label">
+                標籤
+            </h3>
+            <div class="field is-grouped is-grouped-multiline">
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/angular/">
+                        <span class="tag">angular</span>
+                        <span class="tag is-grey">34</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/form/">
+                        <span class="tag">form</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/frontend/">
+                        <span class="tag">frontend</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/git/">
+                        <span class="tag">git</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/homebrew/">
+                        <span class="tag">homebrew</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/javascript/">
+                        <span class="tag">javascript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/library/">
+                        <span class="tag">library</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/macos/">
+                        <span class="tag">macos</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/nx/">
+                        <span class="tag">nx</span>
+                        <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/scss/">
+                        <span class="tag">scss</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/testing/">
+                        <span class="tag">testing</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/typescript/">
+                        <span class="tag">typescript</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/web/">
+                        <span class="tag">web</span>
+                        <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+            </div>
+        </div>
+    </div>
+</div>
+    
+    
+</div>
+
+            </div>
+        </div>
+    </section>
+    <footer class="footer">
+    <div class="container">
+        <div class="level">
+            <div class="level-start has-text-centered-mobile">
+                <a class="footer-logo is-block has-mb-6" href="/">
+                
+                    <img src="/images/logo.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理" height="28">
+                
+                </a>
+                <p class="is-size-7">
+                &copy; 2022 Leo Chen&nbsp;
+                Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
+                
+                </p>
+            </div>
+            <div class="level-end">
+            
+                <div class="field has-addons is-flex-center-mobile has-mt-5-mobile is-flex-wrap is-flex-middle">
+                
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Creative Commons" href="https://creativecommons.org/">
+                        
+                        <i class="fab fa-creative-commons"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Attribution 4.0 International" href="https://creativecommons.org/licenses/by/4.0/">
+                        
+                        <i class="fab fa-creative-commons-by"></i>
+                        
+                    </a>
+                </p>
+                
+                <p class="control">
+                    <a class="button is-white is-large" target="_blank" title="Download on GitHub" href="https://github.com/ppoffice/hexo-theme-icarus">
+                        
+                        <i class="fab fa-github"></i>
+                        
+                    </a>
+                </p>
+                
+                </div>
+            
+            </div>
+        </div>
+    </div>
+</footer>
+    <script src="https://cdn.jsdelivr.net/npm/jquery@3.3.1/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/moment@2.22.2/min/moment-with-locales.min.js"></script>
+<script>moment.locale("zh-TW");</script>
+
+
+    
+    
+    
+    <script src="/js/animation.js"></script>
+    
+
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/lightgallery@1.6.8/dist/js/lightgallery.min.js" defer></script>
+    <script src="https://cdn.jsdelivr.net/npm/justifiedGallery@3.7.0/dist/js/jquery.justifiedGallery.min.js" defer></script>
+    <script src="/js/gallery.js" defer></script>
+    
+
+    
+    
+
+<div id="outdated">
+    <h6>Your browser is out-of-date!</h6>
+    <p>Update your browser to view this website correctly. <a id="btnUpdateBrowser" href="http://outdatedbrowser.com/">Update
+            my browser now </a></p>
+    <p class="last"><a href="#" id="btnCloseUpdateBrowser" title="Close">&times;</a></p>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/outdatedbrowser@1.1.5/outdatedbrowser/outdatedbrowser.min.js" defer></script>
+<script>
+    document.addEventListener("DOMContentLoaded", function () {
+        outdatedBrowser({
+            bgColor: '#f25648',
+            color: '#ffffff',
+            lowerThan: 'flex'
+        });
+    });
+</script>
+
+
+    
+    
+<script src="https://cdn.jsdelivr.net/npm/mathjax@2.7.5/unpacked/MathJax.js?config=TeX-MML-AM_CHTML" defer></script>
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    MathJax.Hub.Config({
+        'HTML-CSS': {
+            matchFontHeight: false
+        },
+        SVG: {
+            matchFontHeight: false
+        },
+        CommonHTML: {
+            matchFontHeight: false
+        },
+        tex2jax: {
+            inlineMath: [
+                ['$','$'],
+                ['\\(','\\)']
+            ]
+        }
+    });
+});
+</script>
+
+    
+    
+
+<a id="back-to-top" title="回到頁首" href="javascript:;">
+    <i class="fas fa-chevron-up"></i>
+</a>
+<script src="/js/back-to-top.js" defer></script>
+
+
+    
+    
+
+    
+    
+    
+    
+
+    
+    
+    
+    
+    
+    <script src="https://cdn.jsdelivr.net/npm/clipboard@2.0.4/dist/clipboard.min.js" defer></script>
+    <script src="/js/clipboard.js" defer></script>
+    
+
+    
+    
+    
+
+
+<script src="/js/main.js" defer></script>
+
+    
+    <div class="searchbox ins-search">
+    <div class="searchbox-container ins-search-container">
+        <div class="searchbox-input-wrapper">
+            <input type="text" class="searchbox-input ins-search-input" placeholder="請輸入關鍵字...">
+            <span class="searchbox-close ins-close ins-selectable"><i class="fa fa-times-circle"></i></span>
+        </div>
+        <div class="searchbox-result-wrapper ins-section-wrapper">
+            <div class="ins-section-container"></div>
+        </div>
+    </div>
+</div>
+<script>
+    (function (window) {
+        var INSIGHT_CONFIG = {
+            TRANSLATION: {
+                POSTS: '文章',
+                PAGES: '頁面',
+                CATEGORIES: '分類',
+                TAGS: '標籤',
+                UNTITLED: '(無標題)',
+            },
+            CONTENT_URL: '/content.json',
+        };
+        window.INSIGHT_CONFIG = INSIGHT_CONFIG;
+    })(window);
+</script>
+<script src="/js/insight.js" defer></script>
+<link rel="stylesheet" href="/css/search.css">
+<link rel="stylesheet" href="/css/insight.css">
+    
+</body>
+</html>
