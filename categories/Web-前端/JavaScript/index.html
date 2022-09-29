@@ -162,6 +162,75 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2022-09-29T03:31:25.000Z">2022-09-29</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    3 分鐘 閱讀文 (大約 411 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2022/09/29/timer-sample-in-rxjs/">用 RxJS 翻轉你的 coding 人生 - 以 Timer 為例</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/6Dh8yoi.png" alt="自製梗圖"></p>
+<p>昨天同事在某個頁面裡新增了一個「背景自動刷新頁面」的功能，而我在幫他 code review 之後趕緊請他改用 <strong>RxJS</strong> 實作這個功能，這是為什麼呢？</p>
+<blockquote>
+<p>沒有要鞭同事的意思，純粹是藉機分享！</p>
+</blockquote>
+<h2 id="一般實作方式"><a href="#一般實作方式" class="headerlink" title="一般實作方式"></a>一般實作方式</h2><p>一般用 JavaScript 實作的計時器大概會長這樣：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">var</span> REFRESH_PERIOD_SECOND = <span class="hljs-number">30</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">var</span> timer;</span><br><span class="line"><span class="hljs-keyword">var</span> counter = <span class="hljs-number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">startTimer</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  timer = setInterval(<span class="hljs-function"><span class="hljs-keyword">function</span> (<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">    counter += <span class="hljs-number">1</span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (counter &gt;= REFRESH_PERIOD_SECOND) &#123;</span><br><span class="line">      <span class="hljs-comment">// do something..</span></span><br><span class="line">      resetTimer();</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;, <span class="hljs-number">1000</span>);</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">resetTimer</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  stopTimer();</span><br><span class="line">  startTimer();</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">stopTimer</span>(<span class="hljs-params"></span>) </span>&#123;</span><br><span class="line">  clearInterval(timer);</span><br><span class="line">  counter = <span class="hljs-number">0</span>;</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">startTimer();</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>完整程式碼範例： <a href="https://jsbin.com/sacikupapo/1/edit?html,js,console,output" target="_blank" rel="noopener">JS Bin</a></p>
+</blockquote>
+<h2 id="用-RxJS-的實作方式"><a href="#用-RxJS-的實作方式" class="headerlink" title="用 RxJS 的實作方式"></a>用 RxJS 的實作方式</h2><p>換用 <a href="https://rxjs.dev/" target="_blank" rel="noopener">RxJS</a> 來實作的話大概會長這樣（以在 <a href="https://angular.tw/" target="_blank" rel="noopener">Angular</a> 裡面實作為例）：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Component</span>(&#123;</span><br><span class="line">  <span class="hljs-comment">// ...</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line">  count = <span class="hljs-number">0</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">private</span> readonly REFRESH_PERIOD_SECOND = <span class="hljs-number">30</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">private</span> start$ = <span class="hljs-keyword">new</span> Subject();</span><br><span class="line">  <span class="hljs-keyword">private</span> stop$ = <span class="hljs-keyword">new</span> Subject();</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">private</span> timer = <span class="hljs-keyword">this</span>.start$.pipe(</span><br><span class="line">    switchMap(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> interval(<span class="hljs-number">1000</span>)),</span><br><span class="line">    tap(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.count += <span class="hljs-number">1</span>;</span><br><span class="line">      <span class="hljs-keyword">if</span> (<span class="hljs-keyword">this</span>.count === <span class="hljs-keyword">this</span>.REFRESH_PERIOD_SECOND) &#123;</span><br><span class="line">        <span class="hljs-keyword">this</span>.resetTimer();</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;),</span><br><span class="line">    takeUntil(<span class="hljs-keyword">this</span>.stop$),</span><br><span class="line">    repeat()</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.timer.subscribe();</span><br><span class="line">    <span class="hljs-keyword">this</span>.startTimer();</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  startTimer(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.start$.next(<span class="hljs-literal">null</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  stopTimer(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.count = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-keyword">this</span>.stop$.next(<span class="hljs-literal">null</span>);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  resetTimer(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.stopTimer();</span><br><span class="line">    <span class="hljs-keyword">this</span>.startTimer();</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>完整程式碼範例： <a href="https://stackblitz.com/edit/angular-ivy-huistn?file=src%2Fapp%2Fapp.component.html,src%2Fapp%2Fapp.component.ts" target="_blank" rel="noopener">Stackblitz</a></p>
+</blockquote>
+<p>所以說，改用 RxJS 來實作到底好在哪裡呢？</p>
+<p>我個人覺得有以下三個好處：</p>
+<ol>
+<li>計時器要做的事情在初始化的時候就做好了，後續不用再重做第二次</li>
+<li>由於有上一點的好處，所以實際在執行動作的時候，就只要用 <code>start$</code> 或 <code>stop$</code> 送出通知即可。</li>
+<li>更好閱讀與更美觀</li>
+</ol>
+<p>你覺得呢？</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2022-09-28T02:04:30.000Z">2022-09-28</time>
                 
                 <div class="level-item">
@@ -269,7 +338,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        36
+                        37
                     </p>
                 </div>
             </div>
@@ -289,7 +358,7 @@
                         標籤
                     </p>
                     <p class="title has-text-weight-normal">
-                        13
+                        14
                     </p>
                 </div>
             </div>
@@ -331,7 +400,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">35</span>
+                <span class="level-item tag">36</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -347,7 +416,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">1</span>
+                <span class="level-item tag">2</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/Nx/">
@@ -385,7 +454,7 @@
         <h3 class="menu-label">
             標籤雲
         </h3>
-        <a href="/tags/angular/" style="font-size: 20px;">angular</a> <a href="/tags/form/" style="font-size: 16.67px;">form</a> <a href="/tags/frontend/" style="font-size: 16.67px;">frontend</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/homebrew/" style="font-size: 10px;">homebrew</a> <a href="/tags/javascript/" style="font-size: 10px;">javascript</a> <a href="/tags/library/" style="font-size: 13.33px;">library</a> <a href="/tags/macos/" style="font-size: 10px;">macos</a> <a href="/tags/nx/" style="font-size: 13.33px;">nx</a> <a href="/tags/scss/" style="font-size: 10px;">scss</a> <a href="/tags/testing/" style="font-size: 16.67px;">testing</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a>
+        <a href="/tags/angular/" style="font-size: 20px;">angular</a> <a href="/tags/form/" style="font-size: 16.67px;">form</a> <a href="/tags/frontend/" style="font-size: 16.67px;">frontend</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/homebrew/" style="font-size: 10px;">homebrew</a> <a href="/tags/javascript/" style="font-size: 13.33px;">javascript</a> <a href="/tags/library/" style="font-size: 13.33px;">library</a> <a href="/tags/macos/" style="font-size: 10px;">macos</a> <a href="/tags/nx/" style="font-size: 13.33px;">nx</a> <a href="/tags/rxjs/" style="font-size: 10px;">rxjs</a> <a href="/tags/scss/" style="font-size: 10px;">scss</a> <a href="/tags/testing/" style="font-size: 16.67px;">testing</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a>
     </div>
 </div>
 
@@ -399,6 +468,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2022/09/29/timer-sample-in-rxjs/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="用 RxJS 翻轉你的 coding 人生 - 以 Timer 為例">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2022-09-29T03:31:25.000Z">2022-09-29</time></div>
+                    <a href="/2022/09/29/timer-sample-in-rxjs/" class="title has-link-black-ter is-size-6 has-text-weight-normal">用 RxJS 翻轉你的 coding 人生 - 以 Timer 為例</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -476,25 +564,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/12/angular-30days-form-and-test-27/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-12T01:14:51.000Z">2021-10-12</time></div>
-                    <a href="/2021/10/12/angular-30days-form-and-test-27/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -513,7 +582,7 @@
                     <span class="level-item">九月 2022</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -635,7 +704,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/javascript/">
                         <span class="tag">javascript</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -657,6 +726,13 @@
                     <a class="tags has-addons" href="/tags/nx/">
                         <span class="tag">nx</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/rxjs/">
+                        <span class="tag">rxjs</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -713,6 +789,25 @@
         
         <article class="media">
             
+            <a href="/2022/09/29/timer-sample-in-rxjs/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="/images/thumbnail.svg" alt="用 RxJS 翻轉你的 coding 人生 - 以 Timer 為例">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2022-09-29T03:31:25.000Z">2022-09-29</time></div>
+                    <a href="/2022/09/29/timer-sample-in-rxjs/" class="title has-link-black-ter is-size-6 has-text-weight-normal">用 RxJS 翻轉你的 coding 人生 - 以 Timer 為例</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
@@ -787,25 +882,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/12/angular-30days-form-and-test-27/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-12T01:14:51.000Z">2021-10-12</time></div>
-                    <a href="/2021/10/12/angular-30days-form-and-test-27/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -824,7 +900,7 @@
                     <span class="level-item">九月 2022</span>
                 </span>
                 <span class="level-end">
-                    <span class="level-item tag">1</span>
+                    <span class="level-item tag">2</span>
                 </span>
             </a>
         </li>
@@ -946,7 +1022,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/javascript/">
                         <span class="tag">javascript</span>
-                        <span class="tag is-grey">1</span>
+                        <span class="tag is-grey">2</span>
                     </a>
                 </div>
                 
@@ -968,6 +1044,13 @@
                     <a class="tags has-addons" href="/tags/nx/">
                         <span class="tag">nx</span>
                         <span class="tag is-grey">2</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/rxjs/">
+                        <span class="tag">rxjs</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
