@@ -16,12 +16,12 @@
 <meta property="og:site_name" content="Leo&#39;s Coding Life">
 <meta property="og:description" content="之前在開發表單的時候，我們都是使用 Angular 所提供的驗證器來驗證表單欄位裡的值是否符合我們的需求。 雖然 Angular 已經這麼貼心地提供了這麼多驗證了，但每個國家、地區的人文風土民情都不同，還有太多太多需要我們自己自訂規則才能符合需求的情況。 因此，今天我們就一起來看看要怎麼自訂驗證器吧！ 自訂驗證器的型別既然要自訂驗證器，就不能不知道驗證器的型別與其定義。  其實之前在第三天的文章">
 <meta property="og:locale" content="zh-TW">
-<meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
-<meta property="og:updated_time" content="2021-10-11T11:32:36.000Z">
+<meta property="og:image" content="https://i.imgur.com/FtIne6K.png">
+<meta property="og:updated_time" content="2022-09-29T05:59:54.498Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 深入淺出三十天：表單與測試 Day26 - 進階表單開發技巧 - 自訂驗證器">
 <meta name="twitter:description" content="之前在開發表單的時候，我們都是使用 Angular 所提供的驗證器來驗證表單欄位裡的值是否符合我們的需求。 雖然 Angular 已經這麼貼心地提供了這麼多驗證了，但每個國家、地區的人文風土民情都不同，還有太多太多需要我們自己自訂規則才能符合需求的情況。 因此，今天我們就一起來看看要怎麼自訂驗證器吧！ 自訂驗證器的型別既然要自訂驗證器，就不能不知道驗證器的型別與其定義。  其實之前在第三天的文章">
-<meta name="twitter:image" content="https://blog.leochen.dev/images/og_image.png">
+<meta name="twitter:image" content="https://i.imgur.com/FtIne6K.png">
 
 
 
@@ -148,7 +148,6 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
-    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -201,7 +200,7 @@
 <figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; required: <span class="hljs-literal">true</span> &#125;</span><br></pre></td></tr></table></figure>
 
 <p>而 <code>Validators.pattern</code> 驗證器在驗證有誤時，會回傳的 <code>ValidationErrors</code> 是：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123; </span><br><span class="line">  actualValue: <span class="hljs-string">'xxx'</span>,</span><br><span class="line">  requiredPattern: <span class="hljs-string">'xxx'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  actualValue: <span class="hljs-string">'xxx'</span>,</span><br><span class="line">  requiredPattern: <span class="hljs-string">'xxx'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p><code>Validators.minlength</code> 跟 <code>Validators.minlength</code> 驗證器在驗證有誤時，則會回傳：</p>
 <figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  actualLength: <span class="hljs-number">1</span>,</span><br><span class="line">  requiredLength: <span class="hljs-number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -210,13 +209,13 @@
 <p>雖然具體上還是要看實際需求，但我個人覺得我們自己在自訂驗證器的 <code>ValidationErrors</code> 時，也可以照著這個規則來處理。</p>
 <p>一方面，整個系統會比較一致；另一方面，也不需要多寫太多額外的程式來處理我們自訂的錯誤。</p>
 <p>舉個例子，如果我們想自訂一個欄位的值只能是 <code>Leo</code> 的驗證器，其程式碼可能會像是這樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> leoValidator: ValidatorFn = <span class="hljs-function">(<span class="hljs-params">control: AbstractControl</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> isLeo = control.value === <span class="hljs-string">'Leo'</span>;</span><br><span class="line">  <span class="hljs-keyword">if</span> (isLeo) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> &#123; </span><br><span class="line">    actualValue: control.value, </span><br><span class="line">    requiredValue: <span class="hljs-string">'Leo'</span></span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> leoValidator: ValidatorFn = <span class="hljs-function">(<span class="hljs-params">control: AbstractControl</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> isLeo = control.value === <span class="hljs-string">'Leo'</span>;</span><br><span class="line">  <span class="hljs-keyword">if</span> (isLeo) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">    actualValue: control.value,</span><br><span class="line">    requiredValue: <span class="hljs-string">'Leo'</span></span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>如此我們就在需要用到它時，直接像這樣使用即可：</p>
 <figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">''</span>, leoValidator);</span><br></pre></td></tr></table></figure>
 
 <p>又或者是彈性一點，讓使用它的人來決定該欄位的值只能是什麼，其程式碼應該會像是這樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">nameValidator</span>(<span class="hljs-params">name: <span class="hljs-built_in">string</span></span>): <span class="hljs-title">ValidatorFn</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> (control: AbstractControl): ValidationErrors | <span class="hljs-function"><span class="hljs-params">null</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (control.value === name) &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> &#123; </span><br><span class="line">      actualValue: control.value, </span><br><span class="line">      requiredValue: name</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">nameValidator</span>(<span class="hljs-params">name: <span class="hljs-built_in">string</span></span>): <span class="hljs-title">ValidatorFn</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> (control: AbstractControl): ValidationErrors | <span class="hljs-function"><span class="hljs-params">null</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (control.value === name) &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">      actualValue: control.value,</span><br><span class="line">      requiredValue: name</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>然後就可以像這樣使用：</p>
 <figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">''</span>, nameValidator(<span class="hljs-string">'Leo'</span>));</span><br></pre></td></tr></table></figure>
@@ -517,7 +516,7 @@
             
             <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                    <img class="thumbnail" src="https://i.imgur.com/PAqMzKL.png" alt="JavaScript 之那些年我們都腦補錯的事">
                 </p>
             </a>
             
@@ -536,7 +535,7 @@
             
             <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
                 </p>
             </a>
             
@@ -555,7 +554,7 @@
             
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
                 </p>
             </a>
             
@@ -574,7 +573,7 @@
             
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
                 </p>
             </a>
             
@@ -835,7 +834,7 @@
             
             <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                    <img class="thumbnail" src="https://i.imgur.com/PAqMzKL.png" alt="JavaScript 之那些年我們都腦補錯的事">
                 </p>
             </a>
             
@@ -854,7 +853,7 @@
             
             <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
                 </p>
             </a>
             
@@ -873,7 +872,7 @@
             
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
                 </p>
             </a>
             
@@ -892,7 +891,7 @@
             
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
                 </p>
             </a>
             

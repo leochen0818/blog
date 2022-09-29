@@ -16,12 +16,12 @@
 <meta property="og:site_name" content="Leo&#39;s Coding Life">
 <meta property="og:description" content="昨天跟大家分享了自訂表單元件的作法，但昨天的作法只適用於一個欄位、一個 FormControl 。 雖然 FormControl 裡是可以設 {} 的值，但如果我們真的想要的是一個可以直接用 [formGroup] 、 [formArray] 所使用的元件呢？  沒問題，只要你想要， Angular 都給你  實作開始大家還記得之前我們做了個「被保人表單」吧？ 一開始只有「姓名」、「性別」跟「年">
 <meta property="og:locale" content="zh-TW">
-<meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
-<meta property="og:updated_time" content="2021-10-14T14:45:14.000Z">
+<meta property="og:image" content="https://i.imgur.com/i2QD8xM.png">
+<meta property="og:updated_time" content="2022-09-29T06:00:04.242Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
 <meta name="twitter:description" content="昨天跟大家分享了自訂表單元件的作法，但昨天的作法只適用於一個欄位、一個 FormControl 。 雖然 FormControl 裡是可以設 {} 的值，但如果我們真的想要的是一個可以直接用 [formGroup] 、 [formArray] 所使用的元件呢？  沒問題，只要你想要， Angular 都給你  實作開始大家還記得之前我們做了個「被保人表單」吧？ 一開始只有「姓名」、「性別」跟「年">
-<meta name="twitter:image" content="https://blog.leochen.dev/images/og_image.png">
+<meta name="twitter:image" content="https://i.imgur.com/i2QD8xM.png">
 
 
 
@@ -148,7 +148,6 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
-    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -222,7 +221,7 @@
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">ng-container</span> <span class="hljs-attr">ngModelGroup</span>=<span class="hljs-string">"addressInfo"</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"zip"</span> <span class="hljs-attr">ngModel</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>&gt;</span>請選擇縣市<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"district"</span> &gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>&gt;</span>請選擇鄉鎮市區<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">style</span>=<span class="hljs-string">"width: 4rem"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"郵遞區號"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"zip"</span> <span class="hljs-attr">ngModel</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"請輸入地址"</span> <span class="hljs-attr">name</span>=<span class="hljs-string">"address"</span> <span class="hljs-attr">ngModel</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">ng-container</span>&gt;</span></span><br></pre></td></tr></table></figure>
 
 <p>然後也不用在 <code>AddressInfoComponent</code> 裡注入 <code>ControlContainer</code> ，而是改在 <code>AddressInfoComponent</code> 的 <strong>MetaData</strong> 的 <code>viewProviders</code> 裡新增以下設定：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'app-address-info'</span>,</span><br><span class="line">  templateUrl: <span class="hljs-string">'./address-info.component.html'</span>,</span><br><span class="line">  styleUrls: [<span class="hljs-string">'./address-info.component.scss'</span>],</span><br><span class="line">  viewProviders:[</span><br><span class="line">    &#123;</span><br><span class="line">      provide: ControlContainer, </span><br><span class="line">      useExisting: NgForm</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AddressInfoComponent &#123;</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Component</span>(&#123;</span><br><span class="line">  selector: <span class="hljs-string">'app-address-info'</span>,</span><br><span class="line">  templateUrl: <span class="hljs-string">'./address-info.component.html'</span>,</span><br><span class="line">  styleUrls: [<span class="hljs-string">'./address-info.component.scss'</span>],</span><br><span class="line">  viewProviders:[</span><br><span class="line">    &#123;</span><br><span class="line">      provide: ControlContainer,</span><br><span class="line">      useExisting: NgForm</span><br><span class="line">    &#125;</span><br><span class="line">  ]</span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AddressInfoComponent &#123;</span><br></pre></td></tr></table></figure>
 
 <p>這樣就能直接用 <code>&lt;app-address-info&gt;&lt;/app-address-info&gt;</code> 的方式使用這個元件了。</p>
 <p>大家覺得，是 <code>Reactive Forms</code> 的方式好用，還是 <code>Template Driven Forms</code> 的方式好用呢？</p>
@@ -498,7 +497,7 @@
             
             <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                    <img class="thumbnail" src="https://i.imgur.com/PAqMzKL.png" alt="JavaScript 之那些年我們都腦補錯的事">
                 </p>
             </a>
             
@@ -517,7 +516,7 @@
             
             <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
                 </p>
             </a>
             
@@ -536,7 +535,7 @@
             
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
                 </p>
             </a>
             
@@ -555,7 +554,7 @@
             
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
                 </p>
             </a>
             
@@ -816,7 +815,7 @@
             
             <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                    <img class="thumbnail" src="https://i.imgur.com/PAqMzKL.png" alt="JavaScript 之那些年我們都腦補錯的事">
                 </p>
             </a>
             
@@ -835,7 +834,7 @@
             
             <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
                 </p>
             </a>
             
@@ -854,7 +853,7 @@
             
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
                 </p>
             </a>
             
@@ -873,7 +872,7 @@
             
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
                 </p>
             </a>
             

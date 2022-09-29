@@ -16,12 +16,12 @@
 <meta property="og:site_name" content="Leo&#39;s Coding Life">
 <meta property="og:description" content="在日常生活中，大家應該滿常看到有些系統的搜尋輸入框是可以在一邊打字的同時，一邊將搜尋結果呈現在一個下拉選單裡，非常地貼心且方便。 當然，這其中其實有很多細節，不過我們今天就專注在前端的表單開發上，來用 Reactive Forms 實作這個搜尋輸入框吧！  沒錯，就算只是個搜尋框，它也是個表單噢！  正好最近六角學院即將舉辦第三屆的前端 &amp;amp; UI 修煉精神時光屋的活動，這次它們與交通部合">
 <meta property="og:locale" content="zh-TW">
-<meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
-<meta property="og:updated_time" content="2021-10-09T08:04:50.000Z">
+<meta property="og:image" content="https://i.imgur.com/MyMnZN1.png">
+<meta property="og:updated_time" content="2022-09-29T05:57:27.041Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching">
 <meta name="twitter:description" content="在日常生活中，大家應該滿常看到有些系統的搜尋輸入框是可以在一邊打字的同時，一邊將搜尋結果呈現在一個下拉選單裡，非常地貼心且方便。 當然，這其中其實有很多細節，不過我們今天就專注在前端的表單開發上，來用 Reactive Forms 實作這個搜尋輸入框吧！  沒錯，就算只是個搜尋框，它也是個表單噢！  正好最近六角學院即將舉辦第三屆的前端 &amp;amp; UI 修煉精神時光屋的活動，這次它們與交通部合">
-<meta name="twitter:image" content="https://blog.leochen.dev/images/og_image.png">
+<meta name="twitter:image" content="https://i.imgur.com/MyMnZN1.png">
 
 
 
@@ -148,7 +148,6 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
-    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -276,7 +275,7 @@
 <ol>
 <li>自己訂閱後將資料指定給 Component 的屬性：</li>
 </ol>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAutoCompleteSearchingComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  searchingInputControl = <span class="hljs-keyword">new</span> FormControl();</span><br><span class="line">  stations: MetroStationDTO[] = []; </span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> service: ReactiveFormsAutoCompleteSearchingService</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.searchingInputControl.valueChanges.pipe(</span><br><span class="line">      startWith(<span class="hljs-string">''</span>),</span><br><span class="line">      debounceTime(<span class="hljs-number">500</span>),</span><br><span class="line">      switchMap(<span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> <span class="hljs-keyword">this</span>.service.searchStation(value))</span><br><span class="line">    ).subscribe(<span class="hljs-function">(<span class="hljs-params">stations</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.stations = stations;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAutoCompleteSearchingComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  searchingInputControl = <span class="hljs-keyword">new</span> FormControl();</span><br><span class="line">  stations: MetroStationDTO[] = [];</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> service: ReactiveFormsAutoCompleteSearchingService</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.searchingInputControl.valueChanges.pipe(</span><br><span class="line">      startWith(<span class="hljs-string">''</span>),</span><br><span class="line">      debounceTime(<span class="hljs-number">500</span>),</span><br><span class="line">      switchMap(<span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> <span class="hljs-keyword">this</span>.service.searchStation(value))</span><br><span class="line">    ).subscribe(<span class="hljs-function">(<span class="hljs-params">stations</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.stations = stations;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>然後再綁到畫面上：</p>
 <figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">caption</span>&gt;</span></span><br><span class="line">    台北捷運之捷運站查詢結果</span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">caption</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">thead</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站代號<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站名稱<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站所屬縣市<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站所屬鄉鎮區<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>假日是否允許自行車進出站<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>位置<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">thead</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">tbody</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let station of stations"</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.StationID &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.StationName.Zh_tw &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.LocationCity &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.LocationTown &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.BikeAllowOnHoliday &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">target</span>=<span class="hljs-string">"_blank"</span> [<span class="hljs-attr">href</span>]=<span class="hljs-string">"station.StationPosition"</span>&gt;</span></span><br><span class="line">          &#123;&#123; station.StationPosition &#125;&#125;</span><br><span class="line">        <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">tbody</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span></span><br></pre></td></tr></table></figure>
@@ -595,7 +594,7 @@
             
             <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                    <img class="thumbnail" src="https://i.imgur.com/PAqMzKL.png" alt="JavaScript 之那些年我們都腦補錯的事">
                 </p>
             </a>
             
@@ -614,7 +613,7 @@
             
             <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
                 </p>
             </a>
             
@@ -633,7 +632,7 @@
             
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
                 </p>
             </a>
             
@@ -652,7 +651,7 @@
             
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
                 </p>
             </a>
             
@@ -913,7 +912,7 @@
             
             <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                    <img class="thumbnail" src="https://i.imgur.com/PAqMzKL.png" alt="JavaScript 之那些年我們都腦補錯的事">
                 </p>
             </a>
             
@@ -932,7 +931,7 @@
             
             <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
                 </p>
             </a>
             
@@ -951,7 +950,7 @@
             
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
                 </p>
             </a>
             
@@ -970,7 +969,7 @@
             
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
                 </p>
             </a>
             

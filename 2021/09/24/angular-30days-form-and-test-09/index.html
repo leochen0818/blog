@@ -16,12 +16,12 @@
 <meta property="og:site_name" content="Leo&#39;s Coding Life">
 <meta property="og:description" content="昨天幫我們用 Reactive Forms 所撰寫的登入系統寫完單元測試之後，今天則是要來為它寫整合測試。 再次幫大家複習一下整合測試的測試目標：  整合測試的測試目標是要測試兩個或是兩個以上的類別之間的互動是否符合我們的預期。  如果對於整合測試在測什麼還沒有概念的話，建議大家先回到第七天的文章複習一下：整合測試實作 - 登入系統 by Template Driven Forms 。 實作開始">
 <meta property="og:locale" content="zh-TW">
-<meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
-<meta property="og:updated_time" content="2021-09-25T00:59:36.000Z">
+<meta property="og:image" content="https://i.imgur.com/sQdS8Dh.png">
+<meta property="og:updated_time" content="2022-09-29T05:53:57.605Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 深入淺出三十天：表單與測試 Day09 - 整合測試實作 - 登入系統 by Reactive Forms">
 <meta name="twitter:description" content="昨天幫我們用 Reactive Forms 所撰寫的登入系統寫完單元測試之後，今天則是要來為它寫整合測試。 再次幫大家複習一下整合測試的測試目標：  整合測試的測試目標是要測試兩個或是兩個以上的類別之間的互動是否符合我們的預期。  如果對於整合測試在測什麼還沒有概念的話，建議大家先回到第七天的文章複習一下：整合測試實作 - 登入系統 by Template Driven Forms 。 實作開始">
-<meta name="twitter:image" content="https://blog.leochen.dev/images/og_image.png">
+<meta name="twitter:image" content="https://i.imgur.com/sQdS8Dh.png">
 
 
 
@@ -148,7 +148,6 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
-    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -184,13 +183,13 @@
 </blockquote>
 <p>如果對於整合測試在測什麼還沒有概念的話，建議大家先回到第七天的文章複習一下：<a href="https://ithelp.ithome.com.tw/articles/10269558" target="_blank" rel="noopener">整合測試實作 - 登入系統 by Template Driven Forms </a>。</p>
 <h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>跟上次一樣先增加一個 <code>describe</code> 的區塊，有關於整合測試的程式碼接下來都會放在這裡面：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; TestBed &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core/testing'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; AppComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.component'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="hljs-string">'AppComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> component: AppComponent;</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">await</span> TestBed.configureTestingModule(&#123;</span><br><span class="line">      declarations: [AppComponent],</span><br><span class="line">      imports: [</span><br><span class="line">        FormsModule,</span><br><span class="line">        ReactiveFormsModule</span><br><span class="line">      ]</span><br><span class="line">    &#125;).compileComponents();</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">const</span> fixture = TestBed.createComponent(AppComponent);</span><br><span class="line">    component = fixture.componentInstance;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  describe(<span class="hljs-string">'Unit testing'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 昨天寫的單元測試...</span></span><br><span class="line">  &#125;);</span><br><span class="line">  </span><br><span class="line">  describe(<span class="hljs-string">'Integration testing'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 今天要寫的整合測試</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">import</span> &#123; TestBed &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'@angular/core/testing'</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">import</span> &#123; AppComponent &#125; <span class="hljs-keyword">from</span> <span class="hljs-string">'./app.component'</span>;</span><br><span class="line"></span><br><span class="line">describe(<span class="hljs-string">'AppComponent'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> component: AppComponent;</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-keyword">async</span> () =&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">await</span> TestBed.configureTestingModule(&#123;</span><br><span class="line">      declarations: [AppComponent],</span><br><span class="line">      imports: [</span><br><span class="line">        FormsModule,</span><br><span class="line">        ReactiveFormsModule</span><br><span class="line">      ]</span><br><span class="line">    &#125;).compileComponents();</span><br><span class="line"></span><br><span class="line">    <span class="hljs-keyword">const</span> fixture = TestBed.createComponent(AppComponent);</span><br><span class="line">    component = fixture.componentInstance;</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  describe(<span class="hljs-string">'Unit testing'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 昨天寫的單元測試...</span></span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  describe(<span class="hljs-string">'Integration testing'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// 今天要寫的整合測試</span></span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>一般我們不會特別將單元測試跟整合測試的程式碼分開檔案來寫，只會用測試集合將其區隔。</p>
 </blockquote>
 <p>上次有提到整合測試跟畫面會比較有相關，但這次因為我們有使用到第二個類別 <code>FormBuilder</code> ，所以我們先來看 <code>xxxx.component.ts</code> 的程式碼：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent &#123;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-comment">// 以上省略...</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> formBuilder: FormBuilder</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.formGroup = <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">      account: [</span><br><span class="line">        <span class="hljs-string">''</span>,</span><br><span class="line">        [</span><br><span class="line">          Validators.required,</span><br><span class="line">          Validators.pattern(<span class="hljs-regexp">/^\b[\w\.-]+@[\w\.-]+\.\w&#123;2,4&#125;\b$/gi</span>)</span><br><span class="line">        ]</span><br><span class="line">      ],</span><br><span class="line">      password: [</span><br><span class="line">        <span class="hljs-string">''</span>,</span><br><span class="line">        [Validators.required, Validators.minLength(<span class="hljs-number">8</span>), Validators.maxLength(<span class="hljs-number">16</span>)]</span><br><span class="line">      ]</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 以下省略...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> AppComponent &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 以上省略...</span></span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> formBuilder: FormBuilder</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.formGroup = <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">      account: [</span><br><span class="line">        <span class="hljs-string">''</span>,</span><br><span class="line">        [</span><br><span class="line">          Validators.required,</span><br><span class="line">          Validators.pattern(<span class="hljs-regexp">/^\b[\w\.-]+@[\w\.-]+\.\w&#123;2,4&#125;\b$/gi</span>)</span><br><span class="line">        ]</span><br><span class="line">      ],</span><br><span class="line">      password: [</span><br><span class="line">        <span class="hljs-string">''</span>,</span><br><span class="line">        [Validators.required, Validators.minLength(<span class="hljs-number">8</span>), Validators.maxLength(<span class="hljs-number">16</span>)]</span><br><span class="line">      ]</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 以下省略...</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>以整合測試要驗證的項目來說，這邊其實可以驗在 <code>ngOnInit</code> 被呼叫時， <code>formBuilder</code> 的 <code>group</code> 函式有沒有被呼叫，像是這樣：</p>
 <figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">it(<span class="hljs-string">'should call function "group" of the "FormBuilder" when function "ngOnInit" be trigger'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// Arrange</span></span><br><span class="line">  <span class="hljs-keyword">const</span> formBuilder = TestBed.inject(FormBuilder);</span><br><span class="line">  spyOn(formBuilder, <span class="hljs-string">'group'</span>);</span><br><span class="line">  <span class="hljs-comment">// Act</span></span><br><span class="line">  fixture.detectChanges();</span><br><span class="line">  <span class="hljs-comment">// Assert</span></span><br><span class="line">  expect(formBuilder.group).toHaveBeenCalled();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
@@ -565,7 +564,7 @@
             
             <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                    <img class="thumbnail" src="https://i.imgur.com/PAqMzKL.png" alt="JavaScript 之那些年我們都腦補錯的事">
                 </p>
             </a>
             
@@ -584,7 +583,7 @@
             
             <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
                 </p>
             </a>
             
@@ -603,7 +602,7 @@
             
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
                 </p>
             </a>
             
@@ -622,7 +621,7 @@
             
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
                 </p>
             </a>
             
@@ -883,7 +882,7 @@
             
             <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                    <img class="thumbnail" src="https://i.imgur.com/PAqMzKL.png" alt="JavaScript 之那些年我們都腦補錯的事">
                 </p>
             </a>
             
@@ -902,7 +901,7 @@
             
             <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
                 </p>
             </a>
             
@@ -921,7 +920,7 @@
             
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
                 </p>
             </a>
             
@@ -940,7 +939,7 @@
             
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
                 </p>
             </a>
             

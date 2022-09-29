@@ -16,12 +16,12 @@
 <meta property="og:site_name" content="Leo&#39;s Coding Life">
 <meta property="og:description" content="今天想要跟大家分享的是跨欄位驗證的小技巧，這個小技巧其實沒有多厲害或多特別，只是可能滿多人剛好不知道原來可以這樣用。 而我們在 Day 23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯 所分享過欄位連動檢核邏輯的部份，就某方面來說，其實也可以使用這種方式來做，但究竟要適不適合、要不要使用，我覺得一切都還是要看需求、看想給使用者什麼樣的使用體驗來決定。 畢竟系統是為了服務需求">
 <meta property="og:locale" content="zh-TW">
-<meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
-<meta property="og:updated_time" content="2021-10-12T05:18:14.000Z">
+<meta property="og:image" content="https://i.imgur.com/EOYJ6Cc.png">
+<meta property="og:updated_time" content="2022-09-29T05:59:57.513Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證">
 <meta name="twitter:description" content="今天想要跟大家分享的是跨欄位驗證的小技巧，這個小技巧其實沒有多厲害或多特別，只是可能滿多人剛好不知道原來可以這樣用。 而我們在 Day 23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯 所分享過欄位連動檢核邏輯的部份，就某方面來說，其實也可以使用這種方式來做，但究竟要適不適合、要不要使用，我覺得一切都還是要看需求、看想給使用者什麼樣的使用體驗來決定。 畢竟系統是為了服務需求">
-<meta name="twitter:image" content="https://blog.leochen.dev/images/og_image.png">
+<meta name="twitter:image" content="https://i.imgur.com/EOYJ6Cc.png">
 
 
 
@@ -148,7 +148,6 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
-    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -187,17 +186,17 @@
 <h3 id="規格需求"><a href="#規格需求" class="headerlink" title="規格需求"></a>規格需求</h3><p>詳細規格需求如下：</p>
 <ul>
 <li>起日<ul>
-<li>必填，驗證有誤時需顯示錯誤訊息： <code>此欄位必填</code> </li>
+<li>必填，驗證有誤時需顯示錯誤訊息： <code>此欄位必填</code></li>
 <li>格式需為 <code>yyyy-MM-dd</code> ，驗證有誤時需顯示錯誤訊息： <code>日期格式不正確</code></li>
-<li>需為確切存在的日期，驗證有誤時需顯示錯誤訊息： <code>此日期不存在</code> </li>
+<li>需為確切存在的日期，驗證有誤時需顯示錯誤訊息： <code>此日期不存在</code></li>
 </ul>
 </li>
 <li>迄日<ul>
 <li>非必填</li>
 <li>格式需為 <code>yyyy-MM-dd</code> ，驗證有誤時需顯示錯誤訊息： <code>日期格式不正確</code></li>
-<li>需為確切存在的日期，驗證有誤時需顯示錯誤訊息： <code>此日期不存在</code> </li>
-<li>迄日不可早於起日，驗證有誤時需顯示錯誤訊息： <code>迄日不可早於起日</code> </li>
-<li>迄日不可晚於起日超過七天，驗證有誤時需顯示錯誤訊息： <code>迄日不可晚於起日超過七天</code> </li>
+<li>需為確切存在的日期，驗證有誤時需顯示錯誤訊息： <code>此日期不存在</code></li>
+<li>迄日不可早於起日，驗證有誤時需顯示錯誤訊息： <code>迄日不可早於起日</code></li>
+<li>迄日不可晚於起日超過七天，驗證有誤時需顯示錯誤訊息： <code>迄日不可晚於起日超過七天</code></li>
 </ul>
 </li>
 <li>以上驗證皆需在使用者輸入時動態檢查</li>
@@ -249,7 +248,7 @@
 <p>接下來在實作驗證器之前，我想先制定該驗證器在驗證有誤時，所要回傳的 <code>ValidationErrors</code> 格式。</p>
 <h4 id="制定驗證器的-ValidationErrors"><a href="#制定驗證器的-ValidationErrors" class="headerlink" title="制定驗證器的 ValidationErrors"></a>制定驗證器的 ValidationErrors</h4><p>之所以想要先制定 <code>ValidationErrors</code> 的格式，一方面是因為待會實作驗證邏輯的時候需要用到；另一方面則是因為這個格式如果訂得好，後續實作時會輕鬆許多。</p>
 <p>我的預期是這樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123; </span><br><span class="line">  dateRange: &#123;</span><br><span class="line">    startDate: <span class="hljs-literal">null</span> | ValidationErrors;</span><br><span class="line">    endDate: <span class="hljs-literal">null</span> | ValidationErrors;</span><br><span class="line">  &#125; </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  dateRange: &#123;</span><br><span class="line">    startDate: <span class="hljs-literal">null</span> | ValidationErrors;</span><br><span class="line">    endDate: <span class="hljs-literal">null</span> | ValidationErrors;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 
 <p>這樣制定的意思是，如果起日欄位沒有錯誤，則 <code>dateRange.startDate</code> 的值會是 <code>null</code> ；而如果迄日欄位沒有錯誤，則 <code>dateRange.endDate</code> 的值會是 <code>null</code> ；又如果兩個欄位都沒錯誤，則該驗證器就會直接回傳 <code>null</code> 。</p>
 <p>反之，如果起日欄位有錯誤，則 <code>dateRange.startDate</code> 的值會是我們接下來要制定的錯誤；迄日欄位亦然。</p>
@@ -258,17 +257,17 @@
 <p>先複習一下規格：</p>
 <ul>
 <li>起日<ul>
-<li>必填，驗證有誤時需顯示錯誤訊息： <code>此欄位必填</code> </li>
+<li>必填，驗證有誤時需顯示錯誤訊息： <code>此欄位必填</code></li>
 <li>格式需為 <code>yyyy-MM-dd</code> ，驗證有誤時需顯示錯誤訊息： <code>日期格式不正確</code></li>
-<li>需為確切存在的日期，驗證有誤時需顯示錯誤訊息： <code>此日期不存在</code> </li>
+<li>需為確切存在的日期，驗證有誤時需顯示錯誤訊息： <code>此日期不存在</code></li>
 </ul>
 </li>
 <li>迄日<ul>
 <li>非必填</li>
 <li>格式需為 <code>yyyy-MM-dd</code> ，驗證有誤時需顯示錯誤訊息： <code>日期格式不正確</code></li>
-<li>需為確切存在的日期，驗證有誤時需顯示錯誤訊息： <code>此日期不存在</code> </li>
-<li>迄日不可早於起日，驗證有誤時需顯示錯誤訊息： <code>迄日不可早於起日</code> </li>
-<li>迄日不可晚於起日超過七天，驗證有誤時需顯示錯誤訊息： <code>迄日不可晚於起日超過七天</code> </li>
+<li>需為確切存在的日期，驗證有誤時需顯示錯誤訊息： <code>此日期不存在</code></li>
+<li>迄日不可早於起日，驗證有誤時需顯示錯誤訊息： <code>迄日不可早於起日</code></li>
+<li>迄日不可晚於起日超過七天，驗證有誤時需顯示錯誤訊息： <code>迄日不可晚於起日超過七天</code></li>
 </ul>
 </li>
 </ul>
@@ -317,7 +316,7 @@
 <p>感謝每一個願意分享的朋友。</p>
 </blockquote>
 <p>準備萬全之後，再來就是把驗證器的判斷邏輯補完：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> dateRangeValidator: ValidatorFn = <span class="hljs-function">(<span class="hljs-params">formGroup</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> startDateControl = formGroup.get(<span class="hljs-string">'startDate'</span>)!;</span><br><span class="line">  <span class="hljs-keyword">const</span> endDateControl = formGroup.get(<span class="hljs-string">'endDate'</span>)!;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">let</span> errors: DateRangeValidationErrors = &#123;</span><br><span class="line">    dateRange: &#123;</span><br><span class="line">      startDate: <span class="hljs-literal">null</span>,</span><br><span class="line">      endDate: <span class="hljs-literal">null</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line">  </span><br><span class="line">  <span class="hljs-keyword">if</span> (startDateControl.errors) &#123;</span><br><span class="line">    errors.dateRange.startDate = startDateControl.errors;</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!isDateExist(startDateControl.value)) &#123;</span><br><span class="line">    errors.dateRange.startDate = &#123; inexistentDate: <span class="hljs-literal">true</span> &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (endDateControl.errors) &#123;</span><br><span class="line">    errors.dateRange.endDate = endDateControl.errors;</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (endDateControl.value) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!isDateExist(endDateControl.value)) &#123;</span><br><span class="line">      errors.dateRange.endDate = &#123; inexistentDate: <span class="hljs-literal">true</span> &#125;;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!errors.dateRange.startDate) &#123;</span><br><span class="line">      <span class="hljs-keyword">const</span> startDateTimeStamp = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(startDateControl.value).getTime();</span><br><span class="line">      <span class="hljs-keyword">const</span> endDateTimeStamp = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(endDateControl.value).getTime();</span><br><span class="line">      <span class="hljs-keyword">const</span> dayInMilliseconds = <span class="hljs-number">24</span> * <span class="hljs-number">60</span> * <span class="hljs-number">60</span> * <span class="hljs-number">1000</span>;</span><br><span class="line">      <span class="hljs-keyword">const</span> duration = <span class="hljs-number">7</span> * dayInMilliseconds;</span><br><span class="line">      <span class="hljs-keyword">if</span> (endDateTimeStamp &lt; startDateTimeStamp) &#123;</span><br><span class="line">        errors.dateRange.endDate = &#123; lessThanStartDate: <span class="hljs-literal">true</span> &#125;;</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (endDateTimeStamp - duration &gt; startDateTimeStamp) &#123;</span><br><span class="line">        errors.dateRange.endDate = &#123;</span><br><span class="line">          greaterThanStartDate: &#123;</span><br><span class="line">            actualGreater: (endDateTimeStamp - startDateTimeStamp) / dayInMilliseconds,</span><br><span class="line">            requiredGreater: <span class="hljs-number">7</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (!errors.dateRange.startDate &amp;&amp; !errors.dateRange.endDate) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> errors;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">const</span> dateRangeValidator: ValidatorFn = <span class="hljs-function">(<span class="hljs-params">formGroup</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> startDateControl = formGroup.get(<span class="hljs-string">'startDate'</span>)!;</span><br><span class="line">  <span class="hljs-keyword">const</span> endDateControl = formGroup.get(<span class="hljs-string">'endDate'</span>)!;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">let</span> errors: DateRangeValidationErrors = &#123;</span><br><span class="line">    dateRange: &#123;</span><br><span class="line">      startDate: <span class="hljs-literal">null</span>,</span><br><span class="line">      endDate: <span class="hljs-literal">null</span>,</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (startDateControl.errors) &#123;</span><br><span class="line">    errors.dateRange.startDate = startDateControl.errors;</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!isDateExist(startDateControl.value)) &#123;</span><br><span class="line">    errors.dateRange.startDate = &#123; inexistentDate: <span class="hljs-literal">true</span> &#125;;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (endDateControl.errors) &#123;</span><br><span class="line">    errors.dateRange.endDate = endDateControl.errors;</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (endDateControl.value) &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!isDateExist(endDateControl.value)) &#123;</span><br><span class="line">      errors.dateRange.endDate = &#123; inexistentDate: <span class="hljs-literal">true</span> &#125;;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (!errors.dateRange.startDate) &#123;</span><br><span class="line">      <span class="hljs-keyword">const</span> startDateTimeStamp = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(startDateControl.value).getTime();</span><br><span class="line">      <span class="hljs-keyword">const</span> endDateTimeStamp = <span class="hljs-keyword">new</span> <span class="hljs-built_in">Date</span>(endDateControl.value).getTime();</span><br><span class="line">      <span class="hljs-keyword">const</span> dayInMilliseconds = <span class="hljs-number">24</span> * <span class="hljs-number">60</span> * <span class="hljs-number">60</span> * <span class="hljs-number">1000</span>;</span><br><span class="line">      <span class="hljs-keyword">const</span> duration = <span class="hljs-number">7</span> * dayInMilliseconds;</span><br><span class="line">      <span class="hljs-keyword">if</span> (endDateTimeStamp &lt; startDateTimeStamp) &#123;</span><br><span class="line">        errors.dateRange.endDate = &#123; lessThanStartDate: <span class="hljs-literal">true</span> &#125;;</span><br><span class="line">      &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (endDateTimeStamp - duration &gt; startDateTimeStamp) &#123;</span><br><span class="line">        errors.dateRange.endDate = &#123;</span><br><span class="line">          greaterThanStartDate: &#123;</span><br><span class="line">            actualGreater: (endDateTimeStamp - startDateTimeStamp) / dayInMilliseconds,</span><br><span class="line">            requiredGreater: <span class="hljs-number">7</span></span><br><span class="line">          &#125;</span><br><span class="line">        &#125;</span><br><span class="line">      &#125;</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">if</span> (!errors.dateRange.startDate &amp;&amp; !errors.dateRange.endDate) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span>;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> errors;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
 
 <p>結果：</p>
 <p><img src="https://i.imgur.com/932bOqf.gif" alt="Template View"></p>
@@ -607,7 +606,7 @@
             
             <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                    <img class="thumbnail" src="https://i.imgur.com/PAqMzKL.png" alt="JavaScript 之那些年我們都腦補錯的事">
                 </p>
             </a>
             
@@ -626,7 +625,7 @@
             
             <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
                 </p>
             </a>
             
@@ -645,7 +644,7 @@
             
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
                 </p>
             </a>
             
@@ -664,7 +663,7 @@
             
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
                 </p>
             </a>
             
@@ -925,7 +924,7 @@
             
             <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                    <img class="thumbnail" src="https://i.imgur.com/PAqMzKL.png" alt="JavaScript 之那些年我們都腦補錯的事">
                 </p>
             </a>
             
@@ -944,7 +943,7 @@
             
             <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
                 </p>
             </a>
             
@@ -963,7 +962,7 @@
             
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
                 </p>
             </a>
             
@@ -982,7 +981,7 @@
             
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
                 </p>
             </a>
             

@@ -8,19 +8,19 @@
 
 
 
-    <meta name="description" content="關於 Angular 的 Injector ，雖然我之前在寫「Angular 深入淺出三十天」的系列文時，就有在基礎結構說明（四）這篇文章裡介紹過，不過今天我在跟朋友們聊到相關的話題時，除了好好的做了個實驗，並把程式碼保留下來之外，也忽然起了個念頭，覺得是該把這個問題寫成文章，讓剛學 Angular 或是對 Angular 的了解沒那麼深的朋友們可以比較容易理解、比較不會用錯（就我個人的經驗來看，">
+    <meta name="description" content="關於 Angular 的 Injector ，雖然我之前在寫「Angular 深入淺出三十天」的系列文時，就有在基礎結構說明（四）這篇文章裡介紹過，不過今天我在跟朋友們聊到相關的話題時，除了好好的做了個實驗，並把程式碼保留下來之外，也忽然起了個念頭，覺得是該把這個問題寫成文章，讓剛學 Angular 或是對 Angular 的了解沒那麼深的朋友們可以比較容易理解、比較不會用錯（就我個人的經驗來看">
 <meta name="keywords" content="angular">
 <meta property="og:type" content="article">
 <meta property="og:title" content="Angular 之 Injector 探討">
 <meta property="og:url" content="https://blog.leochen.dev/2021/03/25/get-to-the-meet-of-angular-injector/index.html">
 <meta property="og:site_name" content="Leo&#39;s Coding Life">
-<meta property="og:description" content="關於 Angular 的 Injector ，雖然我之前在寫「Angular 深入淺出三十天」的系列文時，就有在基礎結構說明（四）這篇文章裡介紹過，不過今天我在跟朋友們聊到相關的話題時，除了好好的做了個實驗，並把程式碼保留下來之外，也忽然起了個念頭，覺得是該把這個問題寫成文章，讓剛學 Angular 或是對 Angular 的了解沒那麼深的朋友們可以比較容易理解、比較不會用錯（就我個人的經驗來看，">
+<meta property="og:description" content="關於 Angular 的 Injector ，雖然我之前在寫「Angular 深入淺出三十天」的系列文時，就有在基礎結構說明（四）這篇文章裡介紹過，不過今天我在跟朋友們聊到相關的話題時，除了好好的做了個實驗，並把程式碼保留下來之外，也忽然起了個念頭，覺得是該把這個問題寫成文章，讓剛學 Angular 或是對 Angular 的了解沒那麼深的朋友們可以比較容易理解、比較不會用錯（就我個人的經驗來看">
 <meta property="og:locale" content="zh-TW">
 <meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
-<meta property="og:updated_time" content="2021-09-16T02:33:51.000Z">
+<meta property="og:updated_time" content="2022-09-29T06:06:32.662Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 之 Injector 探討">
-<meta name="twitter:description" content="關於 Angular 的 Injector ，雖然我之前在寫「Angular 深入淺出三十天」的系列文時，就有在基礎結構說明（四）這篇文章裡介紹過，不過今天我在跟朋友們聊到相關的話題時，除了好好的做了個實驗，並把程式碼保留下來之外，也忽然起了個念頭，覺得是該把這個問題寫成文章，讓剛學 Angular 或是對 Angular 的了解沒那麼深的朋友們可以比較容易理解、比較不會用錯（就我個人的經驗來看，">
+<meta name="twitter:description" content="關於 Angular 的 Injector ，雖然我之前在寫「Angular 深入淺出三十天」的系列文時，就有在基礎結構說明（四）這篇文章裡介紹過，不過今天我在跟朋友們聊到相關的話題時，除了好好的做了個實驗，並把程式碼保留下來之外，也忽然起了個念頭，覺得是該把這個問題寫成文章，讓剛學 Angular 或是對 Angular 的了解沒那麼深的朋友們可以比較容易理解、比較不會用錯（就我個人的經驗來看">
 <meta name="twitter:image" content="https://blog.leochen.dev/images/og_image.png">
 
 
@@ -148,7 +148,6 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
-    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -176,7 +175,8 @@
             
         </h1>
         <div class="content">
-            <p>關於 Angular 的 Injector ，雖然我之前在寫「<a href="https://ithelp.ithome.com.tw/users/20090728/ironman/1600" target="_blank" rel="noopener">Angular 深入淺出三十天</a>」的系列文時，就有在<a href="https://ithelp.ithome.com.tw/articles/10207283" target="_blank" rel="noopener">基礎結構說明（四）</a>這篇文章裡介紹過，不過今天我在跟朋友們聊到相關的話題時，除了好好的做了個實驗，並把程式碼保留下來之外，也忽然起了個念頭，覺得是該把這個問題寫成文章，讓剛學 Angular 或是對 Angular 的了解沒那麼深的朋友們可以比較容易理解、比較不會用錯（就我個人的經驗來看，沒有注意到這個部分的朋友們還滿多的）。</p>
+            <p><img src alt></p>
+<p>關於 Angular 的 Injector ，雖然我之前在寫「<a href="https://ithelp.ithome.com.tw/users/20090728/ironman/1600" target="_blank" rel="noopener">Angular 深入淺出三十天</a>」的系列文時，就有在<a href="https://ithelp.ithome.com.tw/articles/10207283" target="_blank" rel="noopener">基礎結構說明（四）</a>這篇文章裡介紹過，不過今天我在跟朋友們聊到相關的話題時，除了好好的做了個實驗，並把程式碼保留下來之外，也忽然起了個念頭，覺得是該把這個問題寫成文章，讓剛學 Angular 或是對 Angular 的了解沒那麼深的朋友們可以比較容易理解、比較不會用錯（就我個人的經驗來看，沒有注意到這個部分的朋友們還滿多的）。</p>
 <hr>
 <h2 id="問題描述"><a href="#問題描述" class="headerlink" title="問題描述"></a>問題描述</h2><p>在 Angular 裡寫 Service 的時候，我們一般會用以下三種方式註冊它：</p>
 <ol>
@@ -471,7 +471,7 @@
             
             <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                    <img class="thumbnail" src="https://i.imgur.com/PAqMzKL.png" alt="JavaScript 之那些年我們都腦補錯的事">
                 </p>
             </a>
             
@@ -490,7 +490,7 @@
             
             <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
                 </p>
             </a>
             
@@ -509,7 +509,7 @@
             
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
                 </p>
             </a>
             
@@ -528,7 +528,7 @@
             
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
                 </p>
             </a>
             
@@ -789,7 +789,7 @@
             
             <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                    <img class="thumbnail" src="https://i.imgur.com/PAqMzKL.png" alt="JavaScript 之那些年我們都腦補錯的事">
                 </p>
             </a>
             
@@ -808,7 +808,7 @@
             
             <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
                 </p>
             </a>
             
@@ -827,7 +827,7 @@
             
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
                 </p>
             </a>
             
@@ -846,7 +846,7 @@
             
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
                 </p>
             </a>
             

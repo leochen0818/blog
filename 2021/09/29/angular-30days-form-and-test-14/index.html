@@ -16,12 +16,12 @@
 <meta property="og:site_name" content="Leo&#39;s Coding Life">
 <meta property="og:description" content="今天我們要來為我們用 Reactive Forms 所撰寫的被保人表單寫單元測試，如果還沒有相關程式碼的朋友，趕快前往閱讀第十一天的文章： Reactive Forms 實作 - 動態表單初體驗。 實作開始複習一下目前的程式碼： 123456789101112131415161718192021222324252627282930313233343536373839404142434445464">
 <meta property="og:locale" content="zh-TW">
-<meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
-<meta property="og:updated_time" content="2021-09-29T01:37:08.000Z">
+<meta property="og:image" content="https://i.imgur.com/8vYZNBJ.png">
+<meta property="og:updated_time" content="2022-09-29T05:54:15.701Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="Angular 深入淺出三十天：表單與測試 Day14 - 單元測試實作 - 被保人 by Reactive Forms">
 <meta name="twitter:description" content="今天我們要來為我們用 Reactive Forms 所撰寫的被保人表單寫單元測試，如果還沒有相關程式碼的朋友，趕快前往閱讀第十一天的文章： Reactive Forms 實作 - 動態表單初體驗。 實作開始複習一下目前的程式碼： 123456789101112131415161718192021222324252627282930313233343536373839404142434445464">
-<meta name="twitter:image" content="https://blog.leochen.dev/images/og_image.png">
+<meta name="twitter:image" content="https://i.imgur.com/8vYZNBJ.png">
 
 
 
@@ -148,7 +148,6 @@
         <div class="container">
             <div class="columns">
                 <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
-    
     <div class="card-content article ">
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
@@ -188,7 +187,7 @@
 <li><code>ngOnInit</code></li>
 <li><code>addInsured</code></li>
 <li><code>deleteInsured</code></li>
-<li><code>getErrorMessage</code> </li>
+<li><code>getErrorMessage</code></li>
 </ul>
 <p>以下就按照順序來撰寫測試吧！</p>
 <blockquote>
@@ -239,9 +238,9 @@
 <p>雖然前面都測得比較<del>隨便</del>粗糙，我們這個單元測仔細一點好了。</p>
 <p>要驗證的項目如下：</p>
 <ul>
-<li>如果用錯誤的 <code>key</code> 值導致找不到對應的 <code>FormControl</code> ，則回傳空字串。 </li>
-<li>如果該欄位沒有任何錯誤，則回傳空字串。 </li>
-<li>如果該欄位的 <code>pristine</code> 為 <code>true</code>，則回傳空字串。 </li>
+<li>如果用錯誤的 <code>key</code> 值導致找不到對應的 <code>FormControl</code> ，則回傳空字串。</li>
+<li>如果該欄位沒有任何錯誤，則回傳空字串。</li>
+<li>如果該欄位的 <code>pristine</code> 為 <code>true</code>，則回傳空字串。</li>
 <li>如果該欄位的有 <code>required</code> 的錯誤，則回傳 <code>此欄位必填</code></li>
 <li>如果該欄位的有 <code>minlength</code> 的錯誤，則回傳 <code>姓名至少需兩個字以上</code></li>
 <li>如果該欄位的有 <code>maxlength</code> 的錯誤，則回傳 <code>姓名至多只能輸入十個字</code></li>
@@ -523,7 +522,7 @@
             
             <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                    <img class="thumbnail" src="https://i.imgur.com/PAqMzKL.png" alt="JavaScript 之那些年我們都腦補錯的事">
                 </p>
             </a>
             
@@ -542,7 +541,7 @@
             
             <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
                 </p>
             </a>
             
@@ -561,7 +560,7 @@
             
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
                 </p>
             </a>
             
@@ -580,7 +579,7 @@
             
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
                 </p>
             </a>
             
@@ -841,7 +840,7 @@
             
             <a href="/2022/09/28/javascript-runtime-mechanism-notice/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="JavaScript 之那些年我們都腦補錯的事">
+                    <img class="thumbnail" src="https://i.imgur.com/PAqMzKL.png" alt="JavaScript 之那些年我們都腦補錯的事">
                 </p>
             </a>
             
@@ -860,7 +859,7 @@
             
             <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
+                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
                 </p>
             </a>
             
@@ -879,7 +878,7 @@
             
             <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
+                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
                 </p>
             </a>
             
@@ -898,7 +897,7 @@
             
             <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
                 <p class="image is-64x64">
-                    <img class="thumbnail" src="/images/thumbnail.svg" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
+                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
                 </p>
             </a>
             
