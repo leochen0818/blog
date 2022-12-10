@@ -1381,7 +1381,7 @@
 <p>雖然 JS 版或 TS 版的差別並沒有多大，但少了一些開發時期的型別檢查與 Intellisense 還是令人感到彆扭。</p>
 <p>因此，我們今天就來分享如何把 JS 版的 Cypress 變成 TS 版吧！</p>
 <h2 id="Angular-專案"><a href="#Angular-專案" class="headerlink" title="Angular 專案"></a>Angular 專案</h2><p>首先，如果你的專案是 Angular ，預設不會配有任何 E2E 自動化測試工具，如果我們想要在 Angular 的專案使用 Cypress ，可以直接在終端機輸入以下指令：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> ng add @cypress/schematic</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> ng add @cypress/schematic</span></span><br></pre></td></tr></table></figure>
 
 <p>等待它執行完成後，你會發現 Angular Schematics 除了幫你裝好 Cypress 之後，也在 <code>package.json</code> 裡的 <code>scripts</code> 區段增加了以下三個指令：</p>
 <figure class="highlight json hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  <span class="hljs-attr">"scripts"</span>: &#123;</span><br><span class="line">    <span class="hljs-attr">"e2e"</span>: <span class="hljs-string">"ng e2e"</span>,</span><br><span class="line">    <span class="hljs-attr">"cypress:open"</span>: <span class="hljs-string">"cypress open"</span>,</span><br><span class="line">    <span class="hljs-attr">"cypress:run"</span>: <span class="hljs-string">"cypress run"</span></span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
@@ -1412,10 +1412,10 @@
 <h2 id="其他類型專案"><a href="#其他類型專案" class="headerlink" title="其他類型專案"></a>其他類型專案</h2><p>Angular 專案有 Angular Schematics ，但其他類型的專案或者是單單只有 Cypress 的專案怎辦？</p>
 <p>別擔心，其實要做的事情也不會太繁瑣或困難。</p>
 <p>首先，我們可以先在專案裡輸入以下指令以安裝 TypeScript ：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> npm install typescript --save-dev</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> npm install typescript --save-dev</span></span><br></pre></td></tr></table></figure>
 
 <p>or</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> yarn add typescript --dev</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> yarn add typescript --dev</span></span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>如果你的專案裡已經有安裝 TypeScript 的話請略過此步驟</p>
@@ -1663,7 +1663,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        37
+                        38
                     </p>
                 </div>
             </div>
@@ -1673,7 +1673,7 @@
                         分類
                     </p>
                     <p class="title has-text-weight-normal">
-                        7
+                        8
                     </p>
                 </div>
             </div>
@@ -1683,7 +1683,7 @@
                         標籤
                     </p>
                     <p class="title has-text-weight-normal">
-                        14
+                        17
                     </p>
                 </div>
             </div>
@@ -1767,7 +1767,15 @@
             <span class="level-end">
                 <span class="level-item tag">1</span>
             </span>
-        </a></li></ul></li>
+        </a></li></ul></li><li>
+        <a class="level is-marginless" href="/categories/documentation/">
+            <span class="level-start">
+                <span class="level-item">documentation</span>
+            </span>
+            <span class="level-end">
+                <span class="level-item tag">1</span>
+            </span>
+        </a></li>
             </ul>
         </div>
     </div>
@@ -1779,7 +1787,7 @@
         <h3 class="menu-label">
             標籤雲
         </h3>
-        <a href="/tags/angular/" style="font-size: 20px;">angular</a> <a href="/tags/form/" style="font-size: 16.67px;">form</a> <a href="/tags/frontend/" style="font-size: 16.67px;">frontend</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/homebrew/" style="font-size: 10px;">homebrew</a> <a href="/tags/javascript/" style="font-size: 13.33px;">javascript</a> <a href="/tags/library/" style="font-size: 13.33px;">library</a> <a href="/tags/macos/" style="font-size: 10px;">macos</a> <a href="/tags/nx/" style="font-size: 13.33px;">nx</a> <a href="/tags/rxjs/" style="font-size: 10px;">rxjs</a> <a href="/tags/scss/" style="font-size: 10px;">scss</a> <a href="/tags/testing/" style="font-size: 16.67px;">testing</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a>
+        <a href="/tags/angular/" style="font-size: 20px;">angular</a> <a href="/tags/efficiency/" style="font-size: 10px;">efficiency</a> <a href="/tags/form/" style="font-size: 16.67px;">form</a> <a href="/tags/frontend/" style="font-size: 16.67px;">frontend</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/homebrew/" style="font-size: 10px;">homebrew</a> <a href="/tags/javascript/" style="font-size: 13.33px;">javascript</a> <a href="/tags/library/" style="font-size: 13.33px;">library</a> <a href="/tags/macos/" style="font-size: 10px;">macos</a> <a href="/tags/methodology/" style="font-size: 10px;">methodology</a> <a href="/tags/nx/" style="font-size: 13.33px;">nx</a> <a href="/tags/rxjs/" style="font-size: 10px;">rxjs</a> <a href="/tags/scss/" style="font-size: 10px;">scss</a> <a href="/tags/testing/" style="font-size: 16.67px;">testing</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/workflow/" style="font-size: 10px;">workflow</a>
     </div>
 </div>
 
@@ -1793,6 +1801,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2022/12/11/benefit-if-writgin-document/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://i.imgur.com/FfIKlbq.png" alt="寫文件的好處">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2022-12-10T17:02:35.000Z">2022-12-11</time></div>
+                    <a href="/2022/12/11/benefit-if-writgin-document/" class="title has-link-black-ter is-size-6 has-text-weight-normal">寫文件的好處</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/documentation/">documentation</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -1870,25 +1897,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-13T15:38:05.000Z">2021-10-13</time></div>
-                    <a href="/2021/10/13/angular-30days-form-and-test-28/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1900,6 +1908,17 @@
             彙整
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2022/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2022</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2022/09/">
@@ -1999,6 +2018,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/efficiency/">
+                        <span class="tag">efficiency</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
                         <span class="tag is-grey">30</span>
@@ -2048,6 +2074,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/methodology/">
+                        <span class="tag">methodology</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/nx/">
                         <span class="tag">nx</span>
                         <span class="tag is-grey">2</span>
@@ -2086,6 +2119,13 @@
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
                         <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/workflow/">
+                        <span class="tag">workflow</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
@@ -2114,6 +2154,25 @@
         
         <article class="media">
             
+            <a href="/2022/12/11/benefit-if-writgin-document/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://i.imgur.com/FfIKlbq.png" alt="寫文件的好處">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2022-12-10T17:02:35.000Z">2022-12-11</time></div>
+                    <a href="/2022/12/11/benefit-if-writgin-document/" class="title has-link-black-ter is-size-6 has-text-weight-normal">寫文件的好處</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/documentation/">documentation</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2022/09/29/timer-sample-in-rxjs/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://i.imgur.com/6Dh8yoi.png" alt="用 RxJS 翻轉你的 coding 人生 - 以 Timer 為例">
@@ -2188,25 +2247,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/13/angular-30days-form-and-test-28/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://i.imgur.com/RfSbRb8.png" alt="Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-13T15:38:05.000Z">2021-10-13</time></div>
-                    <a href="/2021/10/13/angular-30days-form-and-test-28/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day28 - 自訂表單元件</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2218,6 +2258,17 @@
             彙整
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2022/12/">
+                <span class="level-start">
+                    <span class="level-item">十二月 2022</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2022/09/">
@@ -2317,6 +2368,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/efficiency/">
+                        <span class="tag">efficiency</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/form/">
                         <span class="tag">form</span>
                         <span class="tag is-grey">30</span>
@@ -2366,6 +2424,13 @@
                 </div>
                 
                 <div class="control">
+                    <a class="tags has-addons" href="/tags/methodology/">
+                        <span class="tag">methodology</span>
+                        <span class="tag is-grey">1</span>
+                    </a>
+                </div>
+                
+                <div class="control">
                     <a class="tags has-addons" href="/tags/nx/">
                         <span class="tag">nx</span>
                         <span class="tag is-grey">2</span>
@@ -2404,6 +2469,13 @@
                     <a class="tags has-addons" href="/tags/web/">
                         <span class="tag">web</span>
                         <span class="tag is-grey">30</span>
+                    </a>
+                </div>
+                
+                <div class="control">
+                    <a class="tags has-addons" href="/tags/workflow/">
+                        <span class="tag">workflow</span>
+                        <span class="tag is-grey">1</span>
                     </a>
                 </div>
                 
