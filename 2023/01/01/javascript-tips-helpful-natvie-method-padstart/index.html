@@ -2,21 +2,26 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>彙整: 2021/9 - Leo&#39;s Coding Life</title>
+<title>JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart - Leo&#39;s Coding Life</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <base href="/">
 
 
 
-    <meta property="og:type" content="website">
-<meta property="og:title" content="Leo&#39;s Coding Life">
-<meta property="og:url" content="https://blog.leochen.dev/archives/2021/09/page/2/index.html">
+    <meta name="description" content="今天我想跟大家分享一個數字字串補零時超好用的原生方法： padStart; 假設我們今天收到需求是不管是 0~999 之間的任何一個數字，都要以三位數的形式顯示給使用者看。例如：  如果資料是 9 的話，要顯示 009 如果資料是 99 ，要顯示 099 如果是 999 ，就顯示 999。  所以，以前的我們大概會這樣寫： 123456789// 隨機產生一個 0~999 的數字const ra">
+<meta name="keywords" content="javascript">
+<meta property="og:type" content="article">
+<meta property="og:title" content="JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart">
+<meta property="og:url" content="https://blog.leochen.dev/2023/01/01/javascript-tips-helpful-natvie-method-padstart/index.html">
 <meta property="og:site_name" content="Leo&#39;s Coding Life">
+<meta property="og:description" content="今天我想跟大家分享一個數字字串補零時超好用的原生方法： padStart; 假設我們今天收到需求是不管是 0~999 之間的任何一個數字，都要以三位數的形式顯示給使用者看。例如：  如果資料是 9 的話，要顯示 009 如果資料是 99 ，要顯示 099 如果是 999 ，就顯示 999。  所以，以前的我們大概會這樣寫： 123456789// 隨機產生一個 0~999 的數字const ra">
 <meta property="og:locale" content="zh-TW">
-<meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
+<meta property="og:image" content="https://i.imgur.com/IKQmdRh.png">
+<meta property="og:updated_time" content="2022-12-31T16:17:44.771Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Leo&#39;s Coding Life">
-<meta name="twitter:image" content="https://blog.leochen.dev/images/og_image.png">
+<meta name="twitter:title" content="JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart">
+<meta name="twitter:description" content="今天我想跟大家分享一個數字字串補零時超好用的原生方法： padStart; 假設我們今天收到需求是不管是 0~999 之間的任何一個數字，都要以三位數的形式顯示給使用者看。例如：  如果資料是 9 的話，要顯示 009 如果資料是 99 ，要顯示 099 如果是 999 ，就顯示 999。  所以，以前的我們大概會這樣寫： 123456789// 隨機產生一個 0~999 的數字const ra">
+<meta name="twitter:image" content="https://i.imgur.com/IKQmdRh.png">
 
 
 
@@ -99,7 +104,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="Leo&#39;s Coding Life" height="28">
+                <img src="/images/logo.png" alt="JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart" height="28">
             
             </a>
         </div>
@@ -142,163 +147,118 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
-
-<div class="card widget">
-    <div class="card-content">
-        <h3 class="tag is-link">
-        九月 2021
-        </h3>
-        <div class="timeline">
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
+    <div class="card-content article ">
         
-            <article class="media">
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2022-12-31T16:17:41.000Z">2023-01-01</time>
                 
-                <a href="/2021/09/20/angular-30days-form-and-test-05/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="https://i.imgur.com/lRb9F9M.png" alt="Angular 深入淺出三十天：表單與測試 Day05 - 如何寫出優秀的測試？">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2021-09-20T01:36:10.000Z">2021-09-20</time>
-                        <a href="/2021/09/20/angular-30days-form-and-test-05/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day05 - 如何寫出優秀的測試？</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
                 </div>
-            </article>
-        
-            <article class="media">
                 
-                <a href="/2021/09/19/angular-30days-form-and-test-04/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="https://i.imgur.com/SVDM3en.png" alt="Angular 深入淺出三十天：表單與測試 Day04 - 開始撰寫測試之前必須要知道的二三事">
-                    </p>
-                </a>
                 
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2021-09-19T00:24:10.000Z">2021-09-19</time>
-                        <a href="/2021/09/19/angular-30days-form-and-test-04/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day04 - 開始撰寫測試之前必須要知道的二三事</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
+                <span class="level-item has-text-grey">
+                    
+                    
+                    3 分鐘 閱讀文 (大約 395 個字)
+                </span>
                 
-                <a href="/2021/09/18/angular-30days-form-and-test-03/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="https://i.imgur.com/HR8tUmP.png" alt="Angular 深入淺出三十天：表單與測試 Day03 - Reactive Forms 實作 - 以登入為例">
-                    </p>
-                </a>
                 
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2021-09-18T00:07:10.000Z">2021-09-18</time>
-                        <a href="/2021/09/18/angular-30days-form-and-test-03/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day03 - Reactive Forms 實作 - 以登入為例</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <a href="/2021/09/17/angular-30days-form-and-test-02/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="https://i.imgur.com/EL8b9Ws.png" alt="Angular 深入淺出三十天：表單與測試 Day02 - Template Driven Forms 實作 - 以登入為例">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2021-09-17T00:36:10.000Z">2021-09-17</time>
-                        <a href="/2021/09/17/angular-30days-form-and-test-02/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day02 - Template Driven Forms 實作 - 以登入為例</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
-            <article class="media">
-                
-                <a href="/2021/09/16/angular-30days-form-and-test-01/" class="media-left">
-                    <p class="image is-64x64">
-                        <img class="thumbnail" src="https://i.imgur.com/yRC9Xy8.png" alt="Angular 深入淺出三十天：表單與測試 Day01 - 前言">
-                    </p>
-                </a>
-                
-                <div class="media-content">
-                    <div class="content">
-                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2021-09-16T01:48:10.000Z">2021-09-16</time>
-                        <a href="/2021/09/16/angular-30days-form-and-test-01/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day01 - 前言</a>
-                        <div class="level article-meta is-mobile">
-                            <div class="level-left">
-                                
-                                <div class="level-item is-size-7 is-uppercase">
-                                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                                </div>
-                                
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </article>
-        
+            </div>
         </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://imgur.com/IKQmdRh.png" alt></p>
+<p>今天我想跟大家分享一個數字字串補零時超好用的原生方法： <code>padStart</code>;</p>
+<p>假設我們今天收到需求是不管是 0~999 之間的任何一個數字，都要以三位數的形式顯示給使用者看。例如：</p>
+<ol>
+<li>如果資料是 <code>9</code> 的話，要顯示 <code>009</code></li>
+<li>如果資料是 <code>99</code> ，要顯示 <code>099</code></li>
+<li>如果是 <code>999</code> ，就顯示 <code>999</code>。</li>
+</ol>
+<p>所以，以前的我們大概會這樣寫：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 隨機產生一個 0~999 的數字</span></span><br><span class="line"><span class="hljs-keyword">const</span> randomNum = <span class="hljs-built_in">Number</span>((<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">1000</span>).toFixed());</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> numString = <span class="hljs-string">`<span class="hljs-subst">$&#123;randomNum&#125;</span>`</span>;</span><br><span class="line"><span class="hljs-keyword">if</span> (randomNum &lt; <span class="hljs-number">10</span>) &#123;</span><br><span class="line">  numString = <span class="hljs-string">`00<span class="hljs-subst">$&#123;randomNum&#125;</span>`</span>;</span><br><span class="line">&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (randomNum &lt; <span class="hljs-number">100</span>) &#123;</span><br><span class="line">  numString = <span class="hljs-string">`0<span class="hljs-subst">$&#123;randomNum&#125;</span>`</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果今天需求是需要一個超長的位數的話，那就會有很多個 <code>if/else</code> ，看起來是不是很笨？！是不是很醜？！</p>
+<p>但有了 <code>padStart</code> 之後，我們只要這樣寫：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> num = (<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">1000</span>).toFixed().padStart(<span class="hljs-number">3</span>, <span class="hljs-string">"0"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>一行就解決了，是不是超讚的？！！！</p>
+<p>不管需求要幾位數，都只要改那個 <code>3</code> 就好，而如果不想補 <code>&quot;0&quot;</code> ，想補 <code>&quot;*&quot;</code> 也沒問題，把 <code>&quot;0&quot;</code> 改成 <code>&quot;*&quot;</code> 就好，方便的不得了！！</p>
+<blockquote>
+<p>當然所謂的「數字字串補零時超好用的原生方法」這件事情是我自己覺得最適合用它的應用場景，而如果你有想到更適合的應用場景也拜託請跟我分享！！</p>
+</blockquote>
+<p>今天的 JavaScript 小技巧就到這邊囉，我們下次見，掰掰！</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="https://caniuse.com/?search=padStart" target="_blank" rel="noopener">Can I use - padStart</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart" target="_blank" rel="noopener">MDN - padStart</a></li>
+</ul>
+
+        </div>
+        
+        <div class="level is-size-7 is-uppercase">
+            <div class="level-start">
+                <div class="level-item">
+                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
+                    <a class="has-link-grey -link" href="/tags/javascript/">javascript</a>
+                </div>
+            </div>
+        </div>
+        
+        
+        
     </div>
 </div>
 
 
 
-    
+
+
 <div class="card card-transparent">
-    <nav class="pagination is-centered" role="navigation" aria-label="pagination">
-        <div class="pagination-previous">
-            <a class="is-flex-grow has-text-black-ter" href="/archives/2021/09/">上一頁</a>
+    <div class="level post-navigation is-flex-wrap is-mobile">
+        
+        
+        <div class="level-end">
+            <a class="level level-item has-link-grey  article-nav-next" href="/2022/12/11/benefit-if-writgin-document/">
+                <span class="level-item">寫文件的好處</span>
+                <i class="level-item fas fa-chevron-right"></i>
+            </a>
         </div>
-        <div class="pagination-next is-invisible is-hidden-mobile">
-            <a class="is-flex-grow has-text-black-ter" href="/archives/2021/09/page/3/">下一頁</a>
-        </div>
-        <ul class="pagination-list is-hidden-mobile">
-            
-            <li><a class="pagination-link has-text-black-ter" href="/archives/2021/09/">1</a></li>
-            
-            <li><a class="pagination-link is-current" href="/archives/2021/09/page/2/">2</a></li>
-            
-        </ul>
-    </nav>
+        
+    </div>
+</div>
+
+
+
+<div class="card">
+    <div class="card-content">
+        <h3 class="title is-5 has-text-weight-normal">評論</h3>
+        
+<script>
+    var disqus_config = function () {
+        this.page.url = 'https://blog.leochen.dev/2023/01/01/javascript-tips-helpful-natvie-method-padstart/';
+        this.page.identifier = '2023/01/01/javascript-tips-helpful-natvie-method-padstart/';
+    };
+    (function() {
+        var d = document, s = d.createElement('script');  
+        s.src = '//' + "leochen0818" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+
+<div id="disqus_thread">
+    
+    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+</div>
+    </div>
 </div>
 </div>
                 
@@ -1200,7 +1160,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.png" alt="Leo&#39;s Coding Life" height="28">
+                    <img src="/images/logo.png" alt="JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart" height="28">
                 
                 </a>
                 <p class="is-size-7">

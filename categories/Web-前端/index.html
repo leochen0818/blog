@@ -159,6 +159,74 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2022-12-31T16:17:41.000Z">2023-01-01</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    3 分鐘 閱讀文 (大約 395 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2023/01/01/javascript-tips-helpful-natvie-method-padstart/">JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://imgur.com/IKQmdRh.png" alt></p>
+<p>今天我想跟大家分享一個數字字串補零時超好用的原生方法： <code>padStart</code>;</p>
+<p>假設我們今天收到需求是不管是 0~999 之間的任何一個數字，都要以三位數的形式顯示給使用者看。例如：</p>
+<ol>
+<li>如果資料是 <code>9</code> 的話，要顯示 <code>009</code></li>
+<li>如果資料是 <code>99</code> ，要顯示 <code>099</code></li>
+<li>如果是 <code>999</code> ，就顯示 <code>999</code>。</li>
+</ol>
+<p>所以，以前的我們大概會這樣寫：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-comment">// 隨機產生一個 0~999 的數字</span></span><br><span class="line"><span class="hljs-keyword">const</span> randomNum = <span class="hljs-built_in">Number</span>((<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">1000</span>).toFixed());</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">let</span> numString = <span class="hljs-string">`<span class="hljs-subst">$&#123;randomNum&#125;</span>`</span>;</span><br><span class="line"><span class="hljs-keyword">if</span> (randomNum &lt; <span class="hljs-number">10</span>) &#123;</span><br><span class="line">  numString = <span class="hljs-string">`00<span class="hljs-subst">$&#123;randomNum&#125;</span>`</span>;</span><br><span class="line">&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (randomNum &lt; <span class="hljs-number">100</span>) &#123;</span><br><span class="line">  numString = <span class="hljs-string">`0<span class="hljs-subst">$&#123;randomNum&#125;</span>`</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>如果今天需求是需要一個超長的位數的話，那就會有很多個 <code>if/else</code> ，看起來是不是很笨？！是不是很醜？！</p>
+<p>但有了 <code>padStart</code> 之後，我們只要這樣寫：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> num = (<span class="hljs-built_in">Math</span>.random() * <span class="hljs-number">1000</span>).toFixed().padStart(<span class="hljs-number">3</span>, <span class="hljs-string">"0"</span>);</span><br></pre></td></tr></table></figure>
+
+<p>一行就解決了，是不是超讚的？！！！</p>
+<p>不管需求要幾位數，都只要改那個 <code>3</code> 就好，而如果不想補 <code>&quot;0&quot;</code> ，想補 <code>&quot;*&quot;</code> 也沒問題，把 <code>&quot;0&quot;</code> 改成 <code>&quot;*&quot;</code> 就好，方便的不得了！！</p>
+<blockquote>
+<p>當然所謂的「數字字串補零時超好用的原生方法」這件事情是我自己覺得最適合用它的應用場景，而如果你有想到更適合的應用場景也拜託請跟我分享！！</p>
+</blockquote>
+<p>今天的 JavaScript 小技巧就到這邊囉，我們下次見，掰掰！</p>
+<h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
+<li><a href="https://caniuse.com/?search=padStart" target="_blank" rel="noopener">Can I use - padStart</a></li>
+<li><a href="https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/padStart" target="_blank" rel="noopener">MDN - padStart</a></li>
+</ul>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2022-09-29T03:31:25.000Z">2022-09-29</time>
                 
                 <div class="level-item">
@@ -1381,106 +1449,6 @@
 
 
 
-    <div class="card">
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2021-10-08T01:12:41.000Z">2021-10-08</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    10 分鐘 閱讀文 (大約 1530 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2021/10/08/angular-30days-form-and-test-23/">Angular 深入淺出三十天：表單與測試 Day23 - Reactive Forms 進階技巧 - 欄位連動檢核邏輯</a>
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://i.imgur.com/N9vYaVv.jpg" alt="Day23"></p>
-<p>大家在日常生活中，應該看過滿多表單的某個欄位會隨著另個欄位的改變，而造成該欄位的驗證邏輯需要改變的情況吧？</p>
-<p>舉例來說，可能會有個欄位叫做聯絡資訊，使用者可以選擇要填入手機號碼或者是 E-mail ，該欄位再根據使用所選擇的類型來檢核該欄位的值。</p>
-<p>今天，我們就來用 <strong>Reactive Forms</strong> 實作這個欄位，而這個欄位我會實作在我們的被保人表單上，各位就隨意吧！</p>
-<blockquote>
-<p>如果已經忘記被保人表單長怎麼樣的話，可以先回頭複習一下第十一天的文章：<a href="https://ithelp.ithome.com.tw/articles/10272343" target="_blank" rel="noopener">Reactive Forms 實作 - 動態表單初體驗</a>。</p>
-</blockquote>
-<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>首先，我們需要在原本的被保人表單裡新增一個欄位：聯絡資訊。</p>
-<p>HTML 的部份大概會長這樣：</p>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">label</span>&gt;</span>聯絡資訊：<span class="hljs-tag">&lt;/<span class="hljs-name">label</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>&gt;</span>請選擇<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"mobile"</span>&gt;</span>手機<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"email"</span>&gt;</span>E-Mail<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>畫面看起來會像這樣：</p>
-<p><img src="https://i.imgur.com/0hfeJjz.jpg" alt="Insured View"></p>
-<p>雖然聯絡資訊是一個欄位，但其實我們需要兩個 <code>FormControl</code> ，一個給下拉選單，一個給實際填值的 <code>input</code> 元素。</p>
-<p>因此，我們要在原本的 <code>createInsuredFormGroup</code> 裡多加兩個欄位，像是這樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">private</span> createInsuredFormGroup(): FormGroup &#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">    name: [</span><br><span class="line">      <span class="hljs-string">''</span>,</span><br><span class="line">      [Validators.required, Validators.minLength(<span class="hljs-number">2</span>), Validators.maxLength(<span class="hljs-number">10</span>)]</span><br><span class="line">    ],</span><br><span class="line">    gender: [<span class="hljs-string">''</span>, Validators.required],</span><br><span class="line">    age: [<span class="hljs-string">''</span>, Validators.required],</span><br><span class="line">    contactInfoType: [<span class="hljs-string">''</span>, Validators.required],</span><br><span class="line">    contactInfo: [<span class="hljs-string">''</span>, Validators.required]</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然後將剛剛新增的欄位與畫面的元素綁定：</p>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">select</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"contactInfoType"</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">""</span>&gt;</span>請選擇<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"mobile"</span>&gt;</span>手機<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">option</span> <span class="hljs-attr">value</span>=<span class="hljs-string">"email"</span>&gt;</span>E-Mail<span class="hljs-tag">&lt;/<span class="hljs-name">option</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">select</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">formControlName</span>=<span class="hljs-string">"contactInfo"</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>接著我們透過把資料印在畫面上的方式來檢查是否已正確綁定，像這樣：</p>
-<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">pre</span>&gt;</span>&#123;&#123; formGroup?.getRawValue() | json &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">pre</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-<p>結果：</p>
-<p><img src="https://i.imgur.com/caEJMjG.gif" alt="Insured View"></p>
-<p>看起來已經有正確跟畫面上的元素綁定了，那接下來要怎麼做才好呢？</p>
-<h3 id="valueChanges"><a href="#valueChanges" class="headerlink" title="valueChanges"></a>valueChanges</h3><p><strong>FormControl</strong> 的父類別 <strong>AbstractControl</strong> 有個屬性叫做 <strong><a href="https://angular.io/api/forms/AbstractControl#valueChanges" target="_blank" rel="noopener">valueChanges</a></strong> ，它是一個 <strong>Observable</strong> 。</p>
-<p>我們可以透過訂閱某個 <strong>AbstractControl</strong> 的 <strong>valueChanges</strong> 這個 <strong>Observable</strong> 來知道該欄位是否已經發生變化，並且做出相應的處理。</p>
-<p>因此，我們可以這樣調整 <code>createInsuredFormGroup</code> 裡的實作：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">private</span> createInsuredFormGroup(): FormGroup &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> contactInfoTypeControl = <span class="hljs-keyword">this</span>.formBuilder.control(<span class="hljs-string">''</span>, Validators.required);</span><br><span class="line">  <span class="hljs-keyword">const</span> contactInfoControl = <span class="hljs-keyword">this</span>.formBuilder.control(<span class="hljs-string">''</span>, Validators.required);</span><br><span class="line">  contactInfoTypeControl.valueChanges.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">switch</span> (value) &#123;</span><br><span class="line">      <span class="hljs-keyword">case</span> <span class="hljs-string">'mobile'</span>:</span><br><span class="line">        contactInfoControl.setValidators([Validators.required, Validators.pattern(<span class="hljs-regexp">/$09\d&#123;8&#125;^/</span>)]);</span><br><span class="line">        <span class="hljs-keyword">break</span>;</span><br><span class="line">      <span class="hljs-keyword">case</span> <span class="hljs-string">'email'</span>:</span><br><span class="line">        contactInfoControl.setValidators([Validators.required, Validators.email]);</span><br><span class="line">        <span class="hljs-keyword">break</span>;</span><br><span class="line">      <span class="hljs-keyword">default</span>:</span><br><span class="line">        contactInfoControl.setValidators([Validators.required]);</span><br><span class="line">        <span class="hljs-keyword">break</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    contactInfoControl.updateValueAndValidity();</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">    name: [</span><br><span class="line">      <span class="hljs-string">''</span>,</span><br><span class="line">      [Validators.required, Validators.minLength(<span class="hljs-number">2</span>), Validators.maxLength(<span class="hljs-number">10</span>)]</span><br><span class="line">    ],</span><br><span class="line">    gender: [<span class="hljs-string">''</span>, Validators.required],</span><br><span class="line">    age: [<span class="hljs-string">''</span>, Validators.required],</span><br><span class="line">    contactInfoType: contactInfoTypeControl,</span><br><span class="line">    contactInfo: contactInfoControl</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>上述程式碼中有以下三個要點：</p>
-<ol>
-<li><p>建立 <code>FormControl</code> 的時候可以藉由 <code>this.formBuilder.control()</code> 的方式建立，也可以直接使用 <code>new FormControl()</code> 建立，這點在前面的文章已經有提過，不過我在這邊再提醒大家一次。</p>
-</li>
-<li><p><code>setValidators()</code> 執行完後，記得<strong>一定要</strong>使用 <code>updateValueAndValidity()</code> 來更新當前欄位的驗證，不然就要等到該欄位的值有<strong>改變</strong>時才會以新的驗證器來驗證。</p>
-</li>
-<li><p>由於 <code>contactInfoType</code> 允許使用者選擇 <code>請選擇</code> 的選項，因此記得在 <code>default</code> 的區塊裡，將 <code>Validators.required</code> 給加回去。</p>
-</li>
-</ol>
-<p>這邊改好之後，我們也順便調整一下 <code>getErrorMessage</code> 的實作，讓使用者可以知道該欄位的驗證有誤：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">getErrorMessage(key: <span class="hljs-built_in">string</span>, index: <span class="hljs-built_in">number</span>): <span class="hljs-built_in">string</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> formGroup = <span class="hljs-keyword">this</span>.formArray.controls[index];</span><br><span class="line">  <span class="hljs-keyword">const</span> formControl = formGroup.get(key);</span><br><span class="line">  <span class="hljs-keyword">let</span> errorMessage: <span class="hljs-built_in">string</span>;</span><br><span class="line">  <span class="hljs-keyword">if</span> (!formControl || !formControl.errors || formControl.pristine) &#123;</span><br><span class="line">    errorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.required) &#123;</span><br><span class="line">    errorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.minlength) &#123;</span><br><span class="line">    errorMessage = <span class="hljs-string">'姓名至少需兩個字以上'</span>;</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.maxlength) &#123;</span><br><span class="line">    errorMessage = <span class="hljs-string">'姓名至多只能輸入十個字'</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// 增加以下兩個判斷</span></span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.pattern) &#123;</span><br><span class="line">    errorMessage = <span class="hljs-string">'手機號碼格式錯誤'</span>;</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.email) &#123;</span><br><span class="line">    errorMessage = <span class="hljs-string">'E-mail 格式錯誤'</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">return</span> errorMessage!;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>這邊要提醒大家的是，由於驗證 E-mail 格式的方式我今天是用 <code>Validators.email</code> 的驗證器來驗，不是之前的 <code>Validators.pattern()</code> ，所以我可以直接用 <code>formControl.errors.email</code> 來判斷。</p>
-<p>如果實作時，手機號碼跟 E-mail 都是用  <code>Validators.pattern()</code> 的驗證器來驗的話，就需要進一步去比對 <code>formControl.errors.pattern</code> 裡的 Regular Expression 來分辨究竟是手機號碼的格式錯誤還是 E-mail 的格式錯誤了。</p>
-<p>像是這樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">&#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.pattern) &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> requiredPattern = formControl.errors.pattern.requiredPattern;</span><br><span class="line">  <span class="hljs-keyword">if</span> (requiredPattern === <span class="hljs-string">'/A Regular Expression/'</span>) &#123;</span><br><span class="line">    errorMessage = <span class="hljs-string">'手機號碼格式錯誤'</span>;</span><br><span class="line">  &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (requiredPattern === <span class="hljs-string">'/B Regular Expression/'</span>) &#123;</span><br><span class="line">    errorMessage = <span class="hljs-string">'E-mail 格式錯誤'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>如此一來，我們就完成這個欄位的功能囉！</p>
-<p>結果：</p>
-<p><img src="https://i.imgur.com/caEJMjG.gif" alt="Insured View"></p>
-<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天的重點是學會如何使用 <strong><a href="https://angular.io/api/forms/AbstractControl#valueChanges" target="_blank" rel="noopener">valueChanges</a></strong> 來動態調整相關欄位的驗證邏輯。</p>
-<p>雖然是 Observable 是 RxJS 的東西，但今天並沒有太艱難或太複雜的運用，使用上的感覺會跟使用 <strong>Promise</strong> 的感覺類似，不過我個人認為 RxJS 好玩且強大許多。</p>
-<p>關於 RxJS ，如果大家想知道更多資訊，我推薦大家去看 Mike 的<a href="https://ithelp.ithome.com.tw/users/20020617/ironman/2959" target="_blank" rel="noopener">打通 RxJS 任督二脈</a>系列文，或者是直接買實體書也行。</p>
-<p>雖然今天的實作已經完成了，但因為有調整程式碼的關係，測試程式碼其實也需要相應的調整才不會出錯，此部份就交給大家實作我就不再用篇幅分享實作囉！</p>
-<p>今天的程式碼會放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day23" target="_blank" rel="noopener">Github - Branch: day23</a> 上供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
-<p>如果有任何的問題或是回饋，還請麻煩留言給我讓我知道！</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -1549,7 +1517,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        38
+                        39
                     </p>
                 </div>
             </div>
@@ -1611,7 +1579,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">36</span>
+                <span class="level-item tag">37</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -1627,7 +1595,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">3</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/Nx/">
@@ -1673,7 +1641,7 @@
         <h3 class="menu-label">
             標籤雲
         </h3>
-        <a href="/tags/angular/" style="font-size: 20px;">angular</a> <a href="/tags/efficiency/" style="font-size: 10px;">efficiency</a> <a href="/tags/form/" style="font-size: 16.67px;">form</a> <a href="/tags/frontend/" style="font-size: 16.67px;">frontend</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/homebrew/" style="font-size: 10px;">homebrew</a> <a href="/tags/javascript/" style="font-size: 13.33px;">javascript</a> <a href="/tags/library/" style="font-size: 13.33px;">library</a> <a href="/tags/macos/" style="font-size: 10px;">macos</a> <a href="/tags/methodology/" style="font-size: 10px;">methodology</a> <a href="/tags/nx/" style="font-size: 13.33px;">nx</a> <a href="/tags/rxjs/" style="font-size: 10px;">rxjs</a> <a href="/tags/scss/" style="font-size: 10px;">scss</a> <a href="/tags/testing/" style="font-size: 16.67px;">testing</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/workflow/" style="font-size: 10px;">workflow</a>
+        <a href="/tags/angular/" style="font-size: 20px;">angular</a> <a href="/tags/efficiency/" style="font-size: 10px;">efficiency</a> <a href="/tags/form/" style="font-size: 17.5px;">form</a> <a href="/tags/frontend/" style="font-size: 17.5px;">frontend</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/homebrew/" style="font-size: 10px;">homebrew</a> <a href="/tags/javascript/" style="font-size: 15px;">javascript</a> <a href="/tags/library/" style="font-size: 12.5px;">library</a> <a href="/tags/macos/" style="font-size: 10px;">macos</a> <a href="/tags/methodology/" style="font-size: 10px;">methodology</a> <a href="/tags/nx/" style="font-size: 12.5px;">nx</a> <a href="/tags/rxjs/" style="font-size: 10px;">rxjs</a> <a href="/tags/scss/" style="font-size: 10px;">scss</a> <a href="/tags/testing/" style="font-size: 17.5px;">testing</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web/" style="font-size: 17.5px;">web</a> <a href="/tags/workflow/" style="font-size: 10px;">workflow</a>
     </div>
 </div>
 
@@ -1687,6 +1655,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2023/01/01/javascript-tips-helpful-natvie-method-padstart/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://i.imgur.com/IKQmdRh.png" alt="JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2022-12-31T16:17:41.000Z">2023-01-01</time></div>
+                    <a href="/2023/01/01/javascript-tips-helpful-natvie-method-padstart/" class="title has-link-black-ter is-size-6 has-text-weight-normal">JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -1764,25 +1751,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-14T14:45:12.000Z">2021-10-14</time></div>
-                    <a href="/2021/10/14/angular-30days-form-and-test-29/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1794,6 +1762,17 @@
             彙整
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2023/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2023</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2022/12/">
@@ -1941,7 +1920,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/javascript/">
                         <span class="tag">javascript</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -2040,6 +2019,25 @@
         
         <article class="media">
             
+            <a href="/2023/01/01/javascript-tips-helpful-natvie-method-padstart/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://i.imgur.com/IKQmdRh.png" alt="JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2022-12-31T16:17:41.000Z">2023-01-01</time></div>
+                    <a href="/2023/01/01/javascript-tips-helpful-natvie-method-padstart/" class="title has-link-black-ter is-size-6 has-text-weight-normal">JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2022/12/11/benefit-if-writgin-document/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://i.imgur.com/FfIKlbq.png" alt="寫文件的好處">
@@ -2114,25 +2112,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-14T14:45:12.000Z">2021-10-14</time></div>
-                    <a href="/2021/10/14/angular-30days-form-and-test-29/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2144,6 +2123,17 @@
             彙整
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2023/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2023</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2022/12/">
@@ -2291,7 +2281,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/javascript/">
                         <span class="tag">javascript</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -2386,7 +2376,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2022 Leo Chen&nbsp;
+                &copy; 2023 Leo Chen&nbsp;
                 Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
                 
                 </p>

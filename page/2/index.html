@@ -148,6 +148,202 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2021-10-09T08:04:36.000Z">2021-10-09</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    21 分鐘 閱讀文 (大約 3100 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2021/10/09/angular-30days-form-and-test-24/">Angular 深入淺出三十天：表單與測試 Day24 - Reactive Forms 進階技巧 - Auto-Complete Searching</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://i.imgur.com/MyMnZN1.jpg" alt="Day24"></p>
+<p>在日常生活中，大家應該滿常看到有些系統的搜尋輸入框是可以在一邊打字的同時，一邊將搜尋結果呈現在一個下拉選單裡，非常地貼心且方便。</p>
+<p>當然，這其中其實有很多細節，不過我們今天就專注在前端的表單開發上，來用 <strong>Reactive Forms</strong> 實作這個搜尋輸入框吧！</p>
+<blockquote>
+<p>沒錯，就算只是個搜尋框，它也是個表單噢！</p>
+</blockquote>
+<p>正好最近<a href="https://www.hexschool.com/" target="_blank" rel="noopener">六角學院</a>即將舉辦<a href="https://www.hexschool.com/2021/09/09/2021-09-09-the-f2e-3-2021" target="_blank" rel="noopener">第三屆的前端 &amp; UI 修煉精神時光屋</a>的活動，這次它們與交通部合作，並提供了全國最大的<br><a href="https://tdx.transportdata.tw/api-service/swagger" target="_blank" rel="noopener">運輸資料流通服務平台 (TDX) 之交通 API</a> 給大家使用，讓大家可以透過此活動精進自己的實力，非常推薦給大家。</p>
+<blockquote>
+<p>想當初我第一次寫鐵人賽時，也是使用了參加六角舉辦的第一屆前端修煉精神時光屋的素材來寫，雖然這次沒有要參賽，但又跟六角有關係了呢！</p>
+</blockquote>
+<p>總之，藉由這次的機會與交通部提供的 <a href="https://tdx.transportdata.tw/api-service/swagger" target="_blank" rel="noopener">運輸資料流通服務平台 (TDX) 之交通 API</a> ，我們來簡單地做一個可以查詢台北捷運的車站的搜尋輸入框吧！</p>
+<blockquote>
+<p>這次因為有 API 可以使用的關係，會精實很多，如果跟不上的朋友，可能要再多熟悉一下 Angular 噢！</p>
+</blockquote>
+<h2 id="需求規格說明"><a href="#需求規格說明" class="headerlink" title="需求規格說明"></a>需求規格說明</h2><p>簡單來說，這個功能會需要一個輸入框與一個表格，當使用者在輸入框裡打字時，表格的內容也會連動呈現出搜尋結果。</p>
+<blockquote>
+<p>由於 Auto-Complete 的搜尋輸入框如果要自己做會需要處理不少細節，又不想安裝 UI 框架佔篇幅，所以我用這個方式來呈現查詢結果。</p>
+</blockquote>
+<p>表格的欄位有以下這些：</p>
+<ul>
+<li>車站代號</li>
+<li>車站名稱</li>
+<li>車站所屬縣市</li>
+<li>車站所屬鄉鎮區</li>
+<li>假日是否允許自行車進出站</li>
+<li>位置</li>
+</ul>
+<p>最後呈現結果：</p>
+<p><img src="https://i.imgur.com/683p5e2.gif" alt="Auto-Complete Searching View"></p>
+<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>首先，如果在需求明確的情況下，我個人習慣會先把畫面準備好。</p>
+<p>HTML 的部份大概會長這樣：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"請輸入捷運站名稱"</span> /&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">caption</span>&gt;</span></span><br><span class="line">    台北捷運之捷運站查詢結果</span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">caption</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">thead</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站代號<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站名稱<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站所屬縣市<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站所屬鄉鎮區<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>假日是否允許自行車進出站<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>位置<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">thead</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">tbody</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">target</span>=<span class="hljs-string">"_blank"</span> <span class="hljs-attr">href</span>=<span class="hljs-string">""</span>&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">tbody</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>CSS 的部份大家就自行發揮囉！</p>
+</blockquote>
+<p>畫面看起來會像這樣：</p>
+<p><img src="https://i.imgur.com/wp3BKyl.jpg" alt="Auto-Complete Searching View"></p>
+<p>接著我們會需要一個 <code>FormControl</code> 來跟輸入框綁定，所以我們在 <code>.ts</code> 裡新增一個屬性 ─ <code>searchingInputControl</code>：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAutoCompleteSearchingComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  searchingInputControl = <span class="hljs-keyword">new</span> FormControl();</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>別忘了先到 <code>.module.ts</code> 裡引入 <code>FormsModule</code> 與 <code>ReactiveFormsModule</code> 噢！</p>
+</blockquote>
+<p>然後將 <code>searchingInputControl</code> 與畫面輸入框綁定：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">p</span>&gt;</span><span class="hljs-tag">&lt;<span class="hljs-name">input</span> <span class="hljs-attr">type</span>=<span class="hljs-string">"text"</span> <span class="hljs-attr">placeholder</span>=<span class="hljs-string">"請輸入捷運站名稱"</span> [<span class="hljs-attr">formControl</span>]=<span class="hljs-string">"searchingInputControl"</span> /&gt;</span><span class="hljs-tag">&lt;/<span class="hljs-name">p</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>接著我們使用昨天分享過的 <code>valueChanges</code> 來確認是否已正確綁定：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAutoCompleteSearchingComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  searchingInputControl = <span class="hljs-keyword">new</span> FormControl();</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.searchingInputControl.valueChanges.subscribe(<span class="hljs-function">(<span class="hljs-params">value</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(value);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>結果：</p>
+<p><img src="https://i.imgur.com/Vl0GEpm.gif" alt="Auto-Complete Searching View"></p>
+<p>看起來已經有正確的跟搜尋輸入框綁定了，那接下來要怎麼做才好呢？</p>
+<h3 id="Service"><a href="#Service" class="headerlink" title="Service"></a>Service</h3><p>我們的目的是希望使用者在輸入捷運站名稱的同時，只留下跟使用者的輸入有關聯的捷運站。</p>
+<p>因此，我們會需要一支 Service 來幫我們呼叫交通部所提供的 <a href="https://tdx.transportdata.tw/api-service/swagger" target="_blank" rel="noopener">運輸資料流通服務平台 (TDX) 之交通 API</a> ，並把查詢結果顯示到畫面上。</p>
+<p>Service 的程式碼大概會長這個樣子：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Injectable</span>()</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAutoCompleteSearchingService &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> httpClient: HttpClient</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  searchStation(stationName: <span class="hljs-built_in">string</span>): Observable&lt;MetroStationDTO[]&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">let</span> url = <span class="hljs-string">'https://ptx.transportdata.tw/MOTC/v2/Rail/Metro/Station/TRTC?$format=JSON'</span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (stationName) &#123;</span><br><span class="line">      url += <span class="hljs-string">`&amp;$filter=contains(StationName/Zh_tw,'<span class="hljs-subst">$&#123;stationName&#125;</span>')`</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.httpClient.get&lt;MetroStationDTO[]&gt;(url);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>上述程式碼中有以下幾個重點：</p>
+<ol>
+<li><p>要呼叫 API 的話，需要先到 <code>.module.ts</code> 裡引入 <code>HttpClientModule</code> ，才能在 Service 裡使用 <code>HttpClient</code> 來呼叫 API。</p>
+</li>
+<li><p><code>MetroStationDTO</code> 是我根據交通部所提供的 <a href="https://tdx.transportdata.tw/api-service/swagger" target="_blank" rel="noopener">運輸資料流通服務平台 (TDX) 之交通 API</a> 裡定義的資料介面，詳細位置需先選擇「軌道」再點選「捷運」，如下圖所示：</p>
+</li>
+</ol>
+<p><img src="https://i.imgur.com/e2995Ac.jpg" alt="TDX API Document"></p>
+<ol start="3">
+<li><p>由於 <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods" target="_blank" rel="noopener">HTTP Method</a> 是 <code>GET</code> 的緣故，所以參數是使用 <code>Query Parameters</code> 的方式帶進 URL 之中。</p>
+</li>
+<li><p>如果使用者沒有輸入站名時，還帶 <code>$filter</code> 參數會收到伺服器回傳的 <code>Bed Request</code> 錯誤，因此增加一個判斷式 ─ 當傳入的 <code>stationName</code> 為 <strong><a href="https://developer.mozilla.org/en-US/docs/Glossary/Truthy" target="_blank" rel="noopener">Truthy</a></strong> 值時，才帶 <code>$filter</code> 參數。</p>
+</li>
+<li><p>參數 <code>$filter</code> 的值該怎麼帶這件事情其實在文件中沒有寫，算是這個文件比較美中不足的地方。好在六角學院的院長 ─ 廖洧杰院長前陣子有開直播課教學，而我猜測院長一定有在那堂課講這件事情，所以去翻了一下該堂直播課的<a href="https://hackmd.io/1nMqecIOQ266nTv9PnjSQw?both" target="_blank" rel="noopener">共筆</a>才找到該怎麼帶它的值。</p>
+</li>
+</ol>
+<p>Service 準備好之後，接下來就要將 <code>FormControl</code> 的 <code>valueChanges</code> 事件與 API 相結合了。</p>
+<blockquote>
+<p>準備好<del>見證神蹟</del>了嗎？</p>
+</blockquote>
+<h3 id="Operators"><a href="#Operators" class="headerlink" title="Operators"></a>Operators</h3><p><a href="https://rxjs.dev/" target="_blank" rel="noopener">RxJS</a> 真的是一個很棒的函式庫，它讓我們可以很好地操作<strong>非同步</strong>與<strong>資料串流</strong>，而且還能讓我們的程式碼非常地簡潔、非常地好閱讀。</p>
+<p>就像我們現在需要把使用者的輸入事件與 API 做結合時，用 RxJS 的 <a href="https://rxjs.dev/guide/operators" target="_blank" rel="noopener">Operators</a> 就可以非常完美、漂亮地結合在一起。</p>
+<p>就像這樣：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAutoCompleteSearchingComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  searchingInputControl = <span class="hljs-keyword">new</span> FormControl();</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> service: ReactiveFormsAutoCompleteSearchingService</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.searchingInputControl.valueChanges.pipe(</span><br><span class="line">      startWith(<span class="hljs-string">''</span>),</span><br><span class="line">      debounceTime(<span class="hljs-number">500</span>),</span><br><span class="line">      switchMap(<span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> <span class="hljs-keyword">this</span>.service.searchStation(value))</span><br><span class="line">    ).subscribe(<span class="hljs-function">(<span class="hljs-params">result</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-built_in">console</span>.log(result);</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>結果：</p>
+<p><img src="https://i.imgur.com/JWTH01j.gif" alt="Auto-Complete Searching View"></p>
+<p>我相信在這邊一定會有非常多朋友看傻眼，這是什麼神操作？！這樣就接好了？！</p>
+<p>沒錯！這樣就接好了，是不是比你想像中簡單非常多呢？</p>
+<p>那這串到底做了什麼事呢？</p>
+<p>首先，我希望這個畫面一開始的時候就會先查詢一次，所以我使用 <code>startWith(&#39;&#39;)</code> 來呼叫查詢 API 。</p>
+<p>再者，我希望查詢的間隔不要太過快速，當使用者「可能」已經打完字的時候才查詢，所以我使用 <code>debounceTime(500)</code> 來讓查詢的時間點會在使用者停止打字 500 毫秒後才呼叫查詢 API。</p>
+<p>最後，則要將原本是 <code>valueChanges</code> 的 Observable 轉換成 <strong>呼叫 API</strong> 的 Observable 這件事情 ，所以我使用 <code>switchMap(value =&gt; this.service.searchStation(value))</code> 。</p>
+<blockquote>
+<p>關於 <code>startWith</code> ，大家可以參考<a href="https://rxjs.dev/api/operators/startWith" target="_blank" rel="noopener">官方文件</a>或是 <a href="https://ithelp.ithome.com.tw/articles/10249369" target="_blank" rel="noopener">Mike 的文章</a>。</p>
+<p>關於 <code>debounceTime</code> ，大家可以參考<a href="https://rxjs.dev/api/operators/debounceTime" target="_blank" rel="noopener">官方文件</a>或是 <a href="https://ithelp.ithome.com.tw/articles/10251680" target="_blank" rel="noopener">Mike 的文章</a>。</p>
+<p>關於 <code>switchMap</code> ，大家可以參考<a href="https://rxjs.dev/api/operators/switchMap" target="_blank" rel="noopener">官方文件</a>或是 <a href="https://ithelp.ithome.com.tw/articles/10248745" target="_blank" rel="noopener">Mike 的文章</a>。</p>
+</blockquote>
+<h3 id="AsyncPipe"><a href="#AsyncPipe" class="headerlink" title="AsyncPipe"></a>AsyncPipe</h3><p>接著，我們要將得到的資料綁定到畫面上，而綁定到畫面上的方式大致上有兩種：</p>
+<ol>
+<li>自己訂閱後將資料指定給 Component 的屬性：</li>
+</ol>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAutoCompleteSearchingComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  searchingInputControl = <span class="hljs-keyword">new</span> FormControl();</span><br><span class="line">  stations: MetroStationDTO[] = [];</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> service: ReactiveFormsAutoCompleteSearchingService</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.searchingInputControl.valueChanges.pipe(</span><br><span class="line">      startWith(<span class="hljs-string">''</span>),</span><br><span class="line">      debounceTime(<span class="hljs-number">500</span>),</span><br><span class="line">      switchMap(<span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> <span class="hljs-keyword">this</span>.service.searchStation(value))</span><br><span class="line">    ).subscribe(<span class="hljs-function">(<span class="hljs-params">stations</span>) =&gt;</span> &#123;</span><br><span class="line">      <span class="hljs-keyword">this</span>.stations = stations;</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然後再綁到畫面上：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">caption</span>&gt;</span></span><br><span class="line">    台北捷運之捷運站查詢結果</span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">caption</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">thead</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站代號<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站名稱<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站所屬縣市<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站所屬鄉鎮區<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>假日是否允許自行車進出站<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>位置<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">thead</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">tbody</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let station of stations"</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.StationID &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.StationName.Zh_tw &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.LocationCity &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.LocationTown &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.BikeAllowOnHoliday &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">target</span>=<span class="hljs-string">"_blank"</span> [<span class="hljs-attr">href</span>]=<span class="hljs-string">"station.StationPosition"</span>&gt;</span></span><br><span class="line">          &#123;&#123; station.StationPosition &#125;&#125;</span><br><span class="line">        <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">tbody</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<ol start="2">
+<li>不要自己訂閱，先將 Observable 準備好並用 Component 的屬性儲存起來：</li>
+</ol>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAutoCompleteSearchingComponent &#123;</span><br><span class="line"></span><br><span class="line">  searchingInputControl = <span class="hljs-keyword">new</span> FormControl();</span><br><span class="line">  stations$ = <span class="hljs-keyword">this</span>.searchingInputControl.valueChanges.pipe(</span><br><span class="line">    startWith(<span class="hljs-string">''</span>),</span><br><span class="line">    debounceTime(<span class="hljs-number">500</span>),</span><br><span class="line">    switchMap(<span class="hljs-function"><span class="hljs-params">value</span> =&gt;</span> <span class="hljs-keyword">this</span>.service.searchStation(value))</span><br><span class="line">  );</span><br><span class="line"></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> service: ReactiveFormsAutoCompleteSearchingService</span>) &#123; &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然後透過 <code>AsyncPipe</code> 讓 Template 自己訂閱：</p>
+<figure class="highlight html hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-tag">&lt;<span class="hljs-name">table</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">caption</span>&gt;</span></span><br><span class="line">    台北捷運之捷運站查詢結果</span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">caption</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">thead</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站代號<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站名稱<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站所屬縣市<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>車站所屬鄉鎮區<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>假日是否允許自行車進出站<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>位置<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">thead</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;<span class="hljs-name">tbody</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;<span class="hljs-name">tr</span> *<span class="hljs-attr">ngFor</span>=<span class="hljs-string">"let station of (stations$ | async) || []"</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.StationID &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.StationName.Zh_tw &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.LocationCity &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.LocationTown &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span>&#123;&#123; station.BikeAllowOnHoliday &#125;&#125;<span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">        <span class="hljs-tag">&lt;<span class="hljs-name">a</span> <span class="hljs-attr">target</span>=<span class="hljs-string">"_blank"</span> [<span class="hljs-attr">href</span>]=<span class="hljs-string">"station.StationPosition"</span>&gt;</span></span><br><span class="line">          &#123;&#123; station.StationPosition &#125;&#125;</span><br><span class="line">        <span class="hljs-tag">&lt;/<span class="hljs-name">a</span>&gt;</span></span><br><span class="line">      <span class="hljs-tag">&lt;/<span class="hljs-name">td</span>&gt;</span></span><br><span class="line">    <span class="hljs-tag">&lt;/<span class="hljs-name">tr</span>&gt;</span></span><br><span class="line">  <span class="hljs-tag">&lt;/<span class="hljs-name">tbody</span>&gt;</span></span><br><span class="line"><span class="hljs-tag">&lt;/<span class="hljs-name">table</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+<p>就結果來說，這兩個方法基本上都可以，但我個人非常推薦使用第二種方式。</p>
+<p>原因是使用第二種的方式一方面可以避免我們在 Component 被 Destroy 時忘記解除訂閱而導致 Memory Leak 的情形，另一方面是 Observable 會比單純資料好用很多。</p>
+<blockquote>
+<p>甚至有時候我們自己訂閱會發生「明明資料就有收到但畫面沒有更新」的詭異狀況。</p>
+</blockquote>
+<p>結果：</p>
+<p><img src="https://i.imgur.com/r1zmX3Z.gif" alt="Auto-Complete Searching View"></p>
+<h3 id="Other-Pipes"><a href="#Other-Pipes" class="headerlink" title="Other Pipes"></a>Other Pipes</h3><p>雖然目前運作良好，但還有一些小東西還沒處理完：</p>
+<ol>
+<li>假日是否允許自行車進出站的欄位我想讓它呈現 <code>是</code> 或是 <code>否</code> 。</li>
+<li>位置的欄位我想讓它以 <code>latitude, longitude</code> 的格式呈現。</li>
+<li>連結我想要可以點擊後用新的頁籤打開 Google Map ，並會看到那個捷運站的位置。</li>
+</ol>
+<p>以上這三個小東西非常地簡單，我想大家應該也都知道該怎麼做，但是既然都已經到了第二十四天了，這邊我覺得我們要使用 <code>Pipe</code> ，而不是像之前一樣直接寫在 Component 裡。</p>
+<p>這是因為，如果像之前的 <code>getErrorMessage</code> 是寫在 Component 裡的話，其實當畫面渲染時，該函式就會被呼叫，不管該值有沒有被改變。</p>
+<p>但是使用 <code>Pipe</code> 的話，在該值被改變前，是不會被呼叫第二次的。</p>
+<p>再者，使用 <code>Pipe</code> 的話，重用性與可維護性也比較好。</p>
+<p>所以我建議大家可以使用 <code>Pipe</code> 來完成最後的小調整。</p>
+<p>我個人會建立三個 <code>Pipe</code> ─ <code>BooleanInZhTwPipe</code> 、 <code>GoogleMapLinkPipe</code> 與 <code>LocationStringPipe</code> 。</p>
+<p>它們的程式碼如下：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Pipe</span>(&#123;</span><br><span class="line">  name: <span class="hljs-string">'booleanInZhTw'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> BooleanInZhTwPipe <span class="hljs-keyword">implements</span> PipeTransform &#123;</span><br><span class="line"></span><br><span class="line">  transform(value: <span class="hljs-built_in">boolean</span>, ...args: unknown[]): <span class="hljs-built_in">string</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> value ? <span class="hljs-string">'是'</span> : <span class="hljs-string">'否'</span>;</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Pipe</span>(&#123;</span><br><span class="line">  name: <span class="hljs-string">'googleMapLink'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> GoogleMapLinkPipe <span class="hljs-keyword">implements</span> PipeTransform &#123;</span><br><span class="line"></span><br><span class="line">  transform(&#123; PositionLat, PositionLon &#125;: StationPosition, ...args: unknown[]): <span class="hljs-built_in">string</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-string">`https://www.google.com/maps?q=<span class="hljs-subst">$&#123;PositionLat&#125;</span>,<span class="hljs-subst">$&#123;PositionLon&#125;</span>&amp;z=7`</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Pipe</span>(&#123;</span><br><span class="line">  name: <span class="hljs-string">'locationString'</span></span><br><span class="line">&#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> LocationStringPipe <span class="hljs-keyword">implements</span> PipeTransform &#123;</span><br><span class="line"></span><br><span class="line">  transform(&#123; PositionLat, PositionLon &#125;: StationPosition, ...args: unknown[]): <span class="hljs-built_in">string</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-string">`<span class="hljs-subst">$&#123;PositionLat&#125;</span>, <span class="hljs-subst">$&#123;PositionLon&#125;</span>`</span>;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>最終結果：</p>
+<p><img src="https://i.imgur.com/683p5e2.gif" alt="Auto-Complete Searching View"></p>
+<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>今天的重點主要是：</p>
+<ol>
+<li>學習如何使用 <a href="https://tdx.transportdata.tw/api-service/swagger" target="_blank" rel="noopener">TDX API</a> 。</li>
+<li>學習如何使用 RxJS 的 Operator ─ <code>startWith</code> 、 <code>debounceTime</code> 與 <code>switchMap</code> 將 <code>valueChanges</code> 與<strong>呼叫 API</strong> 串聯。</li>
+<li>學習如何使用 <strong><a href="https://angular.io/api/forms/AbstractControl#AsyncPipe" target="_blank" rel="noopener">AsyncPipe</a></strong> 。</li>
+<li>學習如何自定 <code>Pipe</code> 。</li>
+</ol>
+<p>今天的練習對於一些剛學 Angular 的朋友來說會滿精實且資訊量有點大的，大家可以多看幾遍，多自己練習、做實驗，相信對大家來說會很有幫助。</p>
+<p>關於 RxJS ，如果大家想知道更多資訊，我推薦大家去看 Mike 的<a href="https://ithelp.ithome.com.tw/users/20020617/ironman/2959" target="_blank" rel="noopener">打通 RxJS 任督二脈</a>系列文，或者是直接買實體書也行。</p>
+<p>雖然今天的實作已經完成了，但還有測試的部份，我們明天來撰寫它吧！</p>
+<p>今天的程式碼會放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day24" target="_blank" rel="noopener">Github - Branch: day24</a> 上供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
+<p>如果有任何的問題或是回饋，還請麻煩留言給我讓我知道！</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2021-10-08T01:12:41.000Z">2021-10-08</time>
                 
                 <div class="level-item">
@@ -524,10 +720,10 @@
 <p>經過這兩天的介紹，相信大家對於 Cypress 應該已經有了一定程度的理解，有沒有人已經開始用它來寫測試了呢？</p>
 <p>今天就讓我帶著大家用 Cypress 來為我們的表單撰寫 E2E 測試吧！</p>
 <h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>首先先輸入以下命令以啟動 Cypress 的 Test Runner ：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> npm run cy:open</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> npm run cy:open</span><br></pre></td></tr></table></figure>
 
 <p>或者是</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> yarn cy:open</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> yarn cy:open</span><br></pre></td></tr></table></figure>
 
 <blockquote>
 <p>如果你還不知道怎麼安裝 Cypress 或者是為什麼要輸入這個指令的話，請參考第 18 天的文章：<a href>與 Cypress 的初次見面（上）</a>。</p>
@@ -604,10 +800,10 @@
 <p>你也可以取自己喜歡的指令如 <code>&quot;e2e&quot;: &quot;cypress run&quot;</code> ，不一定要跟我一樣。</p>
 </blockquote>
 <p>之後就能直接用以下的指令執行 E2E 測試了：</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> npm run cy:run</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> npm run cy:run</span><br></pre></td></tr></table></figure>
 
 <p>或者是</p>
-<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span><span class="hljs-bash"> yarn cy:run</span></span><br></pre></td></tr></table></figure>
+<figure class="highlight shell hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">$</span> yarn cy:run</span><br></pre></td></tr></table></figure>
 
 <p>執行結果：</p>
 <p><img src="https://i.imgur.com/QtGtG8I.gif" alt="Testing Result"></p>
@@ -1442,130 +1638,6 @@
 
 
 
-    <div class="card">
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2021-09-29T01:38:02.000Z">2021-09-29</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    14 分鐘 閱讀文 (大約 2151 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                <a class="has-link-black-ter" href="/2021/09/29/angular-30days-form-and-test-14/">Angular 深入淺出三十天：表單與測試 Day14 - 單元測試實作 - 被保人 by Reactive Forms</a>
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://i.imgur.com/8vYZNBJ.jpg" alt="Day14"></p>
-<p>今天我們要來為我們用 <strong>Reactive Forms</strong> 所撰寫的被保人表單寫單元測試，如果還沒有相關程式碼的朋友，趕快前往閱讀第十一天的文章： <a href="https://ithelp.ithome.com.tw/articles/10272343" target="_blank" rel="noopener">Reactive Forms 實作 - 動態表單初體驗</a>。</p>
-<h2 id="實作開始"><a href="#實作開始" class="headerlink" title="實作開始"></a>實作開始</h2><p>複習一下目前的程式碼：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> ReactiveFormsAsyncInsuredComponent <span class="hljs-keyword">implements</span> OnInit &#123;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在表單上</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @type &#123;(FormGroup | undefined)&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  formGroup: FormGroup | <span class="hljs-literal">undefined</span>;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   *  用以取得 FormArray</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @readonly</span></span><br><span class="line"><span class="hljs-comment">   * @type &#123;FormArray&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">get</span> formArray(): FormArray &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formGroup?.get(<span class="hljs-string">'insuredList'</span>)! <span class="hljs-keyword">as</span> FormArray;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 綁定在送出按鈕上，判斷表單是不是無效</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @readonly</span></span><br><span class="line"><span class="hljs-comment">   * @type &#123;boolean&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">get</span> isFormInvalid(): <span class="hljs-built_in">boolean</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formArray.controls.length === <span class="hljs-number">0</span> || <span class="hljs-keyword">this</span>.formGroup!.invalid;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 透過 DI 取得 FromBuilder 物件，用以建立表單</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;FormBuilder&#125; formBuilder</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> formBuilder: FormBuilder</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 當 Component 初始化的時候初始化表單</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  ngOnInit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.formGroup = <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">      insuredList: <span class="hljs-keyword">this</span>.formBuilder.array([])</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 新增被保人</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  addInsured(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> formGroup = <span class="hljs-keyword">this</span>.createInsuredFormGroup();</span><br><span class="line">    <span class="hljs-keyword">this</span>.formArray.push(formGroup);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 刪除被保人</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;number&#125; index</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  deleteInsured(index: <span class="hljs-built_in">number</span>): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">this</span>.formArray.removeAt(index);</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 送出表單</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  submit(): <span class="hljs-built_in">void</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// do login...</span></span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 透過欄位的 Errors 來取得對應的錯誤訊息</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;string&#125; key</span></span><br><span class="line"><span class="hljs-comment">   * @param &#123;number&#125; index</span></span><br><span class="line"><span class="hljs-comment">   * @return &#123;*&#125;  &#123;string&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  getErrorMessage(key: <span class="hljs-built_in">string</span>, index: <span class="hljs-built_in">number</span>): <span class="hljs-built_in">string</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> formGroup = <span class="hljs-keyword">this</span>.formArray.controls[index];</span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = formGroup.get(key);</span><br><span class="line">    <span class="hljs-keyword">let</span> errorMessage: <span class="hljs-built_in">string</span>;</span><br><span class="line">    <span class="hljs-keyword">if</span> (!formControl || !formControl.errors || formControl.pristine) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">''</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.required) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'此欄位必填'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.minlength) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'姓名至少需兩個字以上'</span>;</span><br><span class="line">    &#125; <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (formControl.errors.maxlength) &#123;</span><br><span class="line">      errorMessage = <span class="hljs-string">'姓名至多只能輸入十個字'</span>;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> errorMessage!;</span><br><span class="line">  &#125;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">/**</span></span><br><span class="line"><span class="hljs-comment">   * 建立被保人的表單</span></span><br><span class="line"><span class="hljs-comment">   *</span></span><br><span class="line"><span class="hljs-comment">   * @private</span></span><br><span class="line"><span class="hljs-comment">   * @return &#123;*&#125;  &#123;FormGroup&#125;</span></span><br><span class="line"><span class="hljs-comment">   * @memberof ReactiveFormsAsyncInsuredComponent</span></span><br><span class="line"><span class="hljs-comment">   */</span></span><br><span class="line">  <span class="hljs-keyword">private</span> createInsuredFormGroup(): FormGroup &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.formBuilder.group(&#123;</span><br><span class="line">      name: [</span><br><span class="line">        <span class="hljs-string">''</span>,</span><br><span class="line">        [Validators.required, Validators.minLength(<span class="hljs-number">2</span>), Validators.maxLength(<span class="hljs-number">10</span>)]</span><br><span class="line">      ],</span><br><span class="line">      gender: [<span class="hljs-string">''</span>, Validators.required],</span><br><span class="line">      age: [<span class="hljs-string">''</span>, Validators.required]</span><br><span class="line">    &#125;);</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>以目前的程式碼來看，我們要驗的單元一共有以下這些函式：</p>
-<ul>
-<li><code>formArray</code></li>
-<li><code>isFormInvalid</code></li>
-<li><code>ngOnInit</code></li>
-<li><code>addInsured</code></li>
-<li><code>deleteInsured</code></li>
-<li><code>getErrorMessage</code></li>
-</ul>
-<p>以下就按照順序來撰寫測試吧！</p>
-<blockquote>
-<p>開始撰寫測試案例前，記得先處理好依賴，如果忘記的話，可以先回到<a href="https://ithelp.ithome.com.tw/articles/10268883" target="_blank" rel="noopener">第六天的文章</a>複習，我就不再贅述囉！</p>
-</blockquote>
-<p>不過今天的測試案例幾乎都建立在 <code>ngOnInit</code> 被觸發後的情況之下，所以這次我打算直接把 <code>fixture.detectChanges()</code> 放在一開始的 <code>beforeEach</code> 裡，這樣就不用在每個測試案例加了。</p>
-<p>像這樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-comment">// 其他省略</span></span><br><span class="line">  fixture.detectChanges();</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<h3 id="測試單元-formArray"><a href="#測試單元-formArray" class="headerlink" title="測試單元 - formArray"></a>測試單元 - formArray</h3><p>這個單元很單純，基本只要驗在 <code>ngOnInit</code> 被觸發後，可以取得 <code>formArray</code> 即可。</p>
-<p>程式碼如下：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'formArray'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should get the FormArray from the FormGroup after "ngOnInit" being trigger'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> formArray = component.formGroup?.get(<span class="hljs-string">'insuredList'</span>) <span class="hljs-keyword">as</span> FormArray;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.formArray).toBe(formArray);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>測試結果：</p>
-<p><img src="https://i.imgur.com/uXgAL69.png" alt="testing result"></p>
-<h3 id="測試單元-isFormInvalid"><a href="#測試單元-isFormInvalid" class="headerlink" title="測試單元 - isFormInvalid"></a>測試單元 - isFormInvalid</h3><p>這個單元基本上要測三個狀況：</p>
-<ol>
-<li><code>formArray</code> 裡的 <code>controls</code> 的長度為 <code>0</code> 時，回傳 <code>true</code></li>
-<li><code>formGroup</code> 裡有任何 <code>errors</code> 時，回傳 <code>true</code></li>
-<li><code>formArray</code> 裡的 <code>controls</code> 的長度不為 <code>0</code> 且 <code>formGroup</code> 裡也沒有任何 <code>errors</code> 時，回傳 <code>false</code></li>
-</ol>
-<p>程式碼如下：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'isFormInvalid'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should be true when there are not any insureds'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> expectedResult = component.isFormInvalid;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(expectedResult).toBe(<span class="hljs-literal">true</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should be true when there are any errors'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = <span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">''</span>, Validators.required);</span><br><span class="line">    component.formArray.push(formControl);</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> expectedResult = component.isFormInvalid;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(expectedResult).toBe(<span class="hljs-literal">true</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should be false when there are not any errors'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = <span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">''</span>);</span><br><span class="line">    component.formArray.push(formControl);</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> expectedResult = component.isFormInvalid;</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(expectedResult).toBe(<span class="hljs-literal">false</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>測試結果：</p>
-<p><img src="https://i.imgur.com/XpS2won.png" alt="testing result"></p>
-<h3 id="測試單元-ngOnInit"><a href="#測試單元-ngOnInit" class="headerlink" title="測試單元 - ngOnInit"></a>測試單元 - ngOnInit</h3><p><code>ngOnInit</code> 要驗證的情況也很簡單，就是看執行完有沒有順利地把 <code>formGroup</code> 建立出來。</p>
-<p>不過要驗證到什麼地步就看個人了，例如我們可以很簡單地這樣子驗：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'ngOnInit'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should initialize property "formGroup"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    fixture.detectChanges();</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.formGroup).toBeTruthy();</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>也可以驗稍微仔細一點：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'ngOnInit'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should initialize property "formGroup"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    fixture.detectChanges();</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.formGroup).toBeInstanceOf(FormGroup);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>驗得越粗糙，測試對你的單元保護力越低；反之則越高。所以就看你想要提供給你要測的單元怎麼樣的保護。</p>
-<p>測試結果：</p>
-<p><img src="https://i.imgur.com/5p4w7zx.png" alt="testing result"></p>
-<h3 id="測試單元-addInsured-amp-deleteInsured"><a href="#測試單元-addInsured-amp-deleteInsured" class="headerlink" title="測試單元 - addInsured &amp; deleteInsured"></a>測試單元 - addInsured &amp; deleteInsured</h3><p>這兩個單元就更沒難度了，一個只是驗證執行後， <code>formArray</code> 的長度有沒有增加；另一個則是減少 <code>formArray</code> 的長度。</p>
-<p>程式碼如下：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'addInsured'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should push a "formGroup" into the "formArray"'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.addInsured();</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.formArray.length).toBe(<span class="hljs-number">1</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br><span class="line"></span><br><span class="line">describe(<span class="hljs-string">'deleteInsured'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  it(<span class="hljs-string">'should remove the "formGroup" from the "formArray" by the index'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> index = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> formGroup = <span class="hljs-keyword">new</span> FormGroup(&#123;&#125;);</span><br><span class="line">    component.formArray.push(formGroup);</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    component.deleteInsured(index);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(component.formArray.length).toBe(<span class="hljs-number">0</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>測試結果：</p>
-<p><img src="https://i.imgur.com/XUYyalw.png" alt="testing result"></p>
-<p>我知道一定有人會有一個疑問：「為什麼測 <code>deleteInsured</code> 的時候， <strong>Arrange</strong> 的部分不直接用 <code>component.addInsured()</code> 就好，還要自己敲？」。</p>
-<p>這是因為我們要做到<strong>測試隔離</strong>，大家還記得嗎？不記得的趕快回去翻第五天的文章：<a href="https://ithelp.ithome.com.tw/articles/10268160" target="_blank" rel="noopener">如何寫出優秀的測試？</a></p>
-<p>大家可以想想，如果今天我們真的使用了 <code>component.addInsured()</code> ，之後哪一天 <code>addInsured</code> 這個函式被改壞了不就也連帶導致了 <code>deleteInsured</code> 這個不相干的測試也會跑失敗嗎？</p>
-<p>雖然廣義一點來講，一個跑失敗跟兩個跑失敗貌似沒什麼區別，都是失敗。但在實質意義上來說就差很多，這點務必請大家銘記在心。</p>
-<h3 id="測試單元-getErrorMessage"><a href="#測試單元-getErrorMessage" class="headerlink" title="測試單元 - getErrorMessage"></a>測試單元 - getErrorMessage</h3><p>最後是大家都非常熟悉的 <code>getErrorMessage</code> ，有沒有一種整天都在測這個案例的感覺？</p>
-<p>雖然前面都測得比較<del>隨便</del>粗糙，我們這個單元測仔細一點好了。</p>
-<p>要驗證的項目如下：</p>
-<ul>
-<li>如果用錯誤的 <code>key</code> 值導致找不到對應的 <code>FormControl</code> ，則回傳空字串。</li>
-<li>如果該欄位沒有任何錯誤，則回傳空字串。</li>
-<li>如果該欄位的 <code>pristine</code> 為 <code>true</code>，則回傳空字串。</li>
-<li>如果該欄位的有 <code>required</code> 的錯誤，則回傳 <code>此欄位必填</code></li>
-<li>如果該欄位的有 <code>minlength</code> 的錯誤，則回傳 <code>姓名至少需兩個字以上</code></li>
-<li>如果該欄位的有 <code>maxlength</code> 的錯誤，則回傳 <code>姓名至多只能輸入十個字</code></li>
-</ul>
-<p>程式碼如下：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><span class="line">describe(<span class="hljs-string">'getErrorMessage'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">let</span> formGroup: FormGroup;</span><br><span class="line"></span><br><span class="line">  beforeEach(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">const</span> nameControl = <span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">''</span>, [</span><br><span class="line">      Validators.required,</span><br><span class="line">      Validators.minLength(<span class="hljs-number">2</span>),</span><br><span class="line">      Validators.maxLength(<span class="hljs-number">10</span>)</span><br><span class="line">    ]);</span><br><span class="line">    formGroup = <span class="hljs-keyword">new</span> FormGroup(&#123;</span><br><span class="line">      name: nameControl,</span><br><span class="line">    &#125;);</span><br><span class="line">    component.formArray.push(formGroup);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should return empty string with the wrong key'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> key = <span class="hljs-string">'leo'</span></span><br><span class="line">    <span class="hljs-keyword">const</span> index = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = component.getErrorMessage(key, index);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(errorMessage).toBe(<span class="hljs-string">''</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should return empty string when the "formControl" without errors'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> key = <span class="hljs-string">'name'</span></span><br><span class="line">    <span class="hljs-keyword">const</span> index = <span class="hljs-number">0</span>;</span><br><span class="line">    formGroup.get(key)?.setValue(<span class="hljs-string">'Leo'</span>);</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = component.getErrorMessage(key, index);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(errorMessage).toBe(<span class="hljs-string">''</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should return empty string when property "pristine" of the "formControl" is `true`'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> key = <span class="hljs-string">'name'</span></span><br><span class="line">    <span class="hljs-keyword">const</span> index = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = component.getErrorMessage(key, index);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(errorMessage).toBe(<span class="hljs-string">''</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should return "此欄位必填" when the "formControl" has the required error'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> key = <span class="hljs-string">'name'</span></span><br><span class="line">    <span class="hljs-keyword">const</span> index = <span class="hljs-number">0</span>;</span><br><span class="line">    formGroup.get(key)?.markAsDirty();</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = component.getErrorMessage(key, index);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(errorMessage).toBe(<span class="hljs-string">'此欄位必填'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should return "姓名至少需兩個字以上" when the "formControl" has the min-length error'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> key = <span class="hljs-string">'name'</span></span><br><span class="line">    <span class="hljs-keyword">const</span> index = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = formGroup.get(key)!;</span><br><span class="line">    formControl.setValue(<span class="hljs-string">'A'</span>)</span><br><span class="line">    formControl.markAsDirty();</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = component.getErrorMessage(key, index);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(errorMessage).toBe(<span class="hljs-string">'姓名至少需兩個字以上'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line"></span><br><span class="line">  it(<span class="hljs-string">'should return "姓名至多只能輸入十個字" when the "formControl" has the max-length error'</span>, <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-comment">// Arrange</span></span><br><span class="line">    <span class="hljs-keyword">const</span> key = <span class="hljs-string">'name'</span></span><br><span class="line">    <span class="hljs-keyword">const</span> index = <span class="hljs-number">0</span>;</span><br><span class="line">    <span class="hljs-keyword">const</span> formControl = formGroup.get(key)!;</span><br><span class="line">    formControl.setValue(<span class="hljs-string">'ABCDEF123456'</span>)</span><br><span class="line">    formControl.markAsDirty();</span><br><span class="line">    <span class="hljs-comment">// Act</span></span><br><span class="line">    <span class="hljs-keyword">const</span> errorMessage = component.getErrorMessage(key, index);</span><br><span class="line">    <span class="hljs-comment">// Assert</span></span><br><span class="line">    expect(errorMessage).toBe(<span class="hljs-string">'姓名至多只能輸入十個字'</span>);</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;);</span><br></pre></td></tr></table></figure>
-
-<p>測試結果：</p>
-<p><img src="https://i.imgur.com/lFOUKfG.png" alt="testing result"></p>
-<p>今天所有測試的結果：</p>
-<p><img src="https://i.imgur.com/rwo9Vu0.png" alt="testing result"></p>
-<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>跟昨天一樣的是，其實測試手法大致上差不多就這些，當然更複雜的情境會用到其他的手法，但目前主要還是以讓大家多熟悉、多練習為主，後面才會提到更複雜的情況。</p>
-<p>我個人覺得，提高撰寫測試的功力不外乎就是<strong>練習</strong>以及多跟他人<strong>交流</strong>，所以如果在公司沒人可以幫你 code review 或是你也不會幫其他人 code review 的話，是很可惜的一件事。</p>
-<p>今天實作程式碼一樣會放在 <a href="https://github.com/leochen0818/angular-30days-form-and-testing/tree/day14" target="_blank" rel="noopener">Github - Branch: day14</a> 上供大家參考，建議大家在看我的實作之前，先按照需求規格自己做一遍，之後再跟我的對照，看看自己的實作跟我的實作不同的地方在哪裡、有什麼好處與壞處，如此反覆咀嚼消化後，我相信你一定可以進步地非常快！</p>
-<p>如果有任何的問題或是回饋，也都非常歡迎留言給我讓我知道噢！</p>
-
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-
-
-
 
     
 <div class="card card-transparent">
@@ -1634,7 +1706,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        38
+                        39
                     </p>
                 </div>
             </div>
@@ -1696,7 +1768,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">36</span>
+                <span class="level-item tag">37</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -1712,7 +1784,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">2</span>
+                <span class="level-item tag">3</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/Nx/">
@@ -1758,7 +1830,7 @@
         <h3 class="menu-label">
             標籤雲
         </h3>
-        <a href="/tags/angular/" style="font-size: 20px;">angular</a> <a href="/tags/efficiency/" style="font-size: 10px;">efficiency</a> <a href="/tags/form/" style="font-size: 16.67px;">form</a> <a href="/tags/frontend/" style="font-size: 16.67px;">frontend</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/homebrew/" style="font-size: 10px;">homebrew</a> <a href="/tags/javascript/" style="font-size: 13.33px;">javascript</a> <a href="/tags/library/" style="font-size: 13.33px;">library</a> <a href="/tags/macos/" style="font-size: 10px;">macos</a> <a href="/tags/methodology/" style="font-size: 10px;">methodology</a> <a href="/tags/nx/" style="font-size: 13.33px;">nx</a> <a href="/tags/rxjs/" style="font-size: 10px;">rxjs</a> <a href="/tags/scss/" style="font-size: 10px;">scss</a> <a href="/tags/testing/" style="font-size: 16.67px;">testing</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web/" style="font-size: 16.67px;">web</a> <a href="/tags/workflow/" style="font-size: 10px;">workflow</a>
+        <a href="/tags/angular/" style="font-size: 20px;">angular</a> <a href="/tags/efficiency/" style="font-size: 10px;">efficiency</a> <a href="/tags/form/" style="font-size: 17.5px;">form</a> <a href="/tags/frontend/" style="font-size: 17.5px;">frontend</a> <a href="/tags/git/" style="font-size: 10px;">git</a> <a href="/tags/homebrew/" style="font-size: 10px;">homebrew</a> <a href="/tags/javascript/" style="font-size: 15px;">javascript</a> <a href="/tags/library/" style="font-size: 12.5px;">library</a> <a href="/tags/macos/" style="font-size: 10px;">macos</a> <a href="/tags/methodology/" style="font-size: 10px;">methodology</a> <a href="/tags/nx/" style="font-size: 12.5px;">nx</a> <a href="/tags/rxjs/" style="font-size: 10px;">rxjs</a> <a href="/tags/scss/" style="font-size: 10px;">scss</a> <a href="/tags/testing/" style="font-size: 17.5px;">testing</a> <a href="/tags/typescript/" style="font-size: 10px;">typescript</a> <a href="/tags/web/" style="font-size: 17.5px;">web</a> <a href="/tags/workflow/" style="font-size: 10px;">workflow</a>
     </div>
 </div>
 
@@ -1772,6 +1844,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2023/01/01/javascript-tips-helpful-natvie-method-padstart/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://i.imgur.com/IKQmdRh.png" alt="JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2022-12-31T16:17:41.000Z">2023-01-01</time></div>
+                    <a href="/2023/01/01/javascript-tips-helpful-natvie-method-padstart/" class="title has-link-black-ter is-size-6 has-text-weight-normal">JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -1849,25 +1940,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-14T14:45:12.000Z">2021-10-14</time></div>
-                    <a href="/2021/10/14/angular-30days-form-and-test-29/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1879,6 +1951,17 @@
             彙整
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2023/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2023</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2022/12/">
@@ -2026,7 +2109,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/javascript/">
                         <span class="tag">javascript</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -2125,6 +2208,25 @@
         
         <article class="media">
             
+            <a href="/2023/01/01/javascript-tips-helpful-natvie-method-padstart/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://i.imgur.com/IKQmdRh.png" alt="JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2022-12-31T16:17:41.000Z">2023-01-01</time></div>
+                    <a href="/2023/01/01/javascript-tips-helpful-natvie-method-padstart/" class="title has-link-black-ter is-size-6 has-text-weight-normal">JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2022/12/11/benefit-if-writgin-document/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://i.imgur.com/FfIKlbq.png" alt="寫文件的好處">
@@ -2199,25 +2301,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/14/angular-30days-form-and-test-29/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://i.imgur.com/i2QD8xM.png" alt="Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-14T14:45:12.000Z">2021-10-14</time></div>
-                    <a href="/2021/10/14/angular-30days-form-and-test-29/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day29 - ControlContainer</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -2229,6 +2312,17 @@
             彙整
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2023/01/">
+                <span class="level-start">
+                    <span class="level-item">一月 2023</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2022/12/">
@@ -2376,7 +2470,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/javascript/">
                         <span class="tag">javascript</span>
-                        <span class="tag is-grey">2</span>
+                        <span class="tag is-grey">3</span>
                     </a>
                 </div>
                 
@@ -2471,7 +2565,7 @@
                 
                 </a>
                 <p class="is-size-7">
-                &copy; 2022 Leo Chen&nbsp;
+                &copy; 2023 Leo Chen&nbsp;
                 Powered by <a href="https://hexo.io/" target="_blank">Hexo</a> & <a href="https://github.com/ppoffice/hexo-theme-icarus" target="_blank">Icarus</a>
                 
                 </p>
