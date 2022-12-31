@@ -168,7 +168,7 @@
                 <span class="level-item has-text-grey">
                     
                     
-                    3 分鐘 閱讀文 (大約 395 個字)
+                    4 分鐘 閱讀文 (大約 539 個字)
                 </span>
                 
                 
@@ -183,6 +183,9 @@
         <div class="content">
             <p><img src="https://imgur.com/IKQmdRh.png" alt></p>
 <p>今天我想跟大家分享一個數字字串補零時超好用的原生方法： <code>padStart</code>;</p>
+<blockquote>
+<p>當然所謂的「數字字串補零時超好用的原生方法」這件事情是我自己覺得最適合用它的應用場景，而如果你有想到更適合的應用場景也拜託請跟我分享！！</p>
+</blockquote>
 <p>假設我們今天收到需求是不管是 0~999 之間的任何一個數字，都要以三位數的形式顯示給使用者看。例如：</p>
 <ol>
 <li>如果資料是 <code>9</code> 的話，要顯示 <code>009</code></li>
@@ -198,9 +201,17 @@
 
 <p>一行就解決了，是不是超讚的？！！！</p>
 <p>不管需求要幾位數，都只要改那個 <code>3</code> 就好，而如果不想補 <code>&quot;0&quot;</code> ，想補 <code>&quot;*&quot;</code> 也沒問題，把 <code>&quot;0&quot;</code> 改成 <code>&quot;*&quot;</code> 就好，方便的不得了！！</p>
+<p>而這個方法在各大瀏覽器的支援程度高達 <code>95.72%</code> ，所以各位可以放心使用！！</p>
+<p><img src="https://i.imgur.com/JKcPDpS.png" alt="瀏覽器支援程度"></p>
 <blockquote>
-<p>當然所謂的「數字字串補零時超好用的原生方法」這件事情是我自己覺得最適合用它的應用場景，而如果你有想到更適合的應用場景也拜託請跟我分享！！</p>
+<p><del>如果你還要支援 IE 的話就抱歉了XD</del></p>
 </blockquote>
+<h2 id="同場加映"><a href="#同場加映" class="headerlink" title="同場加映"></a>同場加映</h2><p>聰明的你一定會想，既然有 <code>padStart</code> ，那是不是也有 <code>padEnd</code> ？</p>
+<p>沒錯，其使用的方式一模一樣，只是改為在後面補上你想要補的字而已！！</p>
+<p>像是：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> name = <span class="hljs-string">'Leo'</span>;</span><br><span class="line"><span class="hljs-keyword">const</span> result = name.padEnd(<span class="hljs-number">5</span>, <span class="hljs-string">"a"</span>);</span><br><span class="line"></span><br><span class="line"><span class="hljs-built_in">console</span>.log(result); <span class="hljs-comment">// 'Leoaa'</span></span><br></pre></td></tr></table></figure>
+
+<p>是不是非常簡單呢？！</p>
 <p>今天的 JavaScript 小技巧就到這邊囉，我們下次見，掰掰！</p>
 <h2 id="Reference"><a href="#Reference" class="headerlink" title="Reference"></a>Reference</h2><ul>
 <li><a href="https://caniuse.com/?search=padStart" target="_blank" rel="noopener">Can I use - padStart</a></li>
