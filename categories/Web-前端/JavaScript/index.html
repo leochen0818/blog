@@ -161,6 +161,86 @@
         
         <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
             <div class="level-left">
+                <time class="level-item has-text-grey" datetime="2023-07-22T02:09:04.000Z">2023-07-22</time>
+                
+                <div class="level-item">
+                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                </div>
+                
+                
+                <span class="level-item has-text-grey">
+                    
+                    
+                    5 分鐘 閱讀文 (大約 783 個字)
+                </span>
+                
+                
+            </div>
+        </div>
+        
+        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
+            
+                <a class="has-link-black-ter" href="/2023/07/22/javascript-tips-helpful-natvie-method-tofixed/">JavaScript 語言特性之先 ++ 跟後 ++ 到底哪裡不同？</a>
+            
+        </h1>
+        <div class="content">
+            <p><img src="https://imgur.com/qpyC7LP.png" alt></p>
+<p>今天我在看 Angular 的原始碼的時候我發現了一段程式碼如下：</p>
+<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> _nextReactiveId: <span class="hljs-built_in">number</span> = <span class="hljs-number">0</span>;</span><br><span class="line"></span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">abstract</span> <span class="hljs-keyword">class</span> ReactiveNode &#123;</span><br><span class="line">  <span class="hljs-keyword">private</span> readonly id = _nextReactiveId ++;</span><br><span class="line">  <span class="hljs-comment">// 以下省略</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>然後我就覺得，咦？！第一次看到別人這樣用（<del>被發現我很少看別人的程式碼了</del>），然後就很好奇所以這樣 id 會是從多少開始、然後也很好奇如果改為使用 <code>++ _nextReactiveId</code> 或是 <code>_nextReactiveId += 1</code> 的話會怎樣，所以我就做了一下實驗，並且分享給大家！</p>
+<h2 id="實驗-1-i-1"><a href="#實驗-1-i-1" class="headerlink" title="實驗 1 - i += 1"></a>實驗 1 - <code>i += 1</code></h2><p>首先我們一樣先宣告一個變數 <code>i</code> 等於 0 ：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">let</span> i = <span class="hljs-number">0</span>;</span><br></pre></td></tr></table></figure>
+
+<p>然後宣告一個變數 <code>a</code> 等於 <code>i += 1</code> 之後的結果：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> a = i += <span class="hljs-number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<p>接著把它印出來看看：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">console</span>.log(a) <span class="hljs-comment">// 1</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(i) <span class="hljs-comment">// 1</span></span><br></pre></td></tr></table></figure>
+
+<p>從結果回推，看起來 <code>i += 1</code> 這部份會先運算 （為避免有人不知道，提示一下：<code>i += 1 ⇒ i = i + 1</code>），然後變數 <code>a</code> 會再把變數 <code>i</code> 的值給記錄下來，所以最終兩個變數的值都會是運算完之後的結果。</p>
+<h2 id="實驗-2-i"><a href="#實驗-2-i" class="headerlink" title="實驗 2 - i ++"></a>實驗 2 - <code>i ++</code></h2><p>再來是第二種方式 - <code>i ++</code> ，我們一樣宣告一個變數 <code>b</code> 來記錄 <code>i ++</code> 之後的結果：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> b = i ++;</span><br></pre></td></tr></table></figure>
+
+<p>猜猜看，<code>b</code> 跟 <code>i</code> 的值分別會是什麼呢？（小提示，剛剛 <code>i</code> 的值已經變為 <code>1</code> 了唷！）</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">console</span>.log(b) <span class="hljs-comment">// 1</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(i) <span class="hljs-comment">// 2</span></span><br></pre></td></tr></table></figure>
+
+<p>看到結果的時候，大家是不是跟我最初剛知道這件事情的時候一樣驚訝呢？</p>
+<p>從結果回推之後我們了解到，原來這樣子使用時， <code>b</code> 會先把 <code>i</code> 的值給記錄下來，然後 <code>i</code> 再執行如同 <code>i += 1</code> 的運算，所以 <code>b</code> 的值會是 <code>i</code> 運算前的值，而 <code>i</code> 則會記錄運算後的值。寫成程式碼的話有點像是這樣：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> b = i;</span><br><span class="line">i += <span class="hljs-number">1</span>;</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>所以實驗到這邊我就明白為什麼 Angular 的原始碼會那樣寫了！</p>
+</blockquote>
+<h2 id="實驗-3-i"><a href="#實驗-3-i" class="headerlink" title="實驗 3 - ++ i"></a>實驗 3 - <code>++ i</code></h2><p>最後，我們來看看 <code>++ i</code> 吧！宣告一個變數 <code>c</code> 用以記錄 <code>++ i</code> 之後的結果：</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">const</span> c = ++ i;</span><br></pre></td></tr></table></figure>
+
+<p>大家再來猜猜看 c 跟 i 的值分別會是什麼吧！（小提示：i 的值剛剛已經變為 2 囉！）</p>
+<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-built_in">console</span>.log(c) <span class="hljs-comment">// 3</span></span><br><span class="line"><span class="hljs-built_in">console</span>.log(i) <span class="hljs-comment">// 3</span></span><br></pre></td></tr></table></figure>
+
+<p>大家都有猜到嗎？ <code>++ i</code> 的結果跟 <code>i += 1</code> 是一樣的，都是先運算，再記錄值。</p>
+<h2 id="結論"><a href="#結論" class="headerlink" title="結論"></a>結論</h2><p>從實驗結果來看，我們可以下一個結論：「在這個使用情境中，使用 <code>i += 1</code> <strong>等於</strong>使用 <code>++ i</code> <strong>不等於</strong>使用 <code>i ++</code> 。</p>
+<p>而在此之前，雖然我知道這三種方式有所差異，但其實並沒有真的很清楚的知道差異的所在，而最近自己也在改變自己讀書與學習的方式（其實也就只是好好做筆記，建立自己的知識庫罷了），希望這一點一滴的累積，都可以幫助到自己，也幫助到大家。</p>
+
+        </div>
+        
+        
+        
+    </div>
+</div>
+
+
+
+
+
+
+
+
+    <div class="card">
+    <div class="card-content article ">
+        
+        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
+            <div class="level-left">
                 <time class="level-item has-text-grey" datetime="2022-12-31T16:17:41.000Z">2023-01-01</time>
                 
                 <div class="level-item">
@@ -415,7 +495,7 @@
                         文章
                     </p>
                     <p class="title has-text-weight-normal">
-                        39
+                        40
                     </p>
                 </div>
             </div>
@@ -477,7 +557,7 @@
                 <span class="level-item">Web 前端</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">37</span>
+                <span class="level-item tag">38</span>
             </span>
         </a><ul><li>
         <a class="level is-marginless" href="/categories/Web-前端/Angular-之深入解析/">
@@ -493,7 +573,7 @@
                 <span class="level-item">JavaScript</span>
             </span>
             <span class="level-end">
-                <span class="level-item tag">3</span>
+                <span class="level-item tag">4</span>
             </span>
         </a></li><li>
         <a class="level is-marginless" href="/categories/Web-前端/Nx/">
@@ -553,6 +633,25 @@
         <h3 class="menu-label">
             最新文章
         </h3>
+        
+        <article class="media">
+            
+            <a href="/2023/07/22/javascript-tips-helpful-natvie-method-tofixed/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://i.imgur.com/qpyC7LP.png" alt="JavaScript 語言特性之先 ++ 跟後 ++ 到底哪裡不同？">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-07-22T02:09:04.000Z">2023-07-22</time></div>
+                    <a href="/2023/07/22/javascript-tips-helpful-natvie-method-tofixed/" class="title has-link-black-ter is-size-6 has-text-weight-normal">JavaScript 語言特性之先 ++ 跟後 ++ 到底哪裡不同？</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
         
         <article class="media">
             
@@ -630,25 +729,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-15T15:30:20.000Z">2021-10-15</time></div>
-                    <a href="/2021/10/15/angular-30days-form-and-test-30/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day30 - 表單原理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -660,6 +740,17 @@
             彙整
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2023/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2023</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2023/01/">
@@ -818,7 +909,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/javascript/">
                         <span class="tag">javascript</span>
-                        <span class="tag is-grey">3</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 
@@ -917,6 +1008,25 @@
         
         <article class="media">
             
+            <a href="/2023/07/22/javascript-tips-helpful-natvie-method-tofixed/" class="media-left">
+                <p class="image is-64x64">
+                    <img class="thumbnail" src="https://i.imgur.com/qpyC7LP.png" alt="JavaScript 語言特性之先 ++ 跟後 ++ 到底哪裡不同？">
+                </p>
+            </a>
+            
+            <div class="media-content">
+                <div class="content">
+                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2023-07-22T02:09:04.000Z">2023-07-22</time></div>
+                    <a href="/2023/07/22/javascript-tips-helpful-natvie-method-tofixed/" class="title has-link-black-ter is-size-6 has-text-weight-normal">JavaScript 語言特性之先 ++ 跟後 ++ 到底哪裡不同？</a>
+                    <p class="is-size-7 is-uppercase">
+                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                    </p>
+                </div>
+            </div>
+        </article>
+        
+        <article class="media">
+            
             <a href="/2023/01/01/javascript-tips-helpful-natvie-method-padstart/" class="media-left">
                 <p class="image is-64x64">
                     <img class="thumbnail" src="https://i.imgur.com/IKQmdRh.png" alt="JavaScript 小技巧：數字字串補零時超好用的原生方法 - padStart">
@@ -991,25 +1101,6 @@
             </div>
         </article>
         
-        <article class="media">
-            
-            <a href="/2021/10/15/angular-30days-form-and-test-30/" class="media-left">
-                <p class="image is-64x64">
-                    <img class="thumbnail" src="https://i.imgur.com/J1xtemM.png" alt="Angular 深入淺出三十天：表單與測試 Day30 - 表單原理">
-                </p>
-            </a>
-            
-            <div class="media-content">
-                <div class="content">
-                    <div><time class="has-text-grey is-size-7 is-uppercase" datetime="2021-10-15T15:30:20.000Z">2021-10-15</time></div>
-                    <a href="/2021/10/15/angular-30days-form-and-test-30/" class="title has-link-black-ter is-size-6 has-text-weight-normal">Angular 深入淺出三十天：表單與測試 Day30 - 表單原理</a>
-                    <p class="is-size-7 is-uppercase">
-                        <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                    </p>
-                </div>
-            </div>
-        </article>
-        
     </div>
 </div>
 
@@ -1021,6 +1112,17 @@
             彙整
         </h3>
         <ul class="menu-list">
+        
+        <li>
+            <a class="level is-marginless" href="/archives/2023/07/">
+                <span class="level-start">
+                    <span class="level-item">七月 2023</span>
+                </span>
+                <span class="level-end">
+                    <span class="level-item tag">1</span>
+                </span>
+            </a>
+        </li>
         
         <li>
             <a class="level is-marginless" href="/archives/2023/01/">
@@ -1179,7 +1281,7 @@
                 <div class="control">
                     <a class="tags has-addons" href="/tags/javascript/">
                         <span class="tag">javascript</span>
-                        <span class="tag is-grey">3</span>
+                        <span class="tag is-grey">4</span>
                     </a>
                 </div>
                 

@@ -2,26 +2,21 @@
 <html lang="zh">
 <head><meta name="generator" content="Hexo 3.9.0">
     <meta charset="utf-8">
-<title>Angular 深入淺出三十天：表單與測試 Day26 - 進階表單開發技巧 - 自訂驗證器 - Leo&#39;s Coding Life</title>
+<title>彙整: 2023/7 - Leo&#39;s Coding Life</title>
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
 <base href="/">
 
 
 
-    <meta name="description" content="之前在開發表單的時候，我們都是使用 Angular 所提供的驗證器來驗證表單欄位裡的值是否符合我們的需求。 雖然 Angular 已經這麼貼心地提供了這麼多驗證了，但每個國家、地區的人文風土民情都不同，還有太多太多需要我們自己自訂規則才能符合需求的情況。 因此，今天我們就一起來看看要怎麼自訂驗證器吧！ 自訂驗證器的型別既然要自訂驗證器，就不能不知道驗證器的型別與其定義。  其實之前在第三天的文章">
-<meta name="keywords" content="angular,form,testing,frontend,web">
-<meta property="og:type" content="article">
-<meta property="og:title" content="Angular 深入淺出三十天：表單與測試 Day26 - 進階表單開發技巧 - 自訂驗證器">
-<meta property="og:url" content="https://blog.leochen.dev/2021/10/11/angular-30days-form-and-test-26/index.html">
+    <meta property="og:type" content="website">
+<meta property="og:title" content="Leo&#39;s Coding Life">
+<meta property="og:url" content="https://blog.leochen.dev/archives/2023/07/index.html">
 <meta property="og:site_name" content="Leo&#39;s Coding Life">
-<meta property="og:description" content="之前在開發表單的時候，我們都是使用 Angular 所提供的驗證器來驗證表單欄位裡的值是否符合我們的需求。 雖然 Angular 已經這麼貼心地提供了這麼多驗證了，但每個國家、地區的人文風土民情都不同，還有太多太多需要我們自己自訂規則才能符合需求的情況。 因此，今天我們就一起來看看要怎麼自訂驗證器吧！ 自訂驗證器的型別既然要自訂驗證器，就不能不知道驗證器的型別與其定義。  其實之前在第三天的文章">
 <meta property="og:locale" content="zh-TW">
-<meta property="og:image" content="https://i.imgur.com/FtIne6K.png">
-<meta property="og:updated_time" content="2022-09-29T05:59:54.498Z">
+<meta property="og:image" content="https://blog.leochen.dev/images/og_image.png">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="Angular 深入淺出三十天：表單與測試 Day26 - 進階表單開發技巧 - 自訂驗證器">
-<meta name="twitter:description" content="之前在開發表單的時候，我們都是使用 Angular 所提供的驗證器來驗證表單欄位裡的值是否符合我們的需求。 雖然 Angular 已經這麼貼心地提供了這麼多驗證了，但每個國家、地區的人文風土民情都不同，還有太多太多需要我們自己自訂規則才能符合需求的情況。 因此，今天我們就一起來看看要怎麼自訂驗證器吧！ 自訂驗證器的型別既然要自訂驗證器，就不能不知道驗證器的型別與其定義。  其實之前在第三天的文章">
-<meta name="twitter:image" content="https://i.imgur.com/FtIne6K.png">
+<meta name="twitter:title" content="Leo&#39;s Coding Life">
+<meta name="twitter:image" content="https://blog.leochen.dev/images/og_image.png">
 
 
 
@@ -104,7 +99,7 @@
         <div class="navbar-brand is-flex-center">
             <a class="navbar-item navbar-logo" href="/">
             
-                <img src="/images/logo.png" alt="Angular 深入淺出三十天：表單與測試 Day26 - 進階表單開發技巧 - 自訂驗證器" height="28">
+                <img src="/images/logo.png" alt="Leo&#39;s Coding Life" height="28">
             
             </a>
         </div>
@@ -147,176 +142,45 @@
     <section class="section">
         <div class="container">
             <div class="columns">
-                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main"><div class="card">
-    <div class="card-content article ">
-        
-        <div class="level article-meta is-size-7 is-uppercase is-mobile is-overflow-x-auto">
-            <div class="level-left">
-                <time class="level-item has-text-grey" datetime="2021-10-11T11:32:17.000Z">2021-10-11</time>
-                
-                <div class="level-item">
-                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a>&nbsp;/&nbsp;<a class="has-link-grey -link" href="/categories/Web-前端/iThome2021鐵人賽/">iThome2021鐵人賽</a>
-                </div>
-                
-                
-                <span class="level-item has-text-grey">
-                    
-                    
-                    12 分鐘 閱讀文 (大約 1774 個字)
-                </span>
-                
-                
-            </div>
-        </div>
-        
-        <h1 class="title is-size-3 is-size-4-mobile has-text-weight-normal">
-            
-                Angular 深入淺出三十天：表單與測試 Day26 - 進階表單開發技巧 - 自訂驗證器
-            
-        </h1>
-        <div class="content">
-            <p><img src="https://i.imgur.com/FtIne6K.jpg" alt="Day26"></p>
-<p>之前在開發表單的時候，我們都是使用 <a href="https://angular.tw/api/forms/Validators" target="_blank" rel="noopener">Angular 所提供的驗證器</a>來驗證表單欄位裡的值是否符合我們的需求。</p>
-<p>雖然 Angular 已經這麼貼心地提供了這麼多驗證了，但每個國家、地區的人文風土民情都不同，還有太多太多需要我們自己自訂規則才能符合需求的情況。</p>
-<p>因此，今天我們就一起來看看要怎麼自訂驗證器吧！</p>
-<h2 id="自訂驗證器的型別"><a href="#自訂驗證器的型別" class="headerlink" title="自訂驗證器的型別"></a>自訂驗證器的型別</h2><p>既然要自訂驗證器，就不能不知道驗證器的型別與其定義。</p>
-<blockquote>
-<p>其實之前在第三天的文章：<a href="https://ithelp.ithome.com.tw/articles/10266617" target="_blank" rel="noopener">Reactive Forms 實作 - 以登入為例</a> 裡就有提到驗證器的型別。</p>
-</blockquote>
-<h3 id="ValidatorFn"><a href="#ValidatorFn" class="headerlink" title="ValidatorFn"></a>ValidatorFn</h3><p>驗證器的型別是 <code>ValidatorFn</code> ，其原始碼定義如下：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">interface</span> ValidatorFn &#123;</span><br><span class="line">  (control: AbstractControl): ValidationErrors | <span class="hljs-literal">null</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+                <div class="column is-8-tablet is-8-desktop is-6-widescreen has-order-2 column-main">
 
-<p>從定義中我們可以知道，驗證器其實就只是一個函式，該函式會傳入一個型別為 <code>AbstractControl</code> 的參數來讓我們在函式中判定該欄位的值是否符合我們的需求。</p>
-<p>如果驗證結果符合需求，那就回傳 <code>null</code> ，代表沒有任何的錯誤；如果驗證結果不符合需求那就回傳一個型別為 <code>ValidationErrors</code> 的錯誤。</p>
-<p>那 <code>ValidationErrors</code> 又是什麼呢？</p>
-<h3 id="ValidationErrors"><a href="#ValidationErrors" class="headerlink" title="ValidationErrors"></a>ValidationErrors</h3><p><code>ValidationErrors</code> 之前最早是在第二天的文章： <a href="https://ithelp.ithome.com.tw/articles/10265809" target="_blank" rel="noopener">Template Driven Forms 實作 - 以登入為例</a> 裡登場。</p>
-<p>其原始碼定義如下：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">type</span> ValidationErrors = &#123;</span><br><span class="line">    [key: <span class="hljs-built_in">string</span>]: <span class="hljs-built_in">any</span>;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>沒錯，你沒看錯，就是這麼簡單！</p>
-<p>從定義上看起來，基本上只要是個<strong>物件</strong>，就符合該型別的要求，而這也是因為滿足客製的條件，讓使用 Angular 的開發者有程度的規範但擁有盡可能大的彈性。</p>
-<p>不過雖然大家可以隨意自訂，但我非常建議大家在自訂的時候可以參考官方的驗證器。</p>
-<p>舉例來說，官方的 <code>Validators.required</code> 驗證器在驗證有誤時，會回傳的 <code>ValidationErrors</code> 是：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">&#123; required: <span class="hljs-literal">true</span> &#125;</span><br></pre></td></tr></table></figure>
-
-<p>而 <code>Validators.pattern</code> 驗證器在驗證有誤時，會回傳的 <code>ValidationErrors</code> 是：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  actualValue: <span class="hljs-string">'xxx'</span>,</span><br><span class="line">  requiredPattern: <span class="hljs-string">'xxx'</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p><code>Validators.minlength</code> 跟 <code>Validators.minlength</code> 驗證器在驗證有誤時，則會回傳：</p>
-<figure class="highlight javascript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">&#123;</span><br><span class="line">  actualLength: <span class="hljs-number">1</span>,</span><br><span class="line">  requiredLength: <span class="hljs-number">2</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>我們從中不難發現官方會在 <code>ValidationErrors</code> 中，回傳該欄位當前的狀態以及需求的狀態；而物件的屬性名稱也會按照 <code>actual</code> 加上 <code>XXXX</code> 以及 <code>required</code> 加上 <code>XXXX</code> 的方式來命名。</p>
-<p>雖然具體上還是要看實際需求，但我個人覺得我們自己在自訂驗證器的 <code>ValidationErrors</code> 時，也可以照著這個規則來處理。</p>
-<p>一方面，整個系統會比較一致；另一方面，也不需要多寫太多額外的程式來處理我們自訂的錯誤。</p>
-<p>舉個例子，如果我們想自訂一個欄位的值只能是 <code>Leo</code> 的驗證器，其程式碼可能會像是這樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> leoValidator: ValidatorFn = <span class="hljs-function">(<span class="hljs-params">control: AbstractControl</span>) =&gt;</span> &#123;</span><br><span class="line">  <span class="hljs-keyword">const</span> isLeo = control.value === <span class="hljs-string">'Leo'</span>;</span><br><span class="line">  <span class="hljs-keyword">if</span> (isLeo) &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span></span><br><span class="line">  &#125;</span><br><span class="line">  <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">    actualValue: control.value,</span><br><span class="line">    requiredValue: <span class="hljs-string">'Leo'</span></span><br><span class="line">  &#125;;</span><br><span class="line">&#125;;</span><br></pre></td></tr></table></figure>
-
-<p>如此我們就在需要用到它時，直接像這樣使用即可：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">''</span>, leoValidator);</span><br></pre></td></tr></table></figure>
-
-<p>又或者是彈性一點，讓使用它的人來決定該欄位的值只能是什麼，其程式碼應該會像是這樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-function"><span class="hljs-keyword">function</span> <span class="hljs-title">nameValidator</span>(<span class="hljs-params">name: <span class="hljs-built_in">string</span></span>): <span class="hljs-title">ValidatorFn</span> </span>&#123;</span><br><span class="line">  <span class="hljs-keyword">return</span> (control: AbstractControl): ValidationErrors | <span class="hljs-function"><span class="hljs-params">null</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="hljs-keyword">if</span> (control.value === name) &#123;</span><br><span class="line">      <span class="hljs-keyword">return</span> <span class="hljs-literal">null</span></span><br><span class="line">    &#125;</span><br><span class="line">    <span class="hljs-keyword">return</span> &#123;</span><br><span class="line">      actualValue: control.value,</span><br><span class="line">      requiredValue: name</span><br><span class="line">    &#125;;</span><br><span class="line">  &#125;;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>然後就可以像這樣使用：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">''</span>, nameValidator(<span class="hljs-string">'Leo'</span>));</span><br></pre></td></tr></table></figure>
-
-<p>不過， <code>ValidatorFn</code> 是用<strong>同步</strong>的方式來執行驗證，萬一遇到需要<strong>非同步</strong>驗證的情況要怎麼辦？</p>
-<h2 id="非同步驗證器"><a href="#非同步驗證器" class="headerlink" title="非同步驗證器"></a>非同步驗證器</h2><p>大家應該都滿喜歡玩遊戲的吧？！</p>
-<blockquote>
-<p><del>謎之音：不要自己愛玩就認為別人都愛玩</del></p>
-</blockquote>
-<p>絕大多數的遊戲，尤其是線上遊戲，在取名時不能夠取跟別人相同的名字，而當取到跟別人一樣的名字時，系統會提示「此名稱已被使用」之類的錯誤訊息。</p>
-<p>面對這種應用場景，相信大部分的朋友可能會是使用 <code>valueChanges</code> 來訂閱欄位的變化事件，當使用者輸入名稱時，會呼叫 API 讓後端來幫忙驗證該名字是否已被使用，然後再根據回傳結果來決定是否顯示錯誤訊息。</p>
-<blockquote>
-<p>畢竟前端不可能事先取得幾千、幾萬甚至是幾十萬、幾百萬的名字再一一比對吧？</p>
-</blockquote>
-<p>不過如果有這樣的應用場景，我個人覺得還滿適合使用非同步驗證器來處理的。</p>
-<blockquote>
-<p>順帶一提，這只是我個人舉例，不代表真實應用情況。</p>
-</blockquote>
-<h3 id="AsyncValidator"><a href="#AsyncValidator" class="headerlink" title="AsyncValidator"></a>AsyncValidator</h3><figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">interface</span> AsyncValidator <span class="hljs-keyword">extends</span> Validator &#123;</span><br><span class="line">  validate(control: AbstractControl): <span class="hljs-built_in">Promise</span>&lt;ValidationErrors | <span class="hljs-literal">null</span>&gt; | Observable&lt;ValidationErrors | <span class="hljs-literal">null</span>&gt;</span><br><span class="line"></span><br><span class="line">  <span class="hljs-comment">// inherited from forms/Validator</span></span><br><span class="line">  validate(control: AbstractControl): ValidationErrors | <span class="hljs-literal">null</span></span><br><span class="line">  registerOnValidatorChange(fn: <span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> <span class="hljs-built_in">void</span>)?: <span class="hljs-built_in">void</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<p>從上述定義可以看出，跟<strong>同步</strong>的驗證器所不一樣的是，我們在自訂<strong>非同步的驗證器時</strong>，不是直接製作一個符合 <code>AsyncValidatorFn</code> 定義的函式</p>
-<p>而是要用一個可被注入的 Class 來實作 <code>AsyncValidator</code> 這個介面。</p>
-<p>就像下面這個官網的範例一樣：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-meta">@Injectable</span>(&#123; providedIn: <span class="hljs-string">'root'</span> &#125;)</span><br><span class="line"><span class="hljs-keyword">export</span> <span class="hljs-keyword">class</span> UniqueAlterEgoValidator <span class="hljs-keyword">implements</span> AsyncValidator &#123;</span><br><span class="line">  <span class="hljs-keyword">constructor</span>(<span class="hljs-params"><span class="hljs-keyword">private</span> heroesService: HeroesService</span>) &#123;&#125;</span><br><span class="line"></span><br><span class="line">  validate(</span><br><span class="line">    ctrl: AbstractControl</span><br><span class="line">  ): <span class="hljs-built_in">Promise</span>&lt;ValidationErrors | <span class="hljs-literal">null</span>&gt; | Observable&lt;ValidationErrors | <span class="hljs-literal">null</span>&gt; &#123;</span><br><span class="line">    <span class="hljs-keyword">return</span> <span class="hljs-keyword">this</span>.heroesService.isAlterEgoTaken(ctrl.value).pipe(</span><br><span class="line">      map(<span class="hljs-function"><span class="hljs-params">isTaken</span> =&gt;</span> (isTaken ? &#123; uniqueAlterEgo: <span class="hljs-literal">true</span> &#125; : <span class="hljs-literal">null</span>)),</span><br><span class="line">      catchError(<span class="hljs-function"><span class="hljs-params">()</span> =&gt;</span> of(<span class="hljs-literal">null</span>))</span><br><span class="line">    );</span><br><span class="line">  &#125;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
-
-<h3 id="使用方式"><a href="#使用方式" class="headerlink" title="使用方式"></a>使用方式</h3><p>為我們欄位設定非同步驗證器的方式也非常地簡單。</p>
-<p>以 <code>FormControl</code> 來說， 我們可以用這樣子的方式來設定：</p>
-<figure class="highlight typescript hljs"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="hljs-keyword">new</span> FormControl(<span class="hljs-string">''</span>, [<span class="hljs-comment">/* 一般驗證器 */</span>], [<span class="hljs-comment">/* 非同步驗證器 */</span>]);</span><br></pre></td></tr></table></figure>
-
-<p>簡單來說，不論是用 Reactive Forms 的哪種方式建立欄位，非同步驗證器都是放在一般驗證器後面就對了！</p>
-<h2 id="本日小結"><a href="#本日小結" class="headerlink" title="本日小結"></a>本日小結</h2><p>希望透過今天的分享，能讓大家可以初步掌握自訂驗證器的技巧。雖然在實務上，大家不一定遇的到需要使用非同步驗證器的場景，但如果真的有需要用到又忘記怎麼做時，至少有這篇文章在，隨時都可以回來查詢。</p>
-<p>此外，雖然沒有分享自訂 Template Driven Forms 驗證器的方式，但大家可以自行參考官方的 <a href="https://angular.io/guide/form-validation#adding-custom-validators-to-template-driven-forms" target="_blank" rel="noopener">Form Validation - Adding custom validators to template-driven forms</a> 文件。</p>
-<p>而在非同步驗證器的部份，官網也有提到一些<strong>優化非同步驗證器</strong>的技巧，大家可以參考官方的 <a href="https://angular.io/guide/form-validation#creating-asynchronous-validators" target="_blank" rel="noopener">Form Validation - Optimizing performance of async validators</a> 文件。</p>
-<p>以上，就是今天的文章，如果有任何的問題或是回饋，還請麻煩留言給我讓我知道，感激不盡！</p>
-
-        </div>
-        
-        <div class="level is-size-7 is-uppercase">
-            <div class="level-start">
-                <div class="level-item">
-                    <span class="is-size-6 has-text-grey has-mr-7">#</span>
-                    <a class="has-link-grey -link" href="/tags/angular/">angular</a>, <a class="has-link-grey -link" href="/tags/form/">form</a>, <a class="has-link-grey -link" href="/tags/frontend/">frontend</a>, <a class="has-link-grey -link" href="/tags/testing/">testing</a>, <a class="has-link-grey -link" href="/tags/web/">web</a>
-                </div>
-            </div>
-        </div>
-        
-        
-        
-    </div>
-</div>
-
-
-
-
-
-<div class="card card-transparent">
-    <div class="level post-navigation is-flex-wrap is-mobile">
-        
-        <div class="level-start">
-            <a class="level level-item has-link-grey  article-nav-prev" href="/2021/10/12/angular-30days-form-and-test-27/">
-                <i class="level-item fas fa-chevron-left"></i>
-                <span class="level-item">Angular 深入淺出三十天：表單與測試 Day27 - Reactive Forms 進階技巧 - 跨欄位驗證</span>
-            </a>
-        </div>
-        
-        
-        <div class="level-end">
-            <a class="level level-item has-link-grey  article-nav-next" href="/2021/10/10/angular-30days-form-and-test-25/">
-                <span class="level-item">Angular 深入淺出三十天：表單與測試 Day25 - 測試進階技巧 - DI 抽換</span>
-                <i class="level-item fas fa-chevron-right"></i>
-            </a>
-        </div>
-        
-    </div>
-</div>
-
-
-
-<div class="card">
+<div class="card widget">
     <div class="card-content">
-        <h3 class="title is-5 has-text-weight-normal">評論</h3>
+        <h3 class="tag is-link">
+        七月 2023
+        </h3>
+        <div class="timeline">
         
-<script>
-    var disqus_config = function () {
-        this.page.url = 'https://blog.leochen.dev/2021/10/11/angular-30days-form-and-test-26/';
-        this.page.identifier = '2021/10/11/angular-30days-form-and-test-26/';
-    };
-    (function() {
-        var d = document, s = d.createElement('script');  
-        s.src = '//' + "leochen0818" + '.disqus.com/embed.js';
-        s.setAttribute('data-timestamp', +new Date());
-        (d.head || d.body).appendChild(s);
-    })();
-</script>
-
-<div id="disqus_thread">
-    
-    <noscript>Please enable JavaScript to view the <a href="//disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
-</div>
+            <article class="media">
+                
+                <a href="/2023/07/22/javascript-tips-helpful-natvie-method-tofixed/" class="media-left">
+                    <p class="image is-64x64">
+                        <img class="thumbnail" src="https://i.imgur.com/qpyC7LP.png" alt="JavaScript 語言特性之先 ++ 跟後 ++ 到底哪裡不同？">
+                    </p>
+                </a>
+                
+                <div class="media-content">
+                    <div class="content">
+                        <time class="has-text-grey is-size-7 is-block is-uppercase" datetime="2023-07-22T02:09:04.000Z">2023-07-22</time>
+                        <a href="/2023/07/22/javascript-tips-helpful-natvie-method-tofixed/" class="title has-link-black-ter is-size-6 has-text-weight-normal">JavaScript 語言特性之先 ++ 跟後 ++ 到底哪裡不同？</a>
+                        <div class="level article-meta is-mobile">
+                            <div class="level-left">
+                                
+                                <div class="level-item is-size-7 is-uppercase">
+                                <a class="has-link-grey -link" href="/categories/Web-前端/">Web 前端</a> / <a class="has-link-grey -link" href="/categories/Web-前端/JavaScript/">JavaScript</a>
+                                </div>
+                                
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </article>
+        
+        </div>
     </div>
 </div>
+
+
 </div>
                 
 
@@ -1239,7 +1103,7 @@
             <div class="level-start has-text-centered-mobile">
                 <a class="footer-logo is-block has-mb-6" href="/">
                 
-                    <img src="/images/logo.png" alt="Angular 深入淺出三十天：表單與測試 Day26 - 進階表單開發技巧 - 自訂驗證器" height="28">
+                    <img src="/images/logo.png" alt="Leo&#39;s Coding Life" height="28">
                 
                 </a>
                 <p class="is-size-7">
